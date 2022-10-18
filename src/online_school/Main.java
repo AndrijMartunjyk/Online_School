@@ -7,6 +7,7 @@ public class Main {
         Lecture numberOne = new Lecture();
         Lecture numberTwo = new Lecture();
         Lecture numberThree = new Lecture();
+        Lecture numberFour = new Lecture();
 
         System.out.println(Lecture.getID());
     }
