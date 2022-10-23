@@ -71,11 +71,12 @@ public class Main {
                     trueOrFalse = false;
                     break;
                 default:
-                    System.out.println("Не правильний ввід, спробуйте ще раз ");
+                    System.out.println("Не правильний ввід, спробуйте ще раз!!! ");
                     name = scanner.nextLine();
                     break;
             }
         }
         scanner.close();
+        System.out.println("Програму завершено!!!");
     }
 }
