@@ -9,6 +9,10 @@ public class Lecture {
     private String finishLecture;
     public int courseId = Course.getID();
 
+    public Lecture() {
+        ID++;
+    }
+
     public Lecture(String nameLecture, String startLecture, String finishLecture) {
         this.nameLecture = nameLecture;
         this.startLecture = startLecture;
