@@ -10,6 +10,13 @@ public class Teacher {
         ID++;
     }
 
+    public Teacher(String firstName, String lastName, String direction) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.direction = direction;
+        ID++;
+    }
+
     public static int getID() {
         return ID;
     }
