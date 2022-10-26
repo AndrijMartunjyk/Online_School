@@ -19,53 +19,57 @@ public class Main {
     }
 
     public static void main(String[] args) {
-
         System.out.println("Виберіть категорію:\nКурси\nВчителі\nСтуденти\nЛекції");
         System.out.println("========================\nДля завершення програми,\n введіть \"Stop\"\n========================");
+
         String name = scanner.nextLine();
         boolean trueOrFalse = true;
 
         while (trueOrFalse) {
             switch (name.toLowerCase()) {
                 case "курси":
+//                    Lecture.setID(0);
                     CourseService courseService = new CourseService();
                     Course course = courseService.courseCreation();
                     System.out.println(message() + "\"Курси\"");
-                    System.out.println("ID course " + Course.getID());
-                    System.out.println("ID lecture " + Lecture.getID());
-                    System.out.println("ID teacher " + Teacher.getID());
-                    System.out.println("ID student " + Student.getID());
+                    System.out.println("ID course " + course.getID());
+//                    System.out.println("ID lecture " + Lecture.getID());
+//                    System.out.println("ID teacher " + Teacher.getID());
+//                    System.out.println("ID student " + Student.getID());
                     name = scanner.nextLine();
                     break;
-                case "вчителі":
-                    TeacherService teacherService = new TeacherService();
-                    Teacher teacher = teacherService.teacherCreation();
-                    System.out.println(message() + "\"Вчителі\"");
-                    System.out.println("ID course " + Course.getID());
-                    System.out.println("ID lecture " + Lecture.getID());
-                    System.out.println("ID teacher " + Teacher.getID());
-                    System.out.println("ID student " + Student.getID());
-                    name = scanner.nextLine();
-                    break;
-                case "студенти":
-                    StudentService studentService = new StudentService();
-                    Student student = studentService.studentCreation();
-                    System.out.println(message() + "\"Студенти\"");
-                    System.out.println("ID course " + Course.getID());
-                    System.out.println("ID lecture " + Lecture.getID());
-                    System.out.println("ID teacher " + Teacher.getID());
-                    System.out.println("ID student " + Student.getID());
-                    name = scanner.nextLine();
-                    break;
+//                case "вчителі":
+//                    TeacherService teacherService = new TeacherService();
+//                    Teacher teacher = teacherService.teacherCreation();
+//                    System.out.println(message() + "\"Вчителі\"");
+//                    System.out.println("ID course " +Course.getID());
+//                    System.out.println("ID lecture " + Lecture.getID());
+//                    System.out.println("ID teacher " + Teacher.getID());
+//                    System.out.println("ID student " + Student.getID());
+//                    name = scanner.nextLine();
+//                    break;
+//                case "студенти":
+//                    StudentService studentService = new StudentService();
+//                    Student student = studentService.studentCreation();
+//                    System.out.println(message() + "\"Студенти\"");
+//                    System.out.println("ID course " + Course.getID());
+//                    System.out.println("ID lecture " + Lecture.getID());
+//                    System.out.println("ID teacher " + Teacher.getID());
+//                    System.out.println("ID student " + Student.getID());
+//                    name = scanner.nextLine();
+//                    break;
                 case "лекції":
-                    LectureService lectureService = new LectureService();
-                    Lecture lecture = lectureService.lectureCreation();
+                    Course course1=new Course();
+                    Lecture lecture=new Lecture();
+                    lecture.setCourseId(course1.getID());
                     System.out.println(message() + "\"Лекції\"");
-                    System.out.println("ID course " + Course.getID());
-                    System.out.println("ID lecture " + Lecture.getID());
-                    System.out.println("ID teacher " + Teacher.getID());
-                    System.out.println("ID student " + Student.getID());
-                    name = scanner.nextLine();
+                    System.out.println("ID course " + lecture.getCourseId());
+                    System.out.println("ID lecture " + lecture.getID());
+//                    if (Lecture.getID() < 8) {
+                        name = scanner.nextLine();
+//                    } else {
+//                        name = "stop";
+//                    }
                     break;
                 case "stop":
                     trueOrFalse = false;

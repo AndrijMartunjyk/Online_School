@@ -7,7 +7,7 @@ public class StudentService {
         return new Student();
     }
 
-    public Student studentCreation(String firstName, String lastName, String nameCourse, String nameLecture) {
-        return new Student(firstName, lastName, nameCourse, nameLecture);
+    public Student studentCreation(long ID, String firstName, String lastName, String nameCourse, String nameLecture) {
+        return new Student(ID, firstName, lastName, nameCourse, nameLecture);
     }
 }

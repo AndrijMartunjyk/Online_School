@@ -7,7 +7,7 @@ public class LectureService {
         return new Lecture();
     }
 
-    public Lecture lectureCreation(String nameLecture, String startLecture, String finishLecture) {
-        return new Lecture(nameLecture, startLecture, finishLecture);
+    public Lecture lectureCreation(long ID, String nameLecture, String startLecture, String finishLecture) {
+        return new Lecture(ID, nameLecture, startLecture, finishLecture);
     }
 }

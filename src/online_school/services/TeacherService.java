@@ -7,7 +7,7 @@ public class TeacherService {
         return new Teacher();
     }
 
-    public Teacher teacherCreation(String firstName, String lastName, String direction) {
-        return new Teacher(firstName, lastName, direction);
+    public Teacher teacherCreation(long ID, String firstName, String lastName, String direction) {
+        return new Teacher(ID, firstName, lastName, direction);
     }
 }

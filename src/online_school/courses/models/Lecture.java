@@ -3,24 +3,33 @@ package online_school.courses.models;
 import online_school.courses.Course;
 
 public class Lecture {
-    private static int ID;
+    public static int counter;
+    private long ID;
     private String nameLecture;
     private String startLecture;
     private String finishLecture;
-    public int courseId = Course.getID();
+    private long courseId;
 
     public Lecture() {
-        ID++;
+        ID = ++counter;
     }
 
-    public Lecture(String nameLecture, String startLecture, String finishLecture) {
+    public Lecture(long ID, String nameLecture, String startLecture, String finishLecture) {
+        this.ID = ID + ++counter;
         this.nameLecture = nameLecture;
         this.startLecture = startLecture;
         this.finishLecture = finishLecture;
-        ID++;
     }
 
-    public static int getID() {
+    public long getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(long courseId) {
+        this.courseId = courseId;
+    }
+
+    public long getID() {
         return ID;
     }
 }

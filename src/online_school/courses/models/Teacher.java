@@ -1,23 +1,24 @@
 package online_school.courses.models;
 
 public class Teacher {
-    private static int ID;
+    public static int counter;
+    private long ID;
     private String firstName;
     private String lastName;
     private String direction;
 
     public Teacher() {
-        ID++;
+        ID = ++counter;
     }
 
-    public Teacher(String firstName, String lastName, String direction) {
+    public Teacher(long ID, String firstName, String lastName, String direction) {
+        this.ID = ID + ++counter;
         this.firstName = firstName;
         this.lastName = lastName;
         this.direction = direction;
-        ID++;
     }
 
-    public static int getID() {
+    public long getID() {
         return ID;
     }
 }

@@ -8,31 +8,26 @@ import online_school.services.StudentService;
 import online_school.services.TeacherService;
 
 public class Course {
-    private static int ID;
+    public static int counter;
+    private long ID;
     private String nameCourse;
-    private String startCourse;
-    private String finishCourse;
+    private Lecture lecture;
+    private Teacher teacher;
+    private Student student;
 
     public Course() {
-        ID++;
+        ID = ++counter;
     }
 
-    public Course(String nameCourse, String startCourse, String finishCourse) {
+    public Course(long ID, String nameCourse, Lecture lecture, Teacher teacher, Student student) {
+        this.ID = ID + ++counter;
         this.nameCourse = nameCourse;
-        this.startCourse = startCourse;
-        this.finishCourse = finishCourse;
-        ID++;
+        this.lecture = lecture;
+        this.teacher = teacher;
+        this.student = student;
     }
 
-    public static int getID() {
+    public long getID() {
         return ID;
     }
-
-    TeacherService teacherService = new TeacherService();
-    LectureService lectureService = new LectureService();
-    StudentService studentsService = new StudentService();
-
-    Teacher teacher = teacherService.teacherCreation();
-    Lecture lecture = lectureService.lectureCreation();
-    Student student = studentsService.studentCreation();
 }
