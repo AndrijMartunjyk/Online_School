@@ -28,54 +28,54 @@ public class Main {
         while (trueOrFalse) {
             switch (name.toLowerCase()) {
                 case "курси":
-//                    Lecture.setID(0);
                     CourseService courseService = new CourseService();
                     Course course = courseService.courseCreation();
                     System.out.println(message() + "\"Курси\"");
                     System.out.println("ID course " + course.getID());
-//                    System.out.println("ID lecture " + Lecture.getID());
-//                    System.out.println("ID teacher " + Teacher.getID());
-//                    System.out.println("ID student " + Student.getID());
+                    System.out.println("ID lecture " + Lecture.counter);
+                    System.out.println("ID teacher " + Teacher.counter);
+                    System.out.println("ID student " + Student.counter);
                     name = scanner.nextLine();
                     break;
-//                case "вчителі":
-//                    TeacherService teacherService = new TeacherService();
-//                    Teacher teacher = teacherService.teacherCreation();
-//                    System.out.println(message() + "\"Вчителі\"");
-//                    System.out.println("ID course " +Course.getID());
-//                    System.out.println("ID lecture " + Lecture.getID());
-//                    System.out.println("ID teacher " + Teacher.getID());
-//                    System.out.println("ID student " + Student.getID());
-//                    name = scanner.nextLine();
-//                    break;
-//                case "студенти":
-//                    StudentService studentService = new StudentService();
-//                    Student student = studentService.studentCreation();
-//                    System.out.println(message() + "\"Студенти\"");
-//                    System.out.println("ID course " + Course.getID());
-//                    System.out.println("ID lecture " + Lecture.getID());
-//                    System.out.println("ID teacher " + Teacher.getID());
-//                    System.out.println("ID student " + Student.getID());
-//                    name = scanner.nextLine();
-//                    break;
+                case "вчителі":
+                    TeacherService teacherService = new TeacherService();
+                    Teacher teacher = teacherService.teacherCreation();
+                    System.out.println(message() + "\"Вчителі\"");
+                    System.out.println("ID course " + Course.counter);
+                    System.out.println("ID lecture " + Lecture.counter);
+                    System.out.println("ID teacher " + teacher.getID());
+                    System.out.println("ID student " + Student.counter);
+                    name = scanner.nextLine();
+                    break;
+                case "студенти":
+                    StudentService studentService = new StudentService();
+                    Student student = studentService.studentCreation();
+                    System.out.println(message() + "\"Студенти\"");
+                    System.out.println("ID course " + Course.counter);
+                    System.out.println("ID lecture " + Lecture.counter);
+                    System.out.println("ID teacher " + Teacher.counter);
+                    System.out.println("ID student " + student.getID());
+                    name = scanner.nextLine();
+                    break;
                 case "лекції":
-                    Course course1=new Course();
-                    Lecture lecture=new Lecture();
-                    lecture.setCourseId(course1.getID());
+                    LectureService lectureService = new LectureService();
+                    Lecture lecture = lectureService.lectureCreation();
                     System.out.println(message() + "\"Лекції\"");
-                    System.out.println("ID course " + lecture.getCourseId());
+                    System.out.println("ID course " + Course.counter);
                     System.out.println("ID lecture " + lecture.getID());
-//                    if (Lecture.getID() < 8) {
+                    System.out.println("ID teacher " + Teacher.counter);
+                    System.out.println("ID student " + Student.counter);
+                    if (lecture.getID() < 8) {
                         name = scanner.nextLine();
-//                    } else {
-//                        name = "stop";
-//                    }
+                    } else {
+                        name = "stop";
+                    }
                     break;
                 case "stop":
                     trueOrFalse = false;
                     break;
                 default:
-                    System.out.println("Не правильний ввід, спробуйте ще раз!!! ");
+                    System.out.println("Не правильний ввід, спробуйте ще раз!!!");
                     name = scanner.nextLine();
                     break;
             }
@@ -84,3 +84,4 @@ public class Main {
         System.out.println("Програму завершено!!!");
     }
 }
+

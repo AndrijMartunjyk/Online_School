@@ -8,7 +8,7 @@ public class Lecture {
     private String nameLecture;
     private String startLecture;
     private String finishLecture;
-    private long courseId;
+    public long courseId = Course.counter;
 
     public Lecture() {
         ID = ++counter;
@@ -23,10 +23,6 @@ public class Lecture {
 
     public long getCourseId() {
         return courseId;
-    }
-
-    public void setCourseId(long courseId) {
-        this.courseId = courseId;
     }
 
     public long getID() {
