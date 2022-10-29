@@ -8,14 +8,14 @@ public class Lecture {
     private String nameLecture;
     private String startLecture;
     private String finishLecture;
-    public long courseId = Course.counter;
+    public long courseId;
 
     public Lecture() {
-        ID = ++counter;
+        ID = counter++;
     }
 
     public Lecture(long ID, String nameLecture, String startLecture, String finishLecture) {
-        this.ID = ID + ++counter;
+        this.ID = ID + counter++;
         this.nameLecture = nameLecture;
         this.startLecture = startLecture;
         this.finishLecture = finishLecture;
@@ -23,6 +23,10 @@ public class Lecture {
 
     public long getCourseId() {
         return courseId;
+    }
+
+    public void setCourseId(long courseId) {
+        this.courseId = courseId;
     }
 
     public long getID() {

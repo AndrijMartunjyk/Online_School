@@ -4,14 +4,18 @@ import online_school.courses.Course;
 import online_school.courses.models.Lecture;
 import online_school.courses.models.Student;
 import online_school.courses.models.Teacher;
+import online_school.courses.repositories.CourseRepository;
 import online_school.services.CourseService;
 import online_school.services.LectureService;
 import online_school.services.StudentService;
 import online_school.services.TeacherService;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
+
+    private static int number;
     public static Scanner scanner = new Scanner(System.in);
 
     public static String message() {
@@ -19,6 +23,12 @@ public class Main {
     }
 
     public static void main(String[] args) {
+//        Course course=new Course();
+        Lecture lecture = new Lecture();
+//        lecture.setCourseId(course.getID());
+        CourseRepository courseRepository=new CourseRepository();
+
+
         System.out.println("Виберіть категорію:\nКурси\nВчителі\nСтуденти\nЛекції");
         System.out.println("========================\nДля завершення програми,\n введіть \"Stop\"\n========================");
 
@@ -28,13 +38,23 @@ public class Main {
         while (trueOrFalse) {
             switch (name.toLowerCase()) {
                 case "курси":
-                    CourseService courseService = new CourseService();
-                    Course course = courseService.courseCreation();
                     System.out.println(message() + "\"Курси\"");
-                    System.out.println("ID course " + course.getID());
-                    System.out.println("ID lecture " + Lecture.counter);
-                    System.out.println("ID teacher " + Teacher.counter);
-                    System.out.println("ID student " + Student.counter);
+                    if (Course.counter<1){
+                        System.out.println("введіть кількість курсів");
+                        number = scanner.nextInt();
+                        scanner.nextLine();
+                    }
+                    System.out.println("перед" + Course.counter);
+
+                    courseRepository.setYes(number);
+
+
+//
+                    System.out.println("ID course " + Course.counter);
+//                    System.out.println("ID lecture " + Lecture.counter);
+//                    System.out.println("ID teacher " + Teacher.counter);
+//                    System.out.println("ID student " + Student.counter);
+
                     name = scanner.nextLine();
                     break;
                 case "вчителі":
@@ -59,13 +79,14 @@ public class Main {
                     break;
                 case "лекції":
                     LectureService lectureService = new LectureService();
-                    Lecture lecture = lectureService.lectureCreation();
+//                    Lecture lecture = lectureService.lectureCreation();
                     System.out.println(message() + "\"Лекції\"");
                     System.out.println("ID course " + Course.counter);
                     System.out.println("ID lecture " + lecture.getID());
                     System.out.println("ID teacher " + Teacher.counter);
                     System.out.println("ID student " + Student.counter);
                     if (lecture.getID() < 8) {
+
                         name = scanner.nextLine();
                     } else {
                         name = "stop";
