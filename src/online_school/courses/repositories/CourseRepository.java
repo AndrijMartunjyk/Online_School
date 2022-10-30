@@ -1,47 +1,42 @@
 package online_school.courses.repositories;
 
 import online_school.courses.Course;
+import online_school.services.CourseService;
 
 import java.util.Arrays;
 
 public class CourseRepository {
-    private int yes;
+    private final CourseService courseService = new CourseService();
+    private int number;
+    public static Course[] courses = new Course[Course.counter];
+    public static Course[] newCourse = new Course[Course.counter];
 
-
-    public int getYes() {
-        return yes;
+    public void setNumber(int number) {
+        this.number = number;
     }
-    private int newLengthArray;
-    Course[] courses;
-    Course[] newCourse;
 
-    public void setYes(int yes) {
-        this.yes = yes;
-        if (Course.counter < yes) {
-            if (Course.counter < 1) {
+    public void arraysOfObjects(int counter) {
+        if (counter < 1) {
+            courses = new Course[number];
+        } else if (counter == number) {
+            System.out.format("ВИ ПЕРЕВИЩИЛИ КІЛЬКІСТЬ ОБ'ЄКТІВ, МАСИВ ЗБІЛЬШЕНО ДО: %d ОБ'ЄКТІВ", ((courses.length * 3) / 2 + 1));
+            System.out.println();
+            newCourse = Arrays.copyOf(courses, (courses.length * 3) / 2 + 1);
+        } else if (counter == newCourse.length) {
+            System.out.format("ВИ ПЕРЕВИЩИЛИ КІЛЬКІСТЬ ОБ'ЄКТІВ, МАСИВ ЗБІЛЬШЕНО ДО: %d ОБ'ЄКТІВ", ((newCourse.length * 3) / 2 + 1));
+            System.out.println();
+            newCourse = Arrays.copyOf(newCourse, (newCourse.length * 3) / 2 + 1);
+        }
+    }
 
-                courses = new Course[getYes()];
-            }
-            courses[Course.counter] = new Course();
+    public void objects() {
+        if (Course.counter < number) {
+            courses[Course.counter] = courseService.courseCreation();
         } else {
-            if (Course.counter == yes) {
-                newLengthArray = (getYes() * 3) / 2 + 1;
-                newCourse = Arrays.copyOf(courses, newLengthArray);
-            } if (Course.counter<newCourse.length){
-                newCourse[Course.counter] = new Course();
-                System.out.println("йооооооой");
-                System.out.println("=> " + newCourse.length);
-            }else {
-               setYes(Course.counter);
-            }
-
-
-            }
-
+            newCourse[Course.counter] = courseService.courseCreation();
         }
-
-
-        }
+    }
+}
 
 
 

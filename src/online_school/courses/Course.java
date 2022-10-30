@@ -17,7 +17,7 @@ public class Course {
     }
 
     public Course(long ID, String nameCourse, Lecture lecture, Teacher teacher, Student student) {
-        this.ID = ID + counter++;
+        this.ID = ID + ++counter;
         this.nameCourse = nameCourse;
         this.lecture = lecture;
         this.teacher = teacher;

@@ -5,12 +5,12 @@ import online_school.courses.models.Lecture;
 import online_school.courses.models.Student;
 import online_school.courses.models.Teacher;
 import online_school.courses.repositories.CourseRepository;
+import online_school.courses.repositories.LectureRepository;
 import online_school.services.CourseService;
 import online_school.services.LectureService;
 import online_school.services.StudentService;
 import online_school.services.TeacherService;
 
-import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
@@ -24,10 +24,12 @@ public class Main {
 
     public static void main(String[] args) {
 //        Course course=new Course();
-        Lecture lecture = new Lecture();
+//
+//        Lecture lecture = new Lecture();
 //        lecture.setCourseId(course.getID());
-        CourseRepository courseRepository=new CourseRepository();
-
+        CourseRepository courseRepository = new CourseRepository();
+        LectureRepository lectureRepository = new LectureRepository();
+        CourseService courseService=new CourseService();
 
         System.out.println("Виберіть категорію:\nКурси\nВчителі\nСтуденти\nЛекції");
         System.out.println("========================\nДля завершення програми,\n введіть \"Stop\"\n========================");
@@ -38,23 +40,40 @@ public class Main {
         while (trueOrFalse) {
             switch (name.toLowerCase()) {
                 case "курси":
-                    System.out.println(message() + "\"Курси\"");
-                    if (Course.counter<1){
-                        System.out.println("введіть кількість курсів");
-                        number = scanner.nextInt();
-                        scanner.nextLine();
+                    if (Course.counter < 1) {
+                        System.out.println(message() + "\"Курси\"");
+                        boolean trueFalse = true;
+                        while (trueFalse) {
+                            System.out.println("Введіть кількість курсів, число більше 0");
+                            if (scanner.hasNextInt()) {
+                                number = scanner.nextInt();
+                                scanner.nextLine();
+                                if (number > 0) {
+                                    courseRepository.setNumber(number);
+                                    trueFalse = false;
+                                }
+                            } else {
+                                System.out.println("Не правильний ввід, введіть число!!!");
+                                name = scanner.nextLine();
+                            }
+                        }
+                        System.out.format("Чудово, ви створили масив Курсів довжиною: %d об'єктів !!!", number);
+                        System.out.println();
                     }
-                    System.out.println("перед" + Course.counter);
+                    courseRepository.arraysOfObjects(Course.counter);
+                    if (Course.counter < 1) {
+                        for (int i = 0; i < number; i++) {
+                            courseRepository.objects();
+                        }
+                    } else {
+                        courseRepository.objects();
+                    }
 
-                    courseRepository.setYes(number);
 
-
-//
-                    System.out.println("ID course " + Course.counter);
+//                    System.out.println("ID course " + Course.counter);
 //                    System.out.println("ID lecture " + Lecture.counter);
 //                    System.out.println("ID teacher " + Teacher.counter);
 //                    System.out.println("ID student " + Student.counter);
-
                     name = scanner.nextLine();
                     break;
                 case "вчителі":
@@ -78,19 +97,44 @@ public class Main {
                     name = scanner.nextLine();
                     break;
                 case "лекції":
-                    LectureService lectureService = new LectureService();
-//                    Lecture lecture = lectureService.lectureCreation();
-                    System.out.println(message() + "\"Лекції\"");
+                    if (Lecture.counter < 1) {
+                        System.out.println(message() + "\"Лекції\"");
+                        boolean trueFalse = true;
+                        while (trueFalse) {
+                            System.out.println("Введіть кількість лекцій, число більше 0");
+                            if (scanner.hasNextInt()) {
+                                number = scanner.nextInt();
+                                scanner.nextLine();
+                                if (number > 0) {
+                                    lectureRepository.setNumber(number);
+                                    trueFalse = false;
+                                }
+                            } else {
+                                System.out.println("Не правильний ввід, введіть число!!!");
+                                name = scanner.nextLine();
+                            }
+                        }
+                        System.out.format("Чудово, ви створили масив Лекцій довжиною: %d об'єктів !!!", number);
+                        System.out.println();
+                    }
+                    lectureRepository.arraysOfObjects(Lecture.counter);
+                    if (Lecture.counter < 1) {
+                        for (int i = 0; i < number; i++) {
+                            lectureRepository.objects();
+                        }
+                    } else {
+                        lectureRepository.objects();
+                    }
+
                     System.out.println("ID course " + Course.counter);
-                    System.out.println("ID lecture " + lecture.getID());
+                    System.out.println("ID lecture " + Lecture.counter);
                     System.out.println("ID teacher " + Teacher.counter);
                     System.out.println("ID student " + Student.counter);
-                    if (lecture.getID() < 8) {
-
-                        name = scanner.nextLine();
-                    } else {
-                        name = "stop";
-                    }
+                    name = scanner.nextLine();
+                    break;
+                case "курс id":
+                    courseService.outId();
+                    name = scanner.nextLine();
                     break;
                 case "stop":
                     trueOrFalse = false;
