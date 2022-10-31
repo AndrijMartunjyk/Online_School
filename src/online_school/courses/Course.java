@@ -6,25 +6,29 @@ import online_school.courses.models.Teacher;
 
 public class Course {
     public static int counter;
-    private long ID;
+    public long ID;
     private String nameCourse;
     private Lecture lecture;
     private Teacher teacher;
     private Student student;
 
     public Course() {
-        ID = ++counter;
+        ID = counter++;
     }
 
-    public Course(long ID, String nameCourse, Lecture lecture, Teacher teacher, Student student) {
-        this.ID = ID + ++counter;
+    public Course(long ID, String nameCourse) {
+        this.ID = ID + counter++;
         this.nameCourse = nameCourse;
-        this.lecture = lecture;
-        this.teacher = teacher;
-        this.student = student;
+//        this.lecture = lecture;
+//        this.teacher = teacher;
+//        this.student = student;
     }
 
     public long getID() {
         return ID;
+    }
+
+    public String getNameCourse() {
+        return nameCourse;
     }
 }

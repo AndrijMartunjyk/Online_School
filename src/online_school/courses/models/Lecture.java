@@ -14,11 +14,10 @@ public class Lecture {
         ID = counter++;
     }
 
-    public Lecture(long ID, String nameLecture, String startLecture, String finishLecture) {
+    public Lecture(long ID, String nameLecture) {
         this.ID = ID + counter++;
         this.nameLecture = nameLecture;
-        this.startLecture = startLecture;
-        this.finishLecture = finishLecture;
+
     }
 
     public long getCourseId() {
@@ -31,5 +30,9 @@ public class Lecture {
 
     public long getID() {
         return ID;
+    }
+
+    public String getNameLecture() {
+        return nameLecture;
     }
 }
