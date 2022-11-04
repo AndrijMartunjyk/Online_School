@@ -2,7 +2,8 @@ package online_school.services;
 
 import online_school.courses.Course;
 import online_school.courses.models.Lecture;
-import online_school.courses.repositories.LectureRepository;
+
+import java.util.Arrays;
 
 public class LectureService {
     public Lecture lectureCreation() {
@@ -13,12 +14,20 @@ public class LectureService {
         return new Lecture(ID, nameLecture);
     }
 
-    public void outId() {
+    public void outId(Lecture[] lectures) {
         if (Course.counter < 1) {
             System.out.println("Спочатку створіть Курс!!!");
         } else {
-            for (int i = 0; i < Lecture.counter; i++) {
-                System.out.printf("Обєкт лекції з назвою: \"%s\", і номером ID: \"%d.\"\n", LectureRepository.lectures[i].getNameLecture(), LectureRepository.lectures[i].getID());
+            System.out.println("Інформація про лекцію: " + Arrays.toString(lectures));
+        }
+    }
+
+    public void informLecturesCourse(int idCourse, Lecture[] lectures) {
+        for (int i = 0; i < lectures.length; i++) {
+            if (lectures[i] == null) {
+                break;
+            } else if (lectures[i].getCourseID() == idCourse) {
+                System.out.println("Лекції курсу: " + lectures[i]);
             }
         }
     }

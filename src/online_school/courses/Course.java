@@ -1,16 +1,10 @@
 package online_school.courses;
 
-import online_school.courses.models.Lecture;
-import online_school.courses.models.Student;
-import online_school.courses.models.Teacher;
-
 public class Course {
     public static int counter;
-    public long ID;
+    private final long ID;
     private String nameCourse;
-    private Lecture lecture;
-    private Teacher teacher;
-    private Student student;
+
 
     public Course() {
         ID = counter++;
@@ -19,9 +13,6 @@ public class Course {
     public Course(long ID, String nameCourse) {
         this.ID = ID + counter++;
         this.nameCourse = nameCourse;
-//        this.lecture = lecture;
-//        this.teacher = teacher;
-//        this.student = student;
     }
 
     public long getID() {
@@ -30,5 +21,13 @@ public class Course {
 
     public String getNameCourse() {
         return nameCourse;
+    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "ID=" + ID +
+                ", nameCourse='" + nameCourse + '\'' +
+                '}';
     }
 }

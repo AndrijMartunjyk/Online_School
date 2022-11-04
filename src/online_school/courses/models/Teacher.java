@@ -2,23 +2,47 @@ package online_school.courses.models;
 
 public class Teacher {
     public static int counter;
-    private long ID;
+    private final long ID;
     private String firstName;
     private String lastName;
-    private String direction;
+    private Long courseID;
+    private String nameCourse;
 
     public Teacher() {
-        ID = ++counter;
+        ID = counter++;
     }
 
-    public Teacher(long ID, String firstName, String lastName, String direction) {
-        this.ID = ID + ++counter;
+    public Teacher(long ID, String firstName, String lastName) {
+        this.ID = ID + counter++;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.direction = direction;
     }
 
     public long getID() {
         return ID;
     }
+
+    public Long getCourseID() {
+        return courseID;
+    }
+
+    public void setCourseID(Long courseID) {
+        this.courseID = courseID;
+    }
+
+    public void setNameCourse(String nameCourse) {
+        this.nameCourse = nameCourse;
+    }
+
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "ID=" + ID +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", courseID=" + courseID +
+                ", nameCourse='" + nameCourse + '\'' +
+                '}';
+    }
 }
+

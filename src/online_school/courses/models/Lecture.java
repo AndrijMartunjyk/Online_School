@@ -1,14 +1,13 @@
 package online_school.courses.models;
 
-import online_school.courses.Course;
 
 public class Lecture {
     public static int counter;
-    private long ID;
+    private final long ID;
     private String nameLecture;
-    private String startLecture;
-    private String finishLecture;
-    public long courseId;
+
+    private Long courseID;
+    private String nameCourse;
 
     public Lecture() {
         ID = counter++;
@@ -17,22 +16,31 @@ public class Lecture {
     public Lecture(long ID, String nameLecture) {
         this.ID = ID + counter++;
         this.nameLecture = nameLecture;
-
-    }
-
-    public long getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(long courseId) {
-        this.courseId = courseId;
     }
 
     public long getID() {
         return ID;
     }
 
-    public String getNameLecture() {
-        return nameLecture;
+    public Long getCourseID() {
+        return courseID;
+    }
+
+    public void setCourseID(Long courseID) {
+        this.courseID = courseID;
+    }
+
+    public void setNameCourse(String nameCourse) {
+        this.nameCourse = nameCourse;
+    }
+
+    @Override
+    public String toString() {
+        return "Lecture{" +
+                "ID=" + ID +
+                ", nameLecture='" + nameLecture + '\'' +
+                ", courseID=" + courseID +
+                ", nameCourse='" + nameCourse + '\'' +
+                '}';
     }
 }
