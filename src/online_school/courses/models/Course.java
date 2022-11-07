@@ -1,7 +1,7 @@
-package online_school.courses;
+package online_school.courses.models;
 
 public class Course {
-    public static int counter;
+    private static int counter;
     private final long ID;
     private String nameCourse;
 
@@ -13,6 +13,10 @@ public class Course {
     public Course(long ID, String nameCourse) {
         this.ID = ID + counter++;
         this.nameCourse = nameCourse;
+    }
+
+    public int getCounter() {
+        return counter;
     }
 
     public long getID() {

@@ -1,11 +1,12 @@
 package online_school.services;
 
-import online_school.courses.Course;
+import online_school.courses.models.Course;
 import online_school.courses.models.Teacher;
 
 import java.util.Arrays;
 
 public class TeacherService {
+    private int courseCounter;
     public Teacher teacherCreation() {
         return new Teacher();
     }
@@ -14,8 +15,16 @@ public class TeacherService {
         return new Teacher(ID, firstName, lastName);
     }
 
+    public int getCourseCounter() {
+        return courseCounter;
+    }
+
+    public void setCourseCounter(int courseCounter) {
+        this.courseCounter = courseCounter;
+    }
+
     public void outId(Teacher[] teacher) {
-        if (Course.counter < 1) {
+        if (getCourseCounter() < 1) {
             System.out.println("Спочатку створіть Курс!!!");
         } else {
             System.out.println("Інформація про вчителя: " + Arrays.toString(teacher));

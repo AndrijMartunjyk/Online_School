@@ -1,11 +1,23 @@
-package online_school.courses.repositories;
+package online_school.repositories;
 
-import online_school.courses.Course;
+import online_school.courses.models.Course;
 
 import java.util.Arrays;
 
 public class CourseRepository {
     private Course[] courses = new Course[1];
+
+    public int courseCounter() {
+        int result = 0;
+        for (Course course : courses) {
+            if (course == null) {
+                break;
+            } else {
+                result = course.getCounter();
+            }
+        }
+        return result;
+    }
 
     public void magnificationOfArray() {
         courses = Arrays.copyOf(courses, (courses.length * 3) / 2 + 1);
@@ -14,7 +26,7 @@ public class CourseRepository {
 
     public void addCourse(Course course) {
         for (int i = 0; i < courses.length; i++) {
-            if (Course.counter - 1 == courses.length) {
+            if (courseCounter() - 1 == courses.length) {
                 magnificationOfArray();
             } else if (courses[i] == null) {
                 courses[i] = course;
@@ -28,10 +40,11 @@ public class CourseRepository {
     }
 
     public long getCourseID() {
-        return courses[Course.counter - 1].getID();
+        return courses[courseCounter() - 1].getID();
     }
+
     public String getCourseName() {
-        return courses[Course.counter - 1].getNameCourse();
+        return courses[courseCounter() - 1].getNameCourse();
     }
 }
 

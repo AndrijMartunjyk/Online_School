@@ -1,7 +1,6 @@
 package online_school;
 
-import online_school.courses.Course;
-import online_school.courses.repositories.*;
+import online_school.repositories.*;
 import online_school.services.*;
 
 
@@ -9,7 +8,7 @@ import java.util.Scanner;
 
 public class Main {
     private static String name;
-    private static String lastName;
+
     private static int number;
     public static Scanner scanner = new Scanner(System.in);
     private static final CourseRepository courseRepository = new CourseRepository();
@@ -22,6 +21,8 @@ public class Main {
     private static final TeacherService teacherService = new TeacherService();
 
     public static void main(String[] args) {
+        String lastName;
+
         System.out.println("========================\n\"РЕГІСТР НЕ ВАЖЛИВИЙ !!!\"");
         autoObject();
         System.out.println("Для виводу інфрмації про об'єкти окремо, введіть: \n\"Course info\"\n\"Lecture info\"\n\"Student info\"\n\"Teacher info\"");
@@ -32,9 +33,9 @@ public class Main {
 
         boolean trueOrFalse = true;
         while (trueOrFalse) {
-            if (name.equalsIgnoreCase("курс") || Course.counter > 1 || name.equalsIgnoreCase("Course data")) {
+            if (name.equalsIgnoreCase("курс") || courseRepository.courseCounter() > 1 || name.equalsIgnoreCase("Course data")) {
                 switch (name.toLowerCase()) {
-                    case "курс":
+                    case "курс" -> {
                         System.out.println(message() + "\"Курси\"");
                         numberEntry("курсу");
                         System.out.println("Введіть назву курсу:");
@@ -42,98 +43,99 @@ public class Main {
                         courseRepository.addCourse(courseService.courseCreation(number, name));
                         System.out.printf("Чудово, ви створили курс з назвою: \"%s\", і номером ID: \"%d\".\n", name, courseRepository.getCourseID());
                         System.out.println("Тепер створіть об'єкти ввівши:\n\"Лекція\".\n\"Студент\".\n\"Вчитель\".");
-                        informOfCourse();
+                        informCourse();
                         name = scanner.nextLine();
-                        break;
-                    case "вчитель":
+                    }
+                    case "вчитель" -> {
                         System.out.println(message() + "\"Вчителі\"");
                         numberEntry("вчителя");
                         System.out.println("Введіть ім'я вчителя:");
                         name = scanner.nextLine();
                         System.out.println("Введіть прізвище вчителя:");
                         lastName = scanner.nextLine();
+                        teacherService.setCourseCounter(courseRepository.courseCounter());
                         teacherRepository.addTeacher(teacherService.teacherCreation(number, name, lastName));
                         teacherRepository.setIdCourseOfTeacher(courseRepository.getCourseID(), courseRepository.getCourseName());
                         System.out.printf("Чудово, ви створили об'єкт вчителя з іменем: \"%s\", прізвищем: \"%s\" і номером ID: \"%d\".\n", name, lastName, teacherRepository.getTeacherId());
                         inform();
-                        informOfCourse();
+                        informCourse();
                         name = scanner.nextLine();
-                        break;
-                    case "студент":
+                    }
+                    case "студент" -> {
                         System.out.println(message() + "\"Студенти\"");
                         numberEntry("студента");
                         System.out.println("Введіть ім'я студента:");
                         name = scanner.nextLine();
                         System.out.println("Введіть прізвище студента:");
                         lastName = scanner.nextLine();
+                        studentService.setCourseCounter(courseRepository.courseCounter());
                         studentRepository.addStudent(studentService.studentCreation(number, name, lastName));
                         studentRepository.setIdCourseOfStudent(courseRepository.getCourseID(), courseRepository.getCourseName());
                         System.out.printf("Чудово, ви створили об'єкт студента з іменем: \"%s\", прізвищем: \"%s\" і номером ID: \"%d\".\n", name, lastName, studentRepository.getStudentId());
                         inform();
-                        informOfCourse();
+                        informCourse();
                         name = scanner.nextLine();
-                        break;
-                    case "лекція":
+                    }
+                    case "лекція" -> {
                         System.out.println(message() + "\"Лекції\"");
                         numberEntry("лекції");
                         System.out.println("Введіть назву лекції:");
                         name = scanner.nextLine();
+                        lectureService.setCourseCounter(courseRepository.courseCounter());
                         lectureRepository.addLecture(lectureService.lectureCreation(number, name));
                         lectureRepository.setIdCourseOfLecture(courseRepository.getCourseID(), courseRepository.getCourseName());
                         System.out.printf("Чудово, ви створили лекцію з назвою: \"%s\", і номером ID: \"%d\".\n", name, lectureRepository.getLectureID());
                         inform();
-                        informOfCourse();
+                        informCourse();
                         name = scanner.nextLine();
-                        break;
-                    case "course data":
+                    }
+                    case "course data" -> {
                         numberEntry("курсу");
                         courseService.informCourse(number, courseRepository.getCoursesArray());
                         lectureService.informLecturesCourse(number, lectureRepository.getLecturesArray());
                         studentService.informStudentsCourse(number, studentRepository.getStudentsArray());
                         teacherService.informTeachersCourse(number, teacherRepository.getTeachersArray());
                         border();
-                        if (Course.counter > 1) {
+                        if (courseRepository.courseCounter() > 1) {
                             inform();
                         } else {
                             System.out.println("Створіть об'єкт курсу, ввівши: \"Курс\"");
                         }
                         name = scanner.nextLine();
-                        break;
-                    case "course info":
+                    }
+                    case "course info" -> {
                         courseService.outId(courseRepository.getCoursesArray());
                         border();
                         inform();
                         name = scanner.nextLine();
-                        break;
-                    case "lecture info":
+                    }
+                    case "lecture info" -> {
                         lectureService.outId(lectureRepository.getLecturesArray());
                         border();
                         inform();
                         name = scanner.nextLine();
-                        break;
-                    case "student info":
+                    }
+                    case "student info" -> {
                         studentService.outId(studentRepository.getStudentsArray());
                         border();
                         inform();
                         name = scanner.nextLine();
-                        break;
-                    case "teacher info":
+                    }
+                    case "teacher info" -> {
                         teacherService.outId(teacherRepository.getTeachersArray());
                         border();
                         inform();
                         name = scanner.nextLine();
-                        break;
-                    case "stop":
-                        trueOrFalse = false;
-                        break;
-                    default:
+                    }
+                    case "stop" -> trueOrFalse = false;
+                    default -> {
                         System.out.println("Не правильний ввід, спробуйте ще раз!!!");
                         name = scanner.nextLine();
-                        break;
+                    }
                 }
             } else {
                 System.out.println("Спочатку введіть \"Курс\", або:");
-                informOfCourse();
+                informCourse();
                 name = scanner.nextLine();
             }
         }
@@ -142,10 +144,10 @@ public class Main {
     }
 
     public static void border() {
-        System.out.println("===================================================================================================================================================д");
+        System.out.println("===================================================================================================================================================");
     }
 
-    public static void informOfCourse() {
+    public static void informCourse() {
         System.out.println("Для виводу всієї інфрмації про курс, введіть: \"Course data\" i ID курсу.");
     }
 
@@ -182,7 +184,7 @@ public class Main {
         }
         System.out.println("==========================================================================");
         System.out.println("Створено автоматичний курс з іменем \"Auto course\"\n з ID \"100\" і з трьома лекціями \"No name\".");
-        informOfCourse();
+        informCourse();
         System.out.println("==========================================================================");
 
     }

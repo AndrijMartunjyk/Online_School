@@ -1,4 +1,4 @@
-package online_school.courses.repositories;
+package online_school.repositories;
 
 import online_school.courses.models.Lecture;
 
@@ -8,6 +8,18 @@ public class LectureRepository {
 
     private Lecture[] lectures = new Lecture[3];
 
+    public int lectureCounter() {
+        int result = 0;
+        for (Lecture lecture : lectures) {
+            if (lecture == null) {
+                break;
+            } else {
+                result = lecture.getCounter();
+            }
+        }
+        return result;
+    }
+
     public void magnificationOfArray() {
         lectures = Arrays.copyOf(lectures, (lectures.length * 3) / 2 + 1);
         System.out.format("Масив лекцій збільшено, довжина: %d об'єктів!!!\n", lectures.length);
@@ -15,7 +27,7 @@ public class LectureRepository {
 
     public void addLecture(Lecture lecture) {
         for (int i = 0; i < lectures.length; i++) {
-            if (Lecture.counter - 1 == lectures.length) {
+            if (lectureCounter() - 1 == lectures.length) {
                 magnificationOfArray();
             } else if (lectures[i] == null) {
                 lectures[i] = lecture;
@@ -29,11 +41,11 @@ public class LectureRepository {
     }
 
     public long getLectureID() {
-        return lectures[Lecture.counter - 1].getID();
+        return lectures[lectureCounter() - 1].getID();
     }
 
     public void setIdCourseOfLecture(Long ID, String name) {
-        lectures[Lecture.counter - 1].setCourseID(ID);
-        lectures[Lecture.counter - 1].setNameCourse(name);
+        lectures[lectureCounter() - 1].setCourseID(ID);
+        lectures[lectureCounter() - 1].setNameCourse(name);
     }
 }
