@@ -1,37 +1,20 @@
 package online_school.courses.models;
 
-public class Course {
-    private static int counter;
-    private final long ID;
-    private String nameCourse;
-
-
+public class Course extends SuperModels {
     public Course() {
-        ID = counter++;
     }
 
-    public Course(long ID, String nameCourse) {
-        this.ID = ID + counter++;
-        this.nameCourse = nameCourse;
+    public Course(long id, String name) {
+        super(id, name);
     }
-
     public int getCounter() {
-        return counter;
+        return super.getCounter();
     }
-
-    public long getID() {
-        return ID;
-    }
-
-    public String getNameCourse() {
-        return nameCourse;
-    }
-
     @Override
     public String toString() {
         return "Course{" +
-                "ID=" + ID +
-                ", nameCourse='" + nameCourse + '\'' +
+                "ID=" + super.getID() +
+                ", name='" + super.getName() + '\'' +
                 '}';
     }
 }

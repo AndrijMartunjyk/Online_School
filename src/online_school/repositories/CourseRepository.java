@@ -1,6 +1,7 @@
 package online_school.repositories;
 
 import online_school.courses.models.Course;
+import online_school.courses.models.SuperModels;
 
 import java.util.Arrays;
 
@@ -44,7 +45,7 @@ public class CourseRepository {
     }
 
     public String getCourseName() {
-        return courses[courseCounter() - 1].getNameCourse();
+        return courses[courseCounter() - 1].getName();
     }
 }
 

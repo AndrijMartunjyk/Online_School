@@ -8,7 +8,7 @@ public class CourseService {
     private int courseCounter;
 
     public Course courseCreation() {
-        return new Course();
+        return new Course ();
     }
 
     public Course courseCreation(long ID, String name) {
