@@ -9,11 +9,11 @@ public class TeacherRepository {
 
     public int teacherCounter() {
         int result = 0;
-        for (Teacher teacher : teachers) {
-            if (teacher == null) {
+        for (int i = 0; i < teachers.length; i++) {
+            if (teachers[i] == null) {
                 break;
             } else {
-                result = teacher.getCounter();
+                result = teachers[i].getCounter();
             }
         }
         return result;

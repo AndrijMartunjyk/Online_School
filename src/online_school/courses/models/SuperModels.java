@@ -1,50 +1,44 @@
 package online_school.courses.models;
 
 public class SuperModels {
-    private static int counter;
-    private final long ID;
+
+    private long ID;
     private String name;
     private String lastName;
     private Long courseID;
     private String nameCourse;
 
     public SuperModels() {
-        ID = counter++;
     }
 
     public SuperModels(long ID, String name) {
-        this.ID = ID + counter++;
+        this.ID = ID;
         this.name = name;
     }
 
     public SuperModels(long ID, String name, String lastName) {
-        this();
+        this(ID, name);
         this.lastName = lastName;
     }
 
-    public int getCounter() {
-        return counter;
-    }
 
     public long getID() {
         return ID;
+    }
+
+    public void setID(long ID) {
+        this.ID = ID;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
 
     public Long getCourseID() {
         return courseID;

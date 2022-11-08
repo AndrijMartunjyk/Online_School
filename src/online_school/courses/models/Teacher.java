@@ -1,18 +1,19 @@
 package online_school.courses.models;
 
 public class Teacher extends SuperModels {
+    private static int counter;
 
     public Teacher() {
+        super.setID(getID() + counter++);
     }
 
     public Teacher(long ID, String name, String lastName) {
-        super(ID, name, lastName);
+        super(ID + counter++, name, lastName);
     }
 
     public int getCounter() {
-        return super.getCounter();
+        return counter;
     }
-
 
     @Override
     public String toString() {
