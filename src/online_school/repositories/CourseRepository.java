@@ -1,7 +1,6 @@
 package online_school.repositories;
 
 import online_school.courses.models.Course;
-import online_school.courses.models.SuperModels;
 
 import java.util.Arrays;
 

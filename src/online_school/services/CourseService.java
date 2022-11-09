@@ -7,10 +7,6 @@ import java.util.Arrays;
 public class CourseService {
     private int courseCounter;
 
-    public Course courseCreation() {
-        return new Course ();
-    }
-
     public Course courseCreation(long ID, String name) {
         return new Course(ID, name);
     }
@@ -32,12 +28,12 @@ public class CourseService {
     }
 
     public void informCourse(int idCourse, Course[] courses) {
-        for (int i = 0; i < courses.length; i++) {
-            if (courses[i] == null) {
+        for (Course course : courses) {
+            if (course == null) {
                 break;
-            } else if (courses[i].getID() == idCourse) {
+            } else if (course.getID() == idCourse) {
                 System.out.println("===============================================");
-                System.out.println("Курс: " + courses[i]);
+                System.out.println("Курс: " + course);
                 System.out.println("============================================================================================================");
             }
         }

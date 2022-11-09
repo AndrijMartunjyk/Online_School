@@ -1,11 +1,7 @@
 package online_school.courses.models;
 
-public class Teacher extends SuperModels {
+public class Teacher extends Models {
     private static int counter;
-
-    public Teacher() {
-        super.setID(getID() + counter++);
-    }
 
     public Teacher(long ID, String name, String lastName) {
         super(ID + counter++, name, lastName);

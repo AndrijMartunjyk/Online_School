@@ -40,6 +40,7 @@ public class Main {
                         numberEntry("курсу");
                         System.out.println("Введіть назву курсу:");
                         name = scanner.nextLine();
+                        courseService.setCourseCounter(courseRepository.courseCounter());
                         courseRepository.addCourse(courseService.courseCreation(number, name));
                         System.out.printf("Чудово, ви створили курс з назвою: \"%s\", і номером ID: \"%d\".\n", name, courseRepository.getCourseID());
                         System.out.println("Тепер створіть об'єкти ввівши:\n\"Лекція\".\n\"Студент\".\n\"Вчитель\".");

@@ -1,15 +1,11 @@
 package online_school.services;
 
-import online_school.courses.models.Course;
 import online_school.courses.models.Teacher;
 
 import java.util.Arrays;
 
 public class TeacherService {
     private int courseCounter;
-    public Teacher teacherCreation() {
-        return new Teacher();
-    }
 
     public Teacher teacherCreation(long ID, String firstName, String lastName) {
         return new Teacher(ID, firstName, lastName);
@@ -32,11 +28,11 @@ public class TeacherService {
     }
 
     public void informTeachersCourse(int idCourse, Teacher[] teachers) {
-        for (int i = 0; i < teachers.length; i++) {
-            if (teachers[i] == null) {
+        for (Teacher teacher : teachers) {
+            if (teacher == null) {
                 break;
-            } else if (teachers[i].getCourseID() == idCourse) {
-                System.out.println("Вчителі курсу: " + teachers[i]);
+            } else if (teacher.getCourseID() == idCourse) {
+                System.out.println("Вчителі курсу: " + teacher);
             }
         }
     }

@@ -1,6 +1,5 @@
 package online_school.services;
 
-import online_school.courses.models.Course;
 import online_school.courses.models.Lecture;
 
 import java.util.Arrays;
@@ -8,9 +7,6 @@ import java.util.Arrays;
 
 public class LectureService {
     private int courseCounter;
-    public Lecture lectureCreation() {
-        return new Lecture();
-    }
 
     public Lecture lectureCreation(long ID, String nameLecture) {
         return new Lecture(ID, nameLecture);
@@ -33,11 +29,11 @@ public class LectureService {
     }
 
     public void informLecturesCourse(int idCourse, Lecture[] lectures) {
-        for (int i = 0; i < lectures.length; i++) {
-            if (lectures[i] == null) {
+        for (Lecture lecture : lectures) {
+            if (lecture == null) {
                 break;
-            } else if (lectures[i].getCourseID() == idCourse) {
-                System.out.println("Лекції курсу: " + lectures[i]);
+            } else if (lecture.getCourseID() == idCourse) {
+                System.out.println("Лекції курсу: " + lecture);
             }
         }
     }

@@ -1,22 +1,20 @@
 package online_school.courses.models;
 
-public class SuperModels {
+public class Models {
 
     private long ID;
-    private String name;
+    private final String name;
     private String lastName;
     private Long courseID;
     private String nameCourse;
 
-    public SuperModels() {
-    }
 
-    public SuperModels(long ID, String name) {
+    public Models(long ID, String name) {
         this.ID = ID;
         this.name = name;
     }
 
-    public SuperModels(long ID, String name, String lastName) {
+    public Models(long ID, String name, String lastName) {
         this(ID, name);
         this.lastName = lastName;
     }
