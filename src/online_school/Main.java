@@ -24,7 +24,7 @@ public class Main {
         String lastName;
 
         System.out.println("========================\n\"РЕГІСТР НЕ ВАЖЛИВИЙ !!!\"");
-        autoObject();
+//        autoObject();
         System.out.println("Для виводу інфрмації про об'єкти окремо, введіть: \n\"Course info\"\n\"Lecture info\"\n\"Student info\"\n\"Teacher info\"");
         System.out.println("================================");
         System.out.println("Створіть об'єкт курсу, ввівши:\n\"Курс\"");
@@ -92,7 +92,7 @@ public class Main {
                     }
                     case "course data" -> {
                         numberEntry("курсу");
-                        courseService.informCourse(number, courseRepository.getCoursesArray());
+                        courseService.informCourse(number, courseRepository.getCourses());
                         lectureService.informLecturesCourse(number, lectureRepository.getLecturesArray());
                         studentService.informStudentsCourse(number, studentRepository.getStudentsArray());
                         teacherService.informTeachersCourse(number, teacherRepository.getTeachersArray());
@@ -105,7 +105,7 @@ public class Main {
                         name = scanner.nextLine();
                     }
                     case "course info" -> {
-                        courseService.outId(courseRepository.getCoursesArray());
+                        courseService.outId(courseRepository.getCourses());
                         border();
                         inform();
                         name = scanner.nextLine();

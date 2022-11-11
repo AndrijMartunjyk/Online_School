@@ -1,6 +1,7 @@
 package online_school.services;
 
 import online_school.courses.models.Course;
+import online_school.courses.models.Models;
 
 import java.util.Arrays;
 
@@ -19,7 +20,7 @@ public class CourseService {
         this.courseCounter = courseCounter;
     }
 
-    public void outId(Course[] course) {
+    public void outId(Models[] course) {
         if (getCourseCounter() < 1) {
             System.out.println("Спочатку створіть Курс!!!");
         } else {
@@ -27,13 +28,13 @@ public class CourseService {
         }
     }
 
-    public void informCourse(int idCourse, Course[] courses) {
-        for (Course course : courses) {
-            if (course == null) {
+    public void informCourse(int idCourse, Models[] courses) {
+        for (Models models : courses) {
+            if (models == null) {
                 break;
-            } else if (course.getID() == idCourse) {
+            } else if (models.getID() == idCourse) {
                 System.out.println("===============================================");
-                System.out.println("Курс: " + course);
+                System.out.println("Курс: " + models);
                 System.out.println("============================================================================================================");
             }
         }

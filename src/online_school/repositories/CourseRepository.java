@@ -1,10 +1,11 @@
 package online_school.repositories;
 
 import online_school.courses.models.Course;
+import online_school.courses.models.Models;
 
 import java.util.Arrays;
 
-public class CourseRepository {
+public class CourseRepository extends Repository {
     private Course[] courses = new Course[1];
 
     public int courseCounter() {
@@ -35,7 +36,8 @@ public class CourseRepository {
         }
     }
 
-    public Course[] getCoursesArray() {
+    @Override
+    public Models[] getAll() {
         return courses;
     }
 
