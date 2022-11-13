@@ -4,10 +4,13 @@ public class Course extends Models {
     private static int counter;
 
     public Course(long id, String name) {
-        super(id + ++counter, name);
-        super.setCounter(counter);
+        super(id + counter++ + (int) (Math.random() * 100), name);
     }
 
+    @Override
+    public int getCounter() {
+        return counter;
+    }
 
     @Override
     public String toString() {

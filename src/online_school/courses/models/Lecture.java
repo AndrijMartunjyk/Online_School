@@ -1,13 +1,13 @@
 package online_school.courses.models;
 
-
 public class Lecture extends Models {
     private static int counter;
 
     public Lecture(long ID, String nameLecture) {
-        super(ID + counter++, nameLecture);
+        super(ID + counter++ + (int) (Math.random() * 100), nameLecture);
     }
 
+    @Override
     public int getCounter() {
         return counter;
     }

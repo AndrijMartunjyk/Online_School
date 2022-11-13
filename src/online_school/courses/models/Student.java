@@ -4,7 +4,7 @@ public class Student extends Models {
     private static int counter;
 
     public Student(long ID, String firstName, String lastName) {
-        super(ID + counter++, firstName, lastName);
+        super(ID + counter++ + (int) (Math.random() * 100), firstName, lastName);
     }
 
     public int getCounter() {

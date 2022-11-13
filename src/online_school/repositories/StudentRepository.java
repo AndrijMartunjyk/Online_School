@@ -1,15 +1,15 @@
 package online_school.repositories;
 
-import online_school.courses.models.Student;
+import online_school.courses.models.Models;
 
 import java.util.Arrays;
 
-public class StudentRepository {
-    private Student[] students = new Student[1];
+public class StudentRepository extends Repository {
+    private Models[] students = new Models[1];
 
     public int studentCounter() {
         int result = 0;
-        for (Student student : students) {
+        for (Models student : students) {
             if (student == null) {
                 break;
             } else {
@@ -24,7 +24,13 @@ public class StudentRepository {
         System.out.format("Масив студентів збільшено, довжина: %d об'єктів!!!\n", (students.length));
     }
 
-    public void addStudent(Student student) {
+    @Override
+    public Models[] getAll() {
+        return students;
+    }
+
+    @Override
+    public void add(Models student) {
         for (int i = 0; i < students.length; i++) {
             if (studentCounter() - 1 == students.length) {
                 magnificationOfArray();
@@ -35,8 +41,14 @@ public class StudentRepository {
         }
     }
 
-    public Student[] getStudentsArray() {
-        return students;
+    @Override
+    public Models getByld(int idModels, Models[] models) {
+        return super.getByld(idModels, models);
+    }
+
+    @Override
+    public void deleteByld(int idModels, Models[] models) {
+        super.deleteByld(idModels, models);
     }
 
     public long getStudentId() {

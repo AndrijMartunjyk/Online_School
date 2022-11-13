@@ -1,9 +1,8 @@
 package online_school.courses.models;
 
 public class Models {
-    private int counter;
     private long ID;
-    private final String name;
+    private String name;
     private String lastName;
     private Long courseID;
     private String nameCourse;
@@ -19,21 +18,18 @@ public class Models {
         this.lastName = lastName;
     }
 
-    public int getCounter() {
-        return counter;
+    public Models() {
+
     }
 
-    public void setCounter(int counter) {
-        this.counter = counter;
+    public int getCounter() {
+        return 0;
     }
 
     public long getID() {
         return ID;
     }
 
-    public void setID(long ID) {
-        this.ID = ID;
-    }
 
     public String getName() {
         return name;
