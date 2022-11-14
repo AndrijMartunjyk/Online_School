@@ -19,7 +19,7 @@ public class Main {
 
         System.out.println("========================\n\"РЕГІСТР НЕ ВАЖЛИВИЙ !!!\"");
         mainService.autoObject(courseRepository, courseService, lectureRepository, lectureService);
-        System.out.println("Для виводу інфрмації про всі об'єкти одного типу, введіть: \n\"Course info\"\n\"Lecture info\"\n\"Student info\"\n\"Teacher info\"");
+        System.out.println("Для виводу інфрмації про всі об'єкти одного типу, введіть: \n\"Course info\"\n\"Lecture info\"\n\"Teacher info\"\n\"Student info\"");
         System.out.println("=====================================================");
         System.out.println("Для виводу інфрмації про конкретний об'єкт, введіть: \n\"Show course\"\n\"Show lecture\"\n\"Show teacher\"\n\"Show student\"");
         System.out.println("================================");
@@ -148,12 +148,12 @@ public class Main {
                     }
                     case "delete teacher" -> {
                         mainService.numberEntry("Вчителя");
-                        teacherRepository.deleteByld(mainService.getNumber(), courseRepository.getAll());
+                        teacherRepository.deleteByld(mainService.getNumber(), teacherRepository.getAll());
                         mainService.inform();
                     }
                     case "delete student" -> {
                         mainService.numberEntry("Студента");
-                        studentRepository.deleteByld(mainService.getNumber(), teacherRepository.getAll());
+                        studentRepository.deleteByld(mainService.getNumber(), studentRepository.getAll());
                         mainService.inform();
                     }
                     case "stop" -> trueOrFalse = false;
