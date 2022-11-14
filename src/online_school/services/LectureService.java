@@ -13,8 +13,9 @@ public class LectureService {
     }
 
     public void outId(Models[] lectures) {
-                System.out.println("Інформація про лекцію: " + Arrays.toString(lectures));
+        System.out.println("Інформація про лекцію: " + Arrays.toString(lectures));
     }
+
     public void informLecturesCourse(int idCourse, Models[] lectures) {
         for (Models lecture : lectures) {
             if (lecture == null) {

@@ -24,19 +24,25 @@ public abstract class Repository {
     }
 
     public void deleteByld(int idModels, Models[] models) {
+        boolean trueOrFalse = true;
         for (int i = 0; i < models.length; i++) {
             if (models[i] == null) {
                 break;
             } else if (models[i].getID() == idModels) {
                 models[i] = null;
+                System.out.printf("Об'єкт з номером ID: \"%d\" видалено!!!\n", idModels);
+                for (int j = 0; j < models.length - 1; j++) {
+                    if (models[j] == null) {
+                        models[j] = models[j + 1];
+                        models[j + 1] = null;
+                    }
+                }
+                trueOrFalse = false;
+                break;
             }
         }
-        for (int i = 0; i < models.length - 1; i++) {
-            if (models[i] == null) {
-                models[i] = models[i + 1];
-                models[i + 1] = null;
-            }
+        if (trueOrFalse) {
+            System.out.println("Не має об'єкта з таким ID, спробуйте ще раз!!!");
         }
-        System.out.printf("Об'єкт з номером ID: \"%d\" видалено!!!\n", idModels);
     }
 }

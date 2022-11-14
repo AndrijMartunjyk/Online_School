@@ -16,6 +16,7 @@ public class CourseService {
     }
 
     public void informCourse(int idCourse, Models[] courses) {
+        boolean trueOrFalse = true;
         for (Models models : courses) {
             if (models == null) {
                 break;
@@ -23,7 +24,12 @@ public class CourseService {
                 System.out.println("===============================================");
                 System.out.println("Курс: " + models);
                 System.out.println("============================================================================================================");
+                trueOrFalse = false;
+                break;
             }
+        }
+        if (trueOrFalse) {
+            System.out.println("Не має об'єкта з таким ID, спробуйте ще раз!!!");
         }
     }
 }
