@@ -1,4 +1,4 @@
-package online_school.courses.task_for_lectures;
+package online_school.course.task_for_lecture;
 
 public class Homework {
     private static int ID;

@@ -1,16 +1,17 @@
-package online_school.repositories;
+package online_school.repositorie;
 
-import online_school.courses.models.Models;
+import online_school.course.model.Lecture;
+import online_school.course.model.Models;
 
 import java.util.Arrays;
 
 public class LectureRepository extends Repository {
 
-    private Models[] lectures = new Models[3];
+    private Lecture[] lectures = new Lecture[3];
 
     public int lectureCounter() {
         int result = 0;
-        for (Models lecture : lectures) {
+        for (Lecture lecture : lectures) {
             if (lecture == null) {
                 break;
             } else {
@@ -25,13 +26,14 @@ public class LectureRepository extends Repository {
         System.out.format("Масив лекцій збільшено, довжина: %d об'єктів!!!\n", lectures.length);
     }
 
+
     @Override
-    public Models[] getAll() {
+    public Lecture[] getAll() {
         return lectures;
     }
 
-    @Override
-    public void add(Models lecture) {
+
+    public void add(Lecture lecture) {
         for (int i = 0; i < lectures.length; i++) {
             if (lectureCounter() - 1 == lectures.length) {
                 magnificationOfArray();

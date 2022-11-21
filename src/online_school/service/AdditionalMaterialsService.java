@@ -1,6 +1,6 @@
-package online_school.services;
+package online_school.service;
 
-import online_school.courses.task_for_lectures.AdditionalMaterial;
+import online_school.course.task_for_lecture.AdditionalMaterial;
 
 public class AdditionalMaterialsService {
     public AdditionalMaterial additionalMaterialsCreation() {

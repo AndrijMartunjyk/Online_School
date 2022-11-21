@@ -1,11 +1,12 @@
-package online_school.repositories;
+package online_school.repositorie;
 
-import online_school.courses.models.Models;
+import online_school.course.model.Course;
+import online_school.course.model.Models;
 
 import java.util.Arrays;
 
 public class CourseRepository extends Repository {
-    private Models[] courses = new Models[1];
+    private Models[] courses = new Course[1];
 
     public int courseCounter() {
         int result = 0;

@@ -1,6 +1,8 @@
-package online_school.repositories;
+package online_school.repositorie;
 
-import online_school.courses.models.Models;
+import online_school.course.model.Lecture;
+import online_school.course.model.Models;
+import online_school.course.model.Person;
 
 public abstract class Repository {
     public Models[] getAll() {
@@ -43,6 +45,30 @@ public abstract class Repository {
         }
         if (trueOrFalse) {
             System.out.println("Не має об'єкта з таким ID, спробуйте ще раз!!!");
+        }
+    }
+
+    public void informPersonCourse(long courseId, Lecture[] lectures, Person[] students) {
+        for (Lecture lecture : lectures) {
+            for (Person student : students) {
+                if (lecture == null || student == null) {
+                    break;
+                } else if (lecture.getID() == student.getLectureId() && lecture.getCourseID() == courseId) {
+                    System.out.println(student);
+                }
+            }
+        }
+    }
+
+    public void informPersonLecture(long lectureId, Lecture[] lectures, Person[] teachers) {
+        for (Lecture lecture : lectures) {
+            for (Person teacher : teachers) {
+                if (lecture == null || teacher == null) {
+                    break;
+                } else if (lecture.getID() == teacher.getLectureId() && teacher.getLectureId() == lectureId) {
+                    System.out.println(teacher);
+                }
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
-package online_school.services;
+package online_school.service;
 
-import online_school.courses.models.Course;
-import online_school.courses.models.Models;
+import online_school.course.model.Course;
+import online_school.course.model.Models;
 
 import java.util.Arrays;
 

@@ -1,12 +1,9 @@
-package online_school.courses.models;
+package online_school.course.model;
 
 public class Models {
     private long ID;
     private String name;
     private String lastName;
-    private Long courseID;
-    private String nameCourse;
-
 
     public Models(long ID, String name) {
         this.ID = ID;
@@ -30,30 +27,19 @@ public class Models {
         return ID;
     }
 
-
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getLastName() {
         return lastName;
     }
 
-
-    public Long getCourseID() {
-        return courseID;
-    }
-
-    public void setCourseID(Long courseID) {
-        this.courseID = courseID;
-    }
-
-    public String getNameCourse() {
-        return nameCourse;
-    }
-
-    public void setNameCourse(String nameCourse) {
-        this.nameCourse = nameCourse;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

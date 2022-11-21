@@ -1,4 +1,4 @@
-package online_school.courses.models;
+package online_school.course.model;
 
 public class Course extends Models {
     private static int counter;
