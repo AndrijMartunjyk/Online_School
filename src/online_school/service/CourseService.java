@@ -1,9 +1,7 @@
 package online_school.service;
 
 import online_school.course.model.Course;
-import online_school.course.model.Models;
-
-import java.util.Arrays;
+import online_school.course.model.Model;
 
 public class CourseService {
 
@@ -11,13 +9,9 @@ public class CourseService {
         return new Course(ID, name);
     }
 
-    public void outId(Models[] course) {
-        System.out.println("Інформація про курс: " + Arrays.toString(course));
-    }
-
-    public void informCourse(int idCourse, Models[] courses) {
+    public void informCourse(long idCourse, Model[] courses) {
         boolean trueOrFalse = true;
-        for (Models models : courses) {
+        for (Model models : courses) {
             if (models == null) {
                 break;
             } else if (models.getID() == idCourse) {

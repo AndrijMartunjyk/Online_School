@@ -1,22 +1,13 @@
 package online_school.service;
 
 import online_school.course.model.Lecture;
-import online_school.course.model.Models;
 import online_school.repositorie.Repository;
-
-import java.util.Arrays;
-
 
 public class LectureService extends Repository {
 
-    public Lecture lectureCreation(long ID, String nameLecture) {
-        return new Lecture(ID, nameLecture);
+    public Lecture lectureCreation(long ID, String nameLecture, String description) {
+        return new Lecture(ID, nameLecture, description);
     }
-
-    public void outId(Models[] lectures) {
-        System.out.println("Інформація про лекцію: " + Arrays.toString(lectures));
-    }
-
 
     public void informLecturesCourse(long idCourse, Lecture[] lectures) {
         for (Lecture lecture : lectures) {

@@ -1,21 +1,21 @@
 package online_school.repositorie;
 
 import online_school.course.model.Lecture;
-import online_school.course.model.Models;
+import online_school.course.model.Model;
 import online_school.course.model.Person;
 
 public abstract class Repository {
-    public Models[] getAll() {
+    public Model[] getAll() {
         return null;
     }
 
-    public void add(Models models) {
-        new Models();
+    public void add(Model models) {
+        new Model();
     }
 
-    public Models getByld(int idModels, Models[] models) {
-        Models modelsResult = null;
-        for (Models model : models) {
+    public Model getByldModel(long idModels, Model[] models) {
+        Model modelsResult = null;
+        for (Model model : models) {
             if (model == null) {
                 break;
             } else if (model.getID() == idModels) {
@@ -25,7 +25,42 @@ public abstract class Repository {
         return modelsResult;
     }
 
-    public void deleteByld(int idModels, Models[] models) {
+    public Model getByldPerson(long idModels, Person[] persons) {
+        Model modelsResult = null;
+        for (Person person : persons) {
+            if (person == null) {
+                break;
+            } else if (person.getPersonId() == idModels) {
+                modelsResult = person;
+            }
+        }
+        return modelsResult;
+    }
+
+    public void deleteByldPerson(long idTeachers, Person[] teachers) {
+        boolean trueOrFalse = true;
+        for (int i = 0; i < teachers.length; i++) {
+            if (teachers[i] == null) {
+                break;
+            } else if (teachers[i].getPersonId() == idTeachers) {
+                teachers[i] = null;
+                System.out.printf("Об'єкт з номером ID: \"%d\" видалено!!!\n", idTeachers);
+                for (int j = 0; j < teachers.length - 1; j++) {
+                    if (teachers[j] == null) {
+                        teachers[j] = teachers[j + 1];
+                        teachers[j + 1] = null;
+                    }
+                }
+                trueOrFalse = false;
+                break;
+            }
+        }
+        if (trueOrFalse) {
+            System.out.println("Не має об'єкта з таким ID, спробуйте ще раз!!!");
+        }
+    }
+
+    public void deleteByldModel(long idModels, Model[] models) {
         boolean trueOrFalse = true;
         for (int i = 0; i < models.length; i++) {
             if (models[i] == null) {

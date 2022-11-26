@@ -1,6 +1,6 @@
 package online_school.course.model;
 
-public class Course extends Models {
+public class Course extends Model {
     private static int counter;
 
     public Course(long id, String name) {

@@ -2,17 +2,19 @@ package online_school.course.model;
 
 import online_school.enum_enum.Role;
 
-public class Person extends Models {
+public class Person extends Model {
     private final long personId;
     private long lectureId;
     private final Role role;
     private String lectureName;
 
-    public Person(Role role, long personId, String name, String lastName) {
+    public Person(Role role, long personId, String firstName, String lastName, String phone, String email) {
         this.role = role;
         this.personId = personId + (int) (Math.random() * 100);
-        super.setName(name);
+        super.setFirstName(firstName);
         super.setLastName(lastName);
+        super.setPhone(phone);
+        super.setEmail(email);
     }
 
     public long getLectureId() {
@@ -54,11 +56,13 @@ public class Person extends Models {
     @Override
     public String toString() {
         return role + " {" +
-                "ID=" + personId +
-                ", Name=" + getName() +
-                ", Last name=" + getLastName() + ", //" +
-                " lectureId=" + lectureId +
-                ", lectureName='" + lectureName + '\'' +
+                "ID: " + personId +
+                ", First name: " + super.getFirstName() +
+                ", Last name: " + super.getLastName() +
+                ", phone number: " + super.getPhone() +
+                ", email address: " + super.getEmail() + ", //" +
+                ", lectureId: " + lectureId +
+                ", lectureName:'" + lectureName + '\'' +
                 '}';
     }
 }
