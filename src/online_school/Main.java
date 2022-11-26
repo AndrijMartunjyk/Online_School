@@ -1,6 +1,6 @@
 package online_school;
 
-import online_school.course.model.Models;
+import online_school.course.model.Model;
 import online_school.enum_enum.Role;
 import online_school.repositorie.*;
 import online_school.service.*;
@@ -22,78 +22,85 @@ public class Main {
 
         System.out.println("========================\n\"РЕГІСТР НЕ ВАЖЛИВИЙ !!!\"");
         mainService.autoObject(courseRepository, courseService, lectureRepository, lectureService);
-        System.out.println("Для виводу інфрмації про всі об'єкти одного типу, введіть: \n\"Course info\"\n\"Lecture info\"\n\"Teacher info\"\n\"Student info\"");
-        System.out.println("=====================================================");
         System.out.println("Для виводу інфрмації про конкретний об'єкт, введіть: \n\"Show course\"\n\"Show lecture\"\n\"Show teacher\"\n\"Show student\"");
         System.out.println("================================");
         System.out.println("Щоб видалити об'єкт введіть:\n\"Delete course\"\n\"Delete lecture\"\n\"Delete teacher\"\n\"Delete student\"");
-        System.out.println("=========================================");
-        System.out.println("Щоб додати студента або вчителя введіть:\n\"Add\"");
-        System.out.println("=========================================");
+        System.out.println("==================================================");
+        System.out.println("Щоб додати студента або вчителя до лекції введіть:\n\"Add\"");
+        System.out.println("==================================================");
         System.out.println("Створіть об'єкт курсу, ввівши:\n\"Курс\"");
         System.out.println("================================\nДля завершення програми,\n введіть \"Stop\"\n========================");
-        mainService.scannerName();
+        mainService.scannerNameModelAndPerson();
 
         boolean trueOrFalse = true;
         while (trueOrFalse) {
-            if (mainService.getName().equalsIgnoreCase("курс") || courseRepository.courseCounter() > 1 || mainService.getName().equalsIgnoreCase("Course data")) {
-                switch (mainService.lists()) {
-                    case COURSE -> {
-                        System.out.println(mainService.message() + "\"Курси\"");
-                        mainService.numberEntry("курсу");
+            if (mainService.getNameModelAndPerson().equalsIgnoreCase("курс") || courseRepository.courseCounter() > 1 || mainService.getNameModelAndPerson().equalsIgnoreCase("Course data")) {
+                switch (mainService.getNameModelAndPerson().toLowerCase()) {
+                    case "курс" -> {
+                        System.out.println(mainService.message() + "\"Курс\"");
+                        mainService.checkNumber("курсу");
                         System.out.println("Введіть назву курсу:");
                         mainService.scannerName();
                         courseRepository.add(courseService.courseCreation(mainService.getNumber(), mainService.getName()));
                         System.out.printf("Чудово, ви створили курс з назвою: \"%s\", і номером ID: \"%d\".\n", mainService.getName(), courseRepository.getCourseID());
                         System.out.println("Тепер створіть об'єкти ввівши:\n\"Лекція\".\n\"Студент\".\n\"Вчитель\".");
                         mainService.border();
-                        mainService.informCourse();
+                        mainService.informCourseAndLecture();
                         mainService.border();
-                        mainService.scannerName();
+                        mainService.scannerNameModelAndPerson();
                     }
-                    case LECTURE -> {
-                        System.out.println(mainService.message() + "\"Лекції\"");
-                        mainService.numberEntry("лекції");
+                    case "лекція" -> {
+                        System.out.println(mainService.message() + "\"Лекція\"");
+                        mainService.checkNumber("лекції");
                         System.out.println("Введіть назву лекції:");
                         mainService.scannerName();
-                        lectureRepository.add(lectureService.lectureCreation(mainService.getNumber(), mainService.getName()));
+                        mainService.scannerDescription();
+                        lectureRepository.add(lectureService.lectureCreation(mainService.getNumber(), mainService.getName(), mainService.getDescription()));
                         lectureRepository.setIdCourseOfLecture(courseRepository.getCourseID(), courseRepository.getCourseName());
                         System.out.printf("Чудово, ви створили лекцію з назвою: \"%s\", і номером ID: \"%d\".\n", mainService.getName(), lectureRepository.getLectureID());
                         mainService.border();
-                        mainService.informCourse();
+                        mainService.informCourseAndLecture();
                         mainService.border();
                         mainService.inform();
                     }
-                    case TEACHER -> {
-                        System.out.println(mainService.message() + "\"Вчителі\"");
-                        mainService.numberEntry("вчителя");
+                    case "вчитель" -> {
+                        System.out.println(mainService.message() + "\"Вчитель\"");
+                        mainService.checkNumber("вчителя");
                         System.out.println("Введіть ім'я вчителя:");
-                        mainService.scannerName();
+                        mainService.scannerFirstName();
                         System.out.println("Введіть прізвище вчителя:");
                         mainService.scannerLastName();
-                        teacherRepository.add(teacherService.teacherCreation(Role.TEACHER, mainService.getNumber(), mainService.getName(), mainService.getLastName()));
-                        System.out.printf("Чудово, ви створили об'єкт вчителя з іменем: \"%s\", прізвищем: \"%s\" і номером ID: \"%d\".\n", mainService.getName(), mainService.getLastName(), teacherRepository.getTeacherId());
+                        System.out.println("Введіть номер телефону вчителя:");
+                        mainService.scannerPhone();
+                        System.out.println("Введіть Email студента:");
+                        mainService.scannerEmail();
+                        teacherRepository.add(teacherService.teacherCreation(Role.TEACHER, mainService.getNumber(), mainService.getFirstname(), mainService.getLastName(), mainService.getPhone(), mainService.getEmail()));
+                        System.out.printf("Чудово, ви створили об'єкт вчителя з іменем: \"%s\", прізвищем: \"%s\" і номером ID: \"%d\".\n", mainService.getFirstname(), mainService.getLastName(), teacherRepository.getTeacherId());
                         mainService.border();
-                        mainService.informCourse();
+                        mainService.informCourseAndLecture();
                         mainService.border();
                         mainService.inform();
                     }
-                    case STUDENT -> {
-                        System.out.println(mainService.message() + "\"Студенти\"");
-                        mainService.numberEntry("студента");
+                    case "студент" -> {
+                        System.out.println(mainService.message() + "\"Студент\"");
+                        mainService.checkNumber("студента");
                         System.out.println("Введіть ім'я студента:");
-                        mainService.scannerName();
+                        mainService.scannerFirstName();
                         System.out.println("Введіть прізвище студента:");
                         mainService.scannerLastName();
-                        studentRepository.add(studentService.studentCreation(Role.STUDENT, mainService.getNumber(), mainService.getName(), mainService.getLastName()));
-                        System.out.printf("Чудово, ви створили об'єкт студента з іменем: \"%s\", прізвищем: \"%s\" і номером ID: \"%d\".\n", mainService.getName(), mainService.getLastName(), studentRepository.getStudentId());
+                        System.out.println("Введіть номер телефону студента:");
+                        mainService.scannerPhone();
+                        System.out.println("Введіть Email студента:");
+                        mainService.scannerEmail();
+                        studentRepository.add(studentService.studentCreation(Role.STUDENT, mainService.getNumber(), mainService.getFirstname(), mainService.getLastName(), mainService.getPhone(), mainService.getEmail()));
+                        System.out.printf("Чудово, ви створили об'єкт студента з іменем: \"%s\", прізвищем: \"%s\" і номером ID: \"%d\".\n", mainService.getFirstname(), mainService.getLastName(), studentRepository.getStudentId());
                         mainService.border();
-                        mainService.informCourse();
+                        mainService.informCourseAndLecture();
                         mainService.border();
                         mainService.inform();
                     }
-                    case COURSE_DATA -> {
-                        mainService.numberEntry("курсу");
+                    case "course data" -> {
+                        mainService.checkNumber("курсу");
                         courseService.informCourse(mainService.getNumber(), courseRepository.getAll());
                         lectureService.informLecturesCourse(mainService.getNumber(), lectureRepository.getAll());
                         mainService.border();
@@ -105,11 +112,11 @@ public class Main {
                             mainService.inform();
                         } else {
                             System.out.println("Створіть об'єкт курсу, ввівши: \"Курс\"");
-                            mainService.scannerName();
+                            mainService.scannerNameModelAndPerson();
                         }
                     }
-                    case LECTURE_DATA -> {
-                        mainService.numberEntry("Лекції");
+                    case "lecture data" -> {
+                        mainService.checkNumber("Лекції");
                         lectureService.informLectures(mainService.getNumber(), lectureRepository.getAll());
                         mainService.border();
                         teacherService.informPersonLecture(mainService.getNumber(), lectureRepository.getAll(), teacherRepository.getAll());
@@ -118,118 +125,118 @@ public class Main {
                         mainService.border();
                         mainService.inform();
                     }
-                    case COURSE_INFO -> {
-                        courseService.outId(courseRepository.getAll());
-                        mainService.border();
+                    case "show course" -> {
+                        mainService.checkNumber("Курсу");
+                        System.out.println("Inform => " + courseRepository.getByldModel(mainService.getNumber(), courseRepository.getAll()));
                         mainService.inform();
                     }
-                    case LECTURE_INFO -> {
-                        lectureService.outId(lectureRepository.getAll());
-                        mainService.border();
+                    case "show lecture" -> {
+                        mainService.checkNumber("Лекції");
+                        if (lectureRepository.getByldModel(mainService.getNumber(), lectureRepository.getAll()) == null) {
+                            System.out.println("Немає такої лекції !!!");
+                        } else {
+                            System.out.println("Inform => " + lectureRepository.getByldModel(mainService.getNumber(), lectureRepository.getAll()));
+                        }
                         mainService.inform();
                     }
-                    case STUDENT_INFO -> {
-                        studentService.outId(studentRepository.getAll());
-                        mainService.border();
+                    case "show teacher" -> {
+                        mainService.checkNumber("Вчителя");
+                        if ((teacherRepository.getByldPerson(mainService.getNumber(), teacherRepository.getAll())) == null) {
+                            System.out.println("Немає такого вчителя !!!");
+                        } else {
+                            System.out.println("Inform => " + teacherRepository.getByldPerson(mainService.getNumber(), teacherRepository.getAll()));
+                        }
                         mainService.inform();
                     }
-                    case TEACHER_INFO -> {
-                        teacherService.outId(teacherRepository.getAll());
-                        mainService.border();
+                    case "show student" -> {
+                        mainService.checkNumber("Студента");
+                        if ((teacherRepository.getByldPerson(mainService.getNumber(), teacherRepository.getAll())) == null) {
+                            System.out.println("Немає такого студента !!!");
+                        } else {
+                            System.out.println("Inform => " + studentRepository.getByldPerson(mainService.getNumber(), studentRepository.getAll()));
+                        }
                         mainService.inform();
                     }
-                    case SHOW_COURSE -> {
-                        mainService.numberEntry("Курсу");
-                        System.out.println("Inform => " + courseRepository.getByld(mainService.getNumber(), courseRepository.getAll()));
+                    case "delete course" -> {
+                        mainService.checkNumber("Курсу");
+                        courseRepository.deleteByldModel(mainService.getNumber(), courseRepository.getAll());
                         mainService.inform();
                     }
-                    case SHOW_LECTURE -> {
-                        mainService.numberEntry("Лекції");
-                        System.out.println("Inform => " + lectureRepository.getByld(mainService.getNumber(), lectureRepository.getAll()));
+                    case "delete lecture" -> {
+                        mainService.checkNumber("Лекції");
+                        lectureRepository.deleteByldModel(mainService.getNumber(), lectureRepository.getAll());
                         mainService.inform();
                     }
-                    case SHOW_TEACHER -> {
-                        mainService.numberEntry("Вчителя");
-                        System.out.println("Inform => " + teacherRepository.getByld(mainService.getNumber(), teacherRepository.getAll()));
+                    case "delete teacher" -> {
+                        mainService.checkNumber("Вчителя");
+                        teacherRepository.deleteByldPerson(mainService.getNumber(), teacherRepository.getAll());
                         mainService.inform();
                     }
-                    case SHOW_STUDENT -> {
-                        mainService.numberEntry("Студента");
-                        System.out.println("Inform => " + studentRepository.getByld(mainService.getNumber(), studentRepository.getAll()));
+                    case "delete student" -> {
+                        mainService.checkNumber("Студента");
+                        studentRepository.deleteByldPerson(mainService.getNumber(), studentRepository.getAll());
                         mainService.inform();
                     }
-                    case DELETE_COURSE -> {
-                        mainService.numberEntry("Курсу");
-                        courseRepository.deleteByld(mainService.getNumber(), courseRepository.getAll());
-                        mainService.inform();
-                    }
-                    case DELETE_LECTURE -> {
-                        mainService.numberEntry("Лекції");
-                        lectureRepository.deleteByld(mainService.getNumber(), lectureRepository.getAll());
-                        mainService.inform();
-                    }
-                    case DELETE_TEACHER -> {
-                        mainService.numberEntry("Вчителя");
-                        teacherRepository.deleteByld(mainService.getNumber(), teacherRepository.getAll());
-                        mainService.inform();
-                    }
-                    case DELETE_STUDENT -> {
-                        mainService.numberEntry("Студента");
-                        studentRepository.deleteByld(mainService.getNumber(), studentRepository.getAll());
-                        mainService.inform();
-                    }
-                    case TEACHER_FOR_LECTURE -> {
+                    case "вчитель для лекції" -> {
                         System.out.println("Виберіть лекцію якій хочете присвоїти Вчителя.");
-                        mainService.numberEntry("Лекції");
-                        int lectureId;
-                        Models lecture = lectureRepository.getByld(mainService.getNumber(), lectureRepository.getAll());
+                        mainService.checkNumber("Лекції");
+                        long lectureId;
+                        Model lecture = lectureRepository.getByldModel(mainService.getNumber(), lectureRepository.getAll());
                         if (lecture == null) {
                             System.out.println("Немає такої лекції");
                         } else {
                             lectureId = mainService.getNumber();
-                            System.out.println("Є така лекція з номером ID " + lecture.getID());
-                            mainService.numberEntry("Вчителя");
-                            teacherRepository.searchTeacher(mainService.getNumber(), lectureId, lectureRepository.getAll());
+                            System.out.printf("Є така лекція з номером ID \"%d\"\n", lecture.getID());
+                            mainService.checkNumber("Вчителя");
+                            while (!(teacherRepository.searchTeacher(mainService.getNumber(), lectureId, lectureRepository.getAll()))) {
+                                System.out.println("Не має вчителя з таким ID !!!\nВведіть ще раз.");
+                                mainService.checkNumber("Вчителя");
+                            }
                         }
+                        mainService.informCourseAndLecture();
                         mainService.inform();
                     }
-                    case STUDENT_FOR_LECTURE -> {
+                    case "студент для лекції" -> {
                         System.out.println("Виберіть лекцію якій хочете присвоїти Студента.");
-                        mainService.numberEntry("Лекції");
-                        int lectureId;
-                        Models lecture = lectureRepository.getByld(mainService.getNumber(), lectureRepository.getAll());
+                        mainService.checkNumber("Лекції");
+                        long lectureId;
+                        Model lecture = lectureRepository.getByldModel(mainService.getNumber(), lectureRepository.getAll());
                         if (lecture == null) {
                             System.out.println("Немає такої лекції");
                         } else {
                             lectureId = mainService.getNumber();
-                            System.out.println("Є така лекція з номером ID " + lecture.getID());
-                            mainService.numberEntry("Студента");
-                            studentRepository.searchStudent(mainService.getNumber(), lectureId, lectureRepository.getAll());
+                            System.out.printf("Є така лекція з номером ID \"%d\"\n", lecture.getID());
+                            mainService.checkNumber("Студента");
+                            while (!(studentRepository.searchStudent(mainService.getNumber(), lectureId, lectureRepository.getAll()))) {
+                                System.out.println("Не має студента з таким ID !!!\nВведіть ще раз.");
+                                mainService.checkNumber("Студента");
+                            }
                         }
+                        mainService.informCourseAndLecture();
                         mainService.inform();
                     }
-                    case ADD -> {
-                        System.out.println("Введіть кого хочете додати: \n\"Вчитель\"\n\"Студент\"");
-                        mainService.scannerName();
-                        if (mainService.getName().equalsIgnoreCase("вчитель")) {
-                            mainService.setName("вчитель для лекції");
-                        } else if (mainService.getName().equalsIgnoreCase("студент")) {
-                            mainService.setName("студент для лекції");
+                    case "add" -> {
+                        System.out.println("Введіть кого хочете додати до лекції: \n\"Вчитель\"\n\"Студент\"");
+                        mainService.scannerNameModelAndPerson();
+                        if (mainService.getNameModelAndPerson().equalsIgnoreCase("вчитель")) {
+                            mainService.setNameModelAndPerson("вчитель для лекції");
+                        } else if (mainService.getNameModelAndPerson().equalsIgnoreCase("студент")) {
+                            mainService.setNameModelAndPerson("студент для лекції");
                         } else {
-                            System.out.println("Не правильне введеняя, введіть \"Add\" ще раз, або");
+                            System.out.println("Не правильний ввід, введіть \"Add\" ще раз, або");
                             mainService.inform();
                         }
                     }
-                    case STOP -> trueOrFalse = false;
+                    case "stop" -> trueOrFalse = false;
                     default -> {
                         System.out.println("Не правильний ввід, спробуйте ще раз!!!");
-                        mainService.scannerName();
+                        mainService.scannerNameModelAndPerson();
                     }
                 }
             } else {
                 System.out.println("Спочатку введіть \"Курс\", або для виводу іформації про автоматичний курс, введіть\n\"Course data\"");
                 mainService.border();
-                mainService.scannerName();
+                mainService.scannerNameModelAndPerson();
             }
         }
         System.out.println("Програму завершено!!!");

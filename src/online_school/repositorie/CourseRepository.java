@@ -1,16 +1,16 @@
 package online_school.repositorie;
 
 import online_school.course.model.Course;
-import online_school.course.model.Models;
+import online_school.course.model.Model;
 
 import java.util.Arrays;
 
 public class CourseRepository extends Repository {
-    private Models[] courses = new Course[1];
+    private Model[] courses = new Course[1];
 
     public int courseCounter() {
         int result = 0;
-        for (Models course : courses) {
+        for (Model course : courses) {
             if (course == null) {
                 break;
             } else {
@@ -26,12 +26,12 @@ public class CourseRepository extends Repository {
     }
 
     @Override
-    public Models[] getAll() {
+    public Model[] getAll() {
         return courses;
     }
 
     @Override
-    public void add(Models course) {
+    public void add(Model course) {
         for (int i = 0; i < courses.length; i++) {
             if (courseCounter() - 1 == courses.length) {
                 magnificationOfArray();
@@ -43,13 +43,13 @@ public class CourseRepository extends Repository {
     }
 
     @Override
-    public Models getByld(int idModels, Models[] models) {
-        return super.getByld(idModels, models);
+    public Model getByldModel(long idModels, Model[] models) {
+        return super.getByldModel(idModels, models);
     }
 
     @Override
-    public void deleteByld(int idModels, Models[] models) {
-        super.deleteByld(idModels, models);
+    public void deleteByldModel(long idModels, Model[] models) {
+        super.deleteByldModel(idModels, models);
     }
 
     public long getCourseID() {

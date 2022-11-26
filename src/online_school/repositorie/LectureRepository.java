@@ -1,7 +1,7 @@
 package online_school.repositorie;
 
 import online_school.course.model.Lecture;
-import online_school.course.model.Models;
+import online_school.course.model.Model;
 
 import java.util.Arrays;
 
@@ -45,13 +45,13 @@ public class LectureRepository extends Repository {
     }
 
     @Override
-    public Models getByld(int idModels, Models[] models) {
-        return super.getByld(idModels, models);
+    public Model getByldModel(long idModels, Model[] models) {
+        return super.getByldModel(idModels, models);
     }
 
     @Override
-    public void deleteByld(int idModels, Models[] models) {
-        super.deleteByld(idModels, models);
+    public void deleteByldModel(long idModels, Model[] models) {
+        super.deleteByldModel(idModels, models);
     }
 
     public long getLectureID() {

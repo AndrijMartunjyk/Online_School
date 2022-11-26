@@ -1,23 +1,13 @@
 package online_school.course.model;
 
-public class Lecture extends Models {
+public class Lecture extends Model {
     private static int counter;
     private long personId;
-    private String personName;
-    private String personLastName;
     private Long courseID;
     private String nameCourse;
 
-    public Lecture(long ID, String nameLecture) {
-        super(ID + counter++ + (int) (Math.random() * 100), nameLecture);
-    }
-
-    public void setPersonName(String personName) {
-        this.personName = personName;
-    }
-
-    public void setPersonLastName(String personLastName) {
-        this.personLastName = personLastName;
+    public Lecture(long ID, String nameLecture, String description) {
+        super(ID + counter++ + (int) (Math.random() * 100), nameLecture, description);
     }
 
     public void setPersonId(long personId) {
@@ -50,9 +40,10 @@ public class Lecture extends Models {
         return "LECTURE {" +
                 "ID=" + super.getID() +
                 ", nameLecture='" + super.getName() + '\'' +
+                ", description='" + super.getDescription() + '\'' +
                 ", teacherId=" + personId +
-                ", teacherName='" + personName + '\'' +
-                ", teacherLastName='" + personLastName + '\'' +
+                ", teacherName='" + super.getFirstName() + '\'' +
+                ", teacherLastName='" + super.getLastName() + '\'' +
                 ", courseID=" + getCourseID() +
                 ", nameCourse='" + getNameCourse() + '\'' +
                 '}';
