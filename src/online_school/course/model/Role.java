@@ -1,4 +1,4 @@
-package online_school.enum_enum;
+package online_school.course.model;
 
 public enum Role {
     TEACHER, STUDENT

@@ -15,7 +15,7 @@ public class Course extends Model {
     @Override
     public String toString() {
         return "Course{" +
-                "ID=" + super.getID() +
+                "ID=" + super.getModelId() +
                 ", name='" + super.getName() + '\'' +
                 '}';
     }

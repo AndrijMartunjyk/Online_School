@@ -2,15 +2,14 @@ package online_school.repositorie;
 
 import online_school.course.model.Course;
 import online_school.course.model.Model;
-
-import java.util.Arrays;
+import online_school.generic.SchoolArray;
 
 public class CourseRepository extends Repository {
-    private Model[] courses = new Course[1];
+    private final SchoolArray<Course> coursesArray = new SchoolArray<>(new Course[1]);
 
     public int courseCounter() {
         int result = 0;
-        for (Model course : courses) {
+        for (Model course : coursesArray.getArray()) {
             if (course == null) {
                 break;
             } else {
@@ -20,44 +19,35 @@ public class CourseRepository extends Repository {
         return result;
     }
 
-    public void magnificationOfArray() {
-        courses = Arrays.copyOf(courses, (courses.length * 3) / 2 + 1);
-        System.out.format("Масив курсу збільшено, довжина: %d об'єктів!!!\n", (courses.length));
+    public SchoolArray<Course> getCoursesArrayObject() {
+        return coursesArray;
+    }
+
+    public Model[] getCourseArray() {
+        return coursesArray.getArray();
+    }
+
+
+    public void add(Course course) {
+        coursesArray.add(course);
     }
 
     @Override
-    public Model[] getAll() {
-        return courses;
+    public Model getByldModel(long idCourse, Model[] courses) {
+        return super.getByldModel(idCourse, courses);
     }
 
     @Override
-    public void add(Model course) {
-        for (int i = 0; i < courses.length; i++) {
-            if (courseCounter() - 1 == courses.length) {
-                magnificationOfArray();
-            } else if (courses[i] == null) {
-                courses[i] = course;
-                break;
-            }
-        }
-    }
-
-    @Override
-    public Model getByldModel(long idModels, Model[] models) {
-        return super.getByldModel(idModels, models);
-    }
-
-    @Override
-    public void deleteByldModel(long idModels, Model[] models) {
-        super.deleteByldModel(idModels, models);
+    public void deleteModel(long idCourse, Model[] course) {
+        super.deleteModel(idCourse, course);
     }
 
     public long getCourseID() {
-        return courses[courseCounter() - 1].getID();
+        return coursesArray.getArray()[courseCounter() - 1].getModelId();
     }
 
     public String getCourseName() {
-        return courses[courseCounter() - 1].getName();
+        return coursesArray.getArray()[courseCounter() - 1].getName();
     }
 }
 
