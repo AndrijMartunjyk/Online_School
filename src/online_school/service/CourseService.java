@@ -5,24 +5,24 @@ import online_school.course.model.Model;
 
 public class CourseService {
 
-    public Course courseCreation(long ID, String name) {
+    public Course createCourse(long ID, String name) {
         return new Course(ID, name);
     }
 
-    public void informCourse(long idCourse, Model[] courses) {
-        boolean trueOrFalse = true;
+    public void showInformCourse(long idCourse, Model[] courses) {
+        boolean isPresent = true;
         for (Model models : courses) {
             if (models == null) {
                 break;
-            } else if (models.getID() == idCourse) {
+            } else if (models.getModelId() == idCourse) {
                 System.out.println("===============================================");
                 System.out.println("Курс: " + models);
                 System.out.println("============================================================================================================");
-                trueOrFalse = false;
+                isPresent = false;
                 break;
             }
         }
-        if (trueOrFalse) {
+        if (isPresent) {
             System.out.println("Не має об'єкта з таким ID, спробуйте ще раз!!!");
         }
     }

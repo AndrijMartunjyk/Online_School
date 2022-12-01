@@ -4,20 +4,10 @@ import online_school.repositorie.CourseRepository;
 import online_school.repositorie.LectureRepository;
 
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import static online_school.course.model.RegularExpression.*;
 
 public class MainService {
-    private static final String EMAIL_PATTERN = "^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$";
-    private static final String PHONE_NUMBER_PATTERN = "^\\+\\d{2}\\(\\d{3}\\)\\d{3}-\\d{2}-\\d{2}$";
-    private static final String FIRST_OR_LAST_NAME_PATTERN = "^[А-ЯІЇЄа-яіїєa-z]+$";
-    private static final String NAME_PATTERN = "^(\\S+\\s){0,3}\\S+$";
-    private static final String DESCRIPTION_PATTERN = "^(\\S+\\s){2,19}\\S+$";
-    private static final Pattern emailPattern = Pattern.compile(EMAIL_PATTERN);
-    private static final Pattern phoneNumberPattern = Pattern.compile(PHONE_NUMBER_PATTERN);
-    private static final Pattern firstOrLastNamePattern = Pattern.compile(FIRST_OR_LAST_NAME_PATTERN, Pattern.CASE_INSENSITIVE);
-    private static final Pattern descriptionPattern = Pattern.compile(DESCRIPTION_PATTERN, Pattern.CASE_INSENSITIVE);
-    private static final Pattern namePattern = Pattern.compile(NAME_PATTERN, Pattern.CASE_INSENSITIVE);
     private final Scanner scanner = new Scanner(System.in);
     private long number;
     private String name;
@@ -29,30 +19,30 @@ public class MainService {
     private String email;
 
     public void autoObject(CourseRepository courseRepository, CourseService courseService, LectureRepository lectureRepository, LectureService lectureService) {
-        courseRepository.add(courseService.courseCreation(1, "Auto course"));
+        courseRepository.add(courseService.createCourse(1, "Auto course"));
         for (int i = 1; i < 4; i++) {
-            lectureRepository.add(lectureService.lectureCreation(i, "No name", "No description"));
+            lectureRepository.add(lectureService.createLecture(i, "No name", "No description"));
             lectureRepository.setIdCourseOfLecture(courseRepository.getCourseID(), courseRepository.getCourseName());
         }
         System.out.println("==========================================================================");
-        System.out.printf("Створено автоматичний курс з іменем \"Auto course\"\n з ID \"%d\" і з трьома лекціями \"No name\".\n", courseRepository.getAll()[0].getID());
+        System.out.printf("Створено автоматичний курс з іменем \"Auto course\"\n з ID \"%d\" і з трьома лекціями \"No name\".\n", courseRepository.getCourseArray()[0].getModelId());
         System.out.println("==========================================================================");
-        informCourseAndLecture();
+        showInformCourseAndLecture();
         System.out.println("==========================================================================");
 
     }
 
     public void checkNumber(String outName) {
         long test;
-        boolean trueOrFalseCourse = true;
-        while (trueOrFalseCourse) {
+        boolean isPresent = true;
+        while (isPresent) {
             System.out.printf("Введіть ID %s, число не менше \"0\", i не більше \"%d\":\n", outName, Long.MAX_VALUE - 150);
             if (scanner.hasNextLong()) {
                 test = scanner.nextLong();
                 scanner.nextLine();
                 if (test > 0 && test < Long.MAX_VALUE) {
                     number = test;
-                    trueOrFalseCourse = false;
+                    isPresent = false;
                 }
             } else {
                 System.out.println("Не правильний ввід, або завелике число.\nВведіть ще раз!!!");
@@ -62,15 +52,15 @@ public class MainService {
     }
 
     public void scannerName() {
-        boolean trueFalse = true;
+        boolean isPresent = true;
         String result;
-        while (trueFalse) {
+        while (isPresent) {
             System.out.println("Введіть від одного до чотирьох слів !!!");
             result = scanner.nextLine();
-            if (validate(result, namePattern)) {
+            if (makeValidate(result, namePattern)) {
                 name = result;
                 System.out.println("Назву збережено!!!");
-                trueFalse = false;
+                isPresent = false;
             } else {
                 System.out.println("Не коректний формат !!!");
             }
@@ -82,23 +72,23 @@ public class MainService {
     }
 
     public void scannerFirstName() {
-        firstname = correctInputFirstOrLastName();
+        firstname = checkFirstAndLastName();
     }
 
     public void scannerLastName() {
-        lastName = correctInputFirstOrLastName();
+        lastName = checkFirstAndLastName();
     }
 
     public void scannerDescription() {
-        boolean trueOrFalse = true;
+        boolean isPresent = true;
         String testDescription;
-        while (trueOrFalse) {
+        while (isPresent) {
             System.out.printf("Введіть опис лекції, від \"%d\" до \"%d\" символів.\n", 3, 20);
             testDescription = scanner.nextLine();
-            if (validate(testDescription, descriptionPattern)) {
+            if (makeValidate(testDescription, descriptionPattern)) {
                 description = testDescription;
                 System.out.println("Опис лекції збережено!!!");
-                trueOrFalse = false;
+                isPresent = false;
             } else {
                 System.out.println("Не коректний формат !!!");
             }
@@ -106,16 +96,16 @@ public class MainService {
     }
 
     public void scannerPhone() {
-        boolean trueFalse = true;
+        boolean isPresent = true;
         String format = "«+38(044)555-55-55»";
         String testPhoneNumber;
-        while (trueFalse) {
+        while (isPresent) {
             System.out.printf("Формат номера: %s\n", format);
             testPhoneNumber = scanner.nextLine();
-            if (validate(testPhoneNumber, phoneNumberPattern)) {
+            if (makeValidate(testPhoneNumber, phoneNumberPattern)) {
                 phone = testPhoneNumber;
                 System.out.println("Номер телефону збережено!!!");
-                trueFalse = false;
+                isPresent = false;
             } else {
                 System.out.println("Не коректний формат !!!");
             }
@@ -123,38 +113,32 @@ public class MainService {
     }
 
     public void scannerEmail() {
-        boolean trueFalse = true;
+        boolean isPresent = true;
         String testEmail;
-        while (trueFalse) {
+        while (isPresent) {
             System.out.println("Формат електронної пошти: «nick@mail.com»");
             testEmail = scanner.nextLine();
-            if (validate(testEmail, emailPattern)) {
+            if (makeValidate(testEmail, emailPattern)) {
                 email = testEmail;
                 System.out.println("Пошту збережено збережено!!!");
-                trueFalse = false;
+                isPresent = false;
             } else {
                 System.out.println("Не коректний формат !!!");
             }
         }
     }
 
-    public static boolean validate(final String hex, Pattern pattern) {
-        Matcher matcher = pattern.matcher(hex);
-        return matcher.matches();
-    }
-
-
-    public String correctInputFirstOrLastName() {
-        boolean trueFalse = true;
+    public String checkFirstAndLastName() {
+        boolean isPresent = true;
         String result = "";
         String testFirstOrLastName;
-        while (trueFalse) {
+        while (isPresent) {
             System.out.println("Ведіть одне слово, без цифр пробілів і розділових знаків!!!");
             testFirstOrLastName = scanner.nextLine();
-            if (validate(testFirstOrLastName, firstOrLastNamePattern)) {
+            if (makeValidate(testFirstOrLastName, firstOrLastNamePattern)) {
                 result = testFirstOrLastName;
                 System.out.println("Збережено!!!");
-                trueFalse = false;
+                isPresent = false;
             } else {
                 System.out.println("Не коректний формат !!!");
             }
@@ -162,7 +146,7 @@ public class MainService {
         return result;
     }
 
-    public long getNumber() {
+    public long getCheckNumber() {
         return number;
 
     }
@@ -199,20 +183,20 @@ public class MainService {
         return email;
     }
 
-    public void border() {
+    public void putBorder() {
         System.out.println("===================================================================================================================================================");
     }
 
-    public void informCourseAndLecture() {
+    public void showInformCourseAndLecture() {
         System.out.println("Для виводу всієї інфрмації про курс, або про лекцію, введіть: \n\"Course data\"\n\"Lecture data\"");
     }
 
-    public void inform() {
+    public void showInformAboutCreation() {
         System.out.println("Можете продовжувати створювати студентів, вчителів, лекції.");
         nameModelAndPerson = scanner.nextLine();
     }
 
-    public String message() {
+    public String showJustMessage() {
         return "Ви створюєте об'єкт: ";
     }
 }

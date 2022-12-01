@@ -38,7 +38,7 @@ public class Lecture extends Model {
     @Override
     public String toString() {
         return "LECTURE {" +
-                "ID=" + super.getID() +
+                "ID=" + super.getModelId() +
                 ", nameLecture='" + super.getName() + '\'' +
                 ", description='" + super.getDescription() + '\'' +
                 ", teacherId=" + personId +

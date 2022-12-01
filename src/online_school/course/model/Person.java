@@ -1,7 +1,5 @@
 package online_school.course.model;
 
-import online_school.enum_enum.Role;
-
 public class Person extends Model {
     private final long personId;
     private long lectureId;

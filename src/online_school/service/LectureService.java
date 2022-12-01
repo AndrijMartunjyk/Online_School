@@ -5,11 +5,11 @@ import online_school.repositorie.Repository;
 
 public class LectureService extends Repository {
 
-    public Lecture lectureCreation(long ID, String nameLecture, String description) {
+    public Lecture createLecture(long ID, String nameLecture, String description) {
         return new Lecture(ID, nameLecture, description);
     }
 
-    public void informLecturesCourse(long idCourse, Lecture[] lectures) {
+    public void showInformLecturesAndCourse(long idCourse, Lecture[] lectures) {
         for (Lecture lecture : lectures) {
             if (lecture == null) {
                 break;
@@ -19,16 +19,16 @@ public class LectureService extends Repository {
         }
     }
 
-    public void informLectures(long lectureId, Lecture[] lectures) {
-        boolean trueOrFalse = true;
+    public void showInformLectures(long lectureId, Lecture[] lectures) {
+        boolean isPresent = true;
         for (Lecture lecture : lectures) {
-            if (lecture != null && lecture.getID() == lectureId) {
+            if (lecture != null && lecture.getModelId() == lectureId) {
                 System.out.println(lecture);
-                trueOrFalse = false;
+                isPresent = false;
                 break;
             }
         }
-        if (trueOrFalse) {
+        if (isPresent) {
             System.out.println("Немає такої лекції !!!");
         }
     }

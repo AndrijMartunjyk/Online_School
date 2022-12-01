@@ -2,16 +2,14 @@ package online_school.repositorie;
 
 import online_school.course.model.Lecture;
 import online_school.course.model.Model;
-
-import java.util.Arrays;
+import online_school.generic.SchoolArray;
 
 public class LectureRepository extends Repository {
-
-    private Lecture[] lectures = new Lecture[3];
+    private final SchoolArray<Lecture> lectureArray = new SchoolArray<>(new Lecture[3]);
 
     public int lectureCounter() {
         int result = 0;
-        for (Lecture lecture : lectures) {
+        for (Lecture lecture : lectureArray.getArray()) {
             if (lecture == null) {
                 break;
             } else {
@@ -21,45 +19,34 @@ public class LectureRepository extends Repository {
         return result;
     }
 
-    public void magnificationOfArray() {
-        lectures = Arrays.copyOf(lectures, (lectures.length * 3) / 2 + 1);
-        System.out.format("Масив лекцій збільшено, довжина: %d об'єктів!!!\n", lectures.length);
+    public SchoolArray<Lecture> getLecturesArrayObject() {
+        return lectureArray;
     }
 
-
-    @Override
-    public Lecture[] getAll() {
-        return lectures;
+    public Lecture[] getLectureArray() {
+        return lectureArray.getArray();
     }
-
 
     public void add(Lecture lecture) {
-        for (int i = 0; i < lectures.length; i++) {
-            if (lectureCounter() - 1 == lectures.length) {
-                magnificationOfArray();
-            } else if (lectures[i] == null) {
-                lectures[i] = lecture;
-                break;
-            }
-        }
+        lectureArray.add(lecture);
     }
 
     @Override
-    public Model getByldModel(long idModels, Model[] models) {
-        return super.getByldModel(idModels, models);
+    public Model getByldModel(long idLecture, Model[] lectures) {
+        return super.getByldModel(idLecture, lectures);
     }
 
     @Override
-    public void deleteByldModel(long idModels, Model[] models) {
-        super.deleteByldModel(idModels, models);
+    public void deleteModel(long idLecture, Model[] lecture) {
+        super.deleteModel(idLecture, lecture);
     }
 
     public long getLectureID() {
-        return lectures[lectureCounter() - 1].getID();
+        return lectureArray.getArray()[lectureCounter() - 1].getModelId();
     }
 
     public void setIdCourseOfLecture(Long ID, String name) {
-        lectures[lectureCounter() - 1].setCourseID(ID);
-        lectures[lectureCounter() - 1].setNameCourse(name);
+        lectureArray.getArray()[lectureCounter() - 1].setCourseID(ID);
+        lectureArray.getArray()[lectureCounter() - 1].setNameCourse(name);
     }
 }

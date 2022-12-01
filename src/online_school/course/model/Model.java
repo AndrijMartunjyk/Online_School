@@ -1,7 +1,7 @@
 package online_school.course.model;
 
 public class Model {
-    private long ID;
+    private long ModelId;
     private String name;
     private String description;
     private String firstName;
@@ -9,14 +9,13 @@ public class Model {
     private String phone;
     private String email;
 
-
-    public Model(long ID, String name) {
-        this.ID = ID;
+    public Model(long ModelId, String name) {
+        this.ModelId = ModelId;
         this.name = name;
     }
 
-    public Model(long ID, String name, String description) {
-        this(ID, name);
+    public Model(long ModelId, String name, String description) {
+        this(ModelId, name);
         this.description = description;
     }
 
@@ -27,8 +26,8 @@ public class Model {
         return 0;
     }
 
-    public long getID() {
-        return ID;
+    public long getModelId() {
+        return ModelId;
     }
 
     public String getName() {
