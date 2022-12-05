@@ -1,76 +1,24 @@
 package online_school.course.model;
 
-public class Model {
-    private long ModelId;
-    private String name;
-    private String description;
-    private String firstName;
-    private String lastName;
-    private String phone;
-    private String email;
+public abstract class Model {
+    private String firstPersonName;
+    private String lastPersonName;
 
-    public Model(long ModelId, String name) {
-        this.ModelId = ModelId;
-        this.name = name;
+    public abstract long getObjectId();
+
+    public String getFirstPersonName() {
+        return firstPersonName;
     }
 
-    public Model(long ModelId, String name, String description) {
-        this(ModelId, name);
-        this.description = description;
+    public void setFirstPersonName(String firstPersonName) {
+        this.firstPersonName = firstPersonName;
     }
 
-    public Model() {
+    public String getLastPersonName() {
+        return lastPersonName;
     }
 
-    public int getCounter() {
-        return 0;
-    }
-
-    public long getModelId() {
-        return ModelId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setLastPersonName(String lastPersonName) {
+        this.lastPersonName = lastPersonName;
     }
 }

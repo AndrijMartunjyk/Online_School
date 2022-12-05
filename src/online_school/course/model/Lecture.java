@@ -1,13 +1,31 @@
 package online_school.course.model;
 
+import online_school.course.task_for_lecture.HomeWork;
+import online_school.generic.SchoolArray;
+
 public class Lecture extends Model {
+    private final long lectureId;
+    private final String lectureName;
+    private final String description;
     private static int counter;
     private long personId;
     private Long courseID;
     private String nameCourse;
 
-    public Lecture(long ID, String nameLecture, String description) {
-        super(ID + counter++ + (int) (Math.random() * 100), nameLecture, description);
+    public Lecture(long lectureId, String lectureName, String description) {
+        this.lectureId = lectureId + counter++ + (int) (Math.random() * 100);
+        this.lectureName = lectureName;
+        this.description = description;
+    }
+
+    private final SchoolArray<HomeWork> homeWorkArray = new SchoolArray<>(new HomeWork[1]);
+
+    public SchoolArray<HomeWork> getHomeWorkArray() {
+        return homeWorkArray;
+    }
+
+    public String getLectureName() {
+        return lectureName;
     }
 
     public void setPersonId(long personId) {
@@ -22,15 +40,11 @@ public class Lecture extends Model {
         this.courseID = courseID;
     }
 
-    public String getNameCourse() {
-        return nameCourse;
-    }
 
     public void setNameCourse(String nameCourse) {
         this.nameCourse = nameCourse;
     }
 
-    @Override
     public int getCounter() {
         return counter;
     }
@@ -38,14 +52,19 @@ public class Lecture extends Model {
     @Override
     public String toString() {
         return "LECTURE {" +
-                "ID=" + super.getModelId() +
-                ", nameLecture='" + super.getName() + '\'' +
-                ", description='" + super.getDescription() + '\'' +
+                "ID=" + lectureId +
+                ", nameLecture='" + lectureName + '\'' +
+                ", description='" + description + '\'' +
                 ", teacherId=" + personId +
-                ", teacherName='" + super.getFirstName() + '\'' +
-                ", teacherLastName='" + super.getLastName() + '\'' +
-                ", courseID=" + getCourseID() +
-                ", nameCourse='" + getNameCourse() + '\'' +
+                ", teacherName='" + super.getFirstPersonName() + '\'' +
+                ", teacherLastName='" + super.getLastPersonName() + '\'' +
+                ", courseID=" + courseID +
+                ", nameCourse='" + nameCourse + '\'' +
                 '}';
+    }
+
+    @Override
+    public long getObjectId() {
+        return lectureId;
     }
 }

@@ -3,16 +3,20 @@ package online_school.course.model;
 public class Person extends Model {
     private final long personId;
     private long lectureId;
-    private final Role role;
     private String lectureName;
+    private final Role role;
+    private final String firstName;
+    private final String lastName;
+    private final String phone;
+    private final String email;
 
     public Person(Role role, long personId, String firstName, String lastName, String phone, String email) {
-        this.role = role;
         this.personId = personId + (int) (Math.random() * 100);
-        super.setFirstName(firstName);
-        super.setLastName(lastName);
-        super.setPhone(phone);
-        super.setEmail(email);
+        this.role = role;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.email = email;
     }
 
     public long getLectureId() {
@@ -31,36 +35,29 @@ public class Person extends Model {
         return personId;
     }
 
-    @Override
-    public String getName() {
-        return super.getName();
+    public String getFirstName() {
+        return firstName;
     }
 
-    @Override
-    public void setName(String name) {
-        super.setName(name);
-    }
-
-    @Override
     public String getLastName() {
-        return super.getLastName();
-    }
-
-    @Override
-    public void setLastName(String lastName) {
-        super.setLastName(lastName);
+        return lastName;
     }
 
     @Override
     public String toString() {
         return role + " {" +
                 "ID: " + personId +
-                ", First name: " + super.getFirstName() +
-                ", Last name: " + super.getLastName() +
-                ", phone number: " + super.getPhone() +
-                ", email address: " + super.getEmail() + ", //" +
+                ", First name: " + firstName +
+                ", Last name: " + lastName +
+                ", phone number: " + phone +
+                ", email address: " + email + ", //" +
                 ", lectureId: " + lectureId +
                 ", lectureName:'" + lectureName + '\'' +
                 '}';
+    }
+
+    @Override
+    public long getObjectId() {
+        return personId;
     }
 }
