@@ -1,7 +1,6 @@
 package online_school.service;
 
 import online_school.course.model.Course;
-import online_school.course.model.Model;
 
 public class CourseService {
 
@@ -9,14 +8,14 @@ public class CourseService {
         return new Course(ID, name);
     }
 
-    public void showInformCourse(long idCourse, Model[] courses) {
+    public void showInformCourse(long courseId, Course[] courses) {
         boolean isPresent = true;
-        for (Model models : courses) {
-            if (models == null) {
+        for (Course course : courses) {
+            if (course == null) {
                 break;
-            } else if (models.getModelId() == idCourse) {
+            } else if (course.getObjectId() == courseId) {
                 System.out.println("===============================================");
-                System.out.println("Курс: " + models);
+                System.out.println("Курс: " + course);
                 System.out.println("============================================================================================================");
                 isPresent = false;
                 break;

@@ -3,12 +3,15 @@ package online_school.repositorie;
 import online_school.course.model.Lecture;
 import online_school.course.model.Person;
 import online_school.generic.SchoolArray;
+import online_school.my_interface.InterfaceRepository;
 import online_school.service.StudentService;
 
-public class StudentRepository extends Repository {
+public class StudentRepository implements InterfaceRepository {
     private final SchoolArray<Person> studentsArray = new SchoolArray<>(new Person[1]);
 
-    public int studentCounter() {
+
+    @Override
+    public int counter() {
         int result = 0;
         for (Person student : studentsArray.getArray()) {
             if (student == null) {
@@ -20,24 +23,38 @@ public class StudentRepository extends Repository {
         return result;
     }
 
-    public boolean searchStudent(long studentId, long lectureId, Lecture[] lecture) {
-        boolean trueOrFalse = true;
-        for (Person student : studentsArray.getArray()) {
-            if (student != null && student.getPersonId() == studentId) {
-                for (Lecture value : lecture) {
-                    if (value != null && value.getModelId() == lectureId) {
-                        student.setLectureId(value.getModelId());
-                        student.setLectureName(value.getName());
-                        System.out.printf("Студента з номером ID: \"%d\" присвоєно лекції з ID: \"%d\"\n", studentId, lectureId);
-                        trueOrFalse = true;
-                        break;
+    @Override
+    public void deleteObject(long studentId) {
+        boolean isPresent = true;
+        for (int i = 0; i < studentsArray.getArray().length; i++) {
+            if (studentsArray.getArray()[i] == null) {
+                break;
+            } else if (studentsArray.getArray()[i].getPersonId() == studentId) {
+                studentsArray.getArray()[i] = null;
+                System.out.printf("Об'єкт з номером ID: \"%d\" видалено!!!\n", studentId);
+                for (int j = 0; j < studentsArray.getArray().length - 1; j++) {
+                    if (studentsArray.getArray()[j] == null) {
+                        studentsArray.getArray()[j] = studentsArray.getArray()[j + 1];
+                        studentsArray.getArray()[j + 1] = null;
                     }
                 }
-            } else {
-                trueOrFalse = false;
+                isPresent = false;
+                break;
             }
         }
-        return trueOrFalse;
+        if (isPresent) {
+            System.out.println("Не має об'єкта з таким ID, спробуйте ще раз!!!");
+        }
+    }
+
+    @Override
+    public void showInformPerson(long courseOrLectureId, Lecture[] lectures, Person[] student) {
+        InterfaceRepository.super.showInformPerson(courseOrLectureId, lectures, student);
+    }
+
+    @Override
+    public <E> void add(E student) {
+        studentsArray.add((Person) student);
     }
 
     public SchoolArray<Person> getStudentsArrayObject() {
@@ -48,11 +65,9 @@ public class StudentRepository extends Repository {
         return studentsArray.getArray();
     }
 
-    public void add(Person student) {
-        studentsArray.add(student);
+    public long getStudentId() {
+        return this.studentsArray.getArray()[counter() - 1].getPersonId();
     }
 
-    public long getStudentId() {
-        return this.studentsArray.getArray()[studentCounter() - 1].getPersonId();
-    }
+
 }

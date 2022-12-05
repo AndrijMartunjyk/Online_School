@@ -17,6 +17,7 @@ public class MainService {
     private String lastName;
     private String phone;
     private String email;
+    private String task;
 
     public void autoObject(CourseRepository courseRepository, CourseService courseService, LectureRepository lectureRepository, LectureService lectureService) {
         courseRepository.add(courseService.createCourse(1, "Auto course"));
@@ -25,7 +26,7 @@ public class MainService {
             lectureRepository.setIdCourseOfLecture(courseRepository.getCourseID(), courseRepository.getCourseName());
         }
         System.out.println("==========================================================================");
-        System.out.printf("Створено автоматичний курс з іменем \"Auto course\"\n з ID \"%d\" і з трьома лекціями \"No name\".\n", courseRepository.getCourseArray()[0].getModelId());
+        System.out.printf("Створено автоматичний курс з іменем \"Auto course\"\n з ID \"%d\" і з трьома лекціями \"No name\".\n", courseRepository.getCourseArray()[0].getObjectId());
         System.out.println("==========================================================================");
         showInformCourseAndLecture();
         System.out.println("==========================================================================");
@@ -88,6 +89,22 @@ public class MainService {
             if (makeValidate(testDescription, descriptionPattern)) {
                 description = testDescription;
                 System.out.println("Опис лекції збережено!!!");
+                isPresent = false;
+            } else {
+                System.out.println("Не коректний формат !!!");
+            }
+        }
+    }
+
+    public void scannerHomeTask() {
+        boolean isPresent = true;
+        String task;
+        while (isPresent) {
+            System.out.printf("Запишіть домашнє завдання, від \"%d\" до \"%d\" символів.\n", 3, 20);
+            task = scanner.nextLine();
+            if (makeValidate(task, descriptionPattern)) {
+                this.task = task;
+                System.out.println("Домашнє завдання збережено!!!");
                 isPresent = false;
             } else {
                 System.out.println("Не коректний формат !!!");
@@ -183,8 +200,16 @@ public class MainService {
         return email;
     }
 
+    public Scanner getScanner() {
+        return scanner;
+    }
+
+    public String getTask() {
+        return task;
+    }
+
     public void putBorder() {
-        System.out.println("===================================================================================================================================================");
+        System.out.println("================================================================================================================================================================");
     }
 
     public void showInformCourseAndLecture() {

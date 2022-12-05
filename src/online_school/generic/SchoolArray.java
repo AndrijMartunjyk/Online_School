@@ -1,10 +1,9 @@
 package online_school.generic;
 
-import online_school.course.model.Model;
 
 import java.util.Arrays;
 
-public class SchoolArray<E extends Model> {
+public class SchoolArray<E> {
     private E[] array;
 
     public SchoolArray(E[] array) {
@@ -77,6 +76,6 @@ public class SchoolArray<E extends Model> {
 
     public void magnificationOfArray() {
         array = Arrays.copyOf(array, (size() * 3) / 2 + 1);
-        System.out.format("Масив збільшено, довжина: %d об'єктів!!!\n", (size()));
+        System.out.format("Масив збільшено, довжина: %d об'єктів!!!\n", size());
     }
 }
