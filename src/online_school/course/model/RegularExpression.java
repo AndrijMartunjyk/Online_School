@@ -15,6 +15,9 @@ public class RegularExpression {
     public static final Pattern descriptionPattern = Pattern.compile(DESCRIPTION_PATTERN, Pattern.CASE_INSENSITIVE);
     public static final Pattern namePattern = Pattern.compile(NAME_PATTERN, Pattern.CASE_INSENSITIVE);
 
+    private RegularExpression() {
+    }
+
     public static boolean makeValidate(final String string, Pattern pattern) {
         Matcher matcher = pattern.matcher(string);
         return matcher.matches();

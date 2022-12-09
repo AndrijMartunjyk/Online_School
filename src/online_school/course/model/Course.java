@@ -1,5 +1,7 @@
 package online_school.course.model;
 
+import java.util.Random;
+
 public class Course extends Model {
     private final String courseName;
     private final long courseId;
@@ -7,7 +9,7 @@ public class Course extends Model {
 
     public Course(long courseId, String courseName) {
         this.courseName = courseName;
-        this.courseId = courseId + counter++ + (int) (Math.random() * 100);
+        this.courseId = courseId + counter++ + new Random().nextInt(Integer.MAX_VALUE);
     }
 
     public String getCourseName() {
@@ -26,8 +28,7 @@ public class Course extends Model {
                 '}';
     }
 
-    @Override
-    public long getObjectId() {
+    public long getCourseId() {
         return courseId;
     }
 }

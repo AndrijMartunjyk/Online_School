@@ -1,6 +1,7 @@
 package online_school.repositorie;
 
 import online_school.course.model.Course;
+import online_school.exception.EntityNotFoundException;
 import online_school.generic.SchoolArray;
 import online_school.my_interface.InterfaceRepository;
 
@@ -21,7 +22,7 @@ public class CourseRepository implements InterfaceRepository {
     }
 
     public long getCourseID() {
-        return coursesArray.getArray()[counter() - 1].getObjectId();
+        return coursesArray.getArray()[counter() - 1].getCourseId();
     }
 
     public String getCourseName() {
@@ -41,13 +42,12 @@ public class CourseRepository implements InterfaceRepository {
         return result;
     }
 
-    @Override
-    public void deleteObject(long courseId) {
+    public void deleteCourse(long courseId) {
         boolean isPresent = true;
         for (int i = 0; i < coursesArray.getArray().length; i++) {
             if (coursesArray.getArray()[i] == null) {
-                break;
-            } else if (coursesArray.getArray()[i].getObjectId() == courseId) {
+                return;
+            } else if (coursesArray.getArray()[i].getCourseId() == courseId) {
                 coursesArray.getArray()[i] = null;
                 System.out.printf("Об'єкт з номером ID: \"%d\" видалено!!!\n", courseId);
                 for (int j = 0; j < coursesArray.getArray().length - 1; j++) {
@@ -57,11 +57,10 @@ public class CourseRepository implements InterfaceRepository {
                     }
                 }
                 isPresent = false;
-                break;
             }
         }
         if (isPresent) {
-            System.out.println("Не має об'єкта з таким ID, спробуйте ще раз!!!");
+            throw new EntityNotFoundException(("Id course is not found!!!"));
         }
     }
 

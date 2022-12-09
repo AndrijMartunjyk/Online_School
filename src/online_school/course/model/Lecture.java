@@ -3,6 +3,8 @@ package online_school.course.model;
 import online_school.course.task_for_lecture.HomeWork;
 import online_school.generic.SchoolArray;
 
+import java.util.Random;
+
 public class Lecture extends Model {
     private final long lectureId;
     private final String lectureName;
@@ -13,7 +15,7 @@ public class Lecture extends Model {
     private String nameCourse;
 
     public Lecture(long lectureId, String lectureName, String description) {
-        this.lectureId = lectureId + counter++ + (int) (Math.random() * 100);
+        this.lectureId = lectureId + counter++ + new Random().nextInt(Integer.MAX_VALUE);
         this.lectureName = lectureName;
         this.description = description;
     }
@@ -63,8 +65,7 @@ public class Lecture extends Model {
                 '}';
     }
 
-    @Override
-    public long getObjectId() {
+    public long getLectureId() {
         return lectureId;
     }
 }
