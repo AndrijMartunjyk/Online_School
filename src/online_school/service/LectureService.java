@@ -1,5 +1,6 @@
 package online_school.service;
 
+import online_school.exception.EntityNotFoundException;
 import online_school.course.model.Lecture;
 
 public class LectureService {
@@ -8,27 +9,37 @@ public class LectureService {
         return new Lecture(ID, nameLecture, description);
     }
 
-    public void showInformLectures(long lectureId, Lecture[] lectures) {
+    public void showLectures(long lectureId, Lecture[] lectures) {
         boolean isPresent = true;
         for (Lecture lecture : lectures) {
-            if (lecture != null && lecture.getObjectId() == lectureId) {
+            if (lecture == null) {
+               return;
+            }
+            if (lecture.getLectureId() == lectureId) {
                 System.out.println(lecture);
                 isPresent = false;
                 break;
             }
         }
         if (isPresent) {
-            System.out.println("Немає такої лекції !!!");
+            throw new EntityNotFoundException("Id lecture is not found!!!");
         }
     }
 
-    public void showInformLecturesAndCourse(long idCourse, Lecture[] lectures) {
+
+    public void showLecturesInCourse(long idCourse, Lecture[] lectures) {
+        boolean isPresent = true;
         for (Lecture lecture : lectures) {
             if (lecture == null) {
-                break;
-            } else if (lecture.getCourseID() == idCourse) {
+                return;
+            }else if (lecture.getCourseID() == idCourse) {
+                isPresent = false;
                 System.out.println(lecture);
             }
         }
+        if (isPresent) {
+            throw new EntityNotFoundException("Id of the lecture is not found!!!");
+        }
     }
 }
+

@@ -4,8 +4,6 @@ public abstract class Model {
     private String firstPersonName;
     private String lastPersonName;
 
-    public abstract long getObjectId();
-
     public String getFirstPersonName() {
         return firstPersonName;
     }

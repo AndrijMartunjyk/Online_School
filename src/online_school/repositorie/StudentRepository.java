@@ -1,5 +1,6 @@
 package online_school.repositorie;
 
+import online_school.exception.EntityNotFoundException;
 import online_school.course.model.Lecture;
 import online_school.course.model.Person;
 import online_school.generic.SchoolArray;
@@ -23,12 +24,11 @@ public class StudentRepository implements InterfaceRepository {
         return result;
     }
 
-    @Override
-    public void deleteObject(long studentId) {
+    public void deleteStudent(long studentId) {
         boolean isPresent = true;
         for (int i = 0; i < studentsArray.getArray().length; i++) {
             if (studentsArray.getArray()[i] == null) {
-                break;
+                return;
             } else if (studentsArray.getArray()[i].getPersonId() == studentId) {
                 studentsArray.getArray()[i] = null;
                 System.out.printf("Об'єкт з номером ID: \"%d\" видалено!!!\n", studentId);
@@ -39,11 +39,10 @@ public class StudentRepository implements InterfaceRepository {
                     }
                 }
                 isPresent = false;
-                break;
             }
         }
         if (isPresent) {
-            System.out.println("Не має об'єкта з таким ID, спробуйте ще раз!!!");
+            throw new EntityNotFoundException("Id student is not found!!!");
         }
     }
 

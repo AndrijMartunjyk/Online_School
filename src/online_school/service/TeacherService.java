@@ -1,5 +1,6 @@
 package online_school.service;
 
+import online_school.exception.EntityNotFoundException;
 import online_school.course.model.Lecture;
 import online_school.course.model.Role;
 import online_school.course.model.Person;
@@ -9,32 +10,30 @@ public class TeacherService {
     private static int counter;
 
     public Person createTeacher(Role role, long personId, String firstName, String lastName, String phone, String email) {
-        counter++;
-        return new Person(role, personId, firstName, lastName, phone, email);
+        return new Person(role, personId + counter++, firstName, lastName, phone, email);
     }
 
-    public boolean searchTeacher(long teacherId, long lectureId, Lecture[] lecture, SchoolArray<Person> teachersArray) {
-        boolean isPresent = false;
+    public void searchTeacher(long teacherId, long lectureId, Lecture[] lecture, SchoolArray<Person> teachersArray) {
+        boolean isPresent = true;
         for (Person teacher : teachersArray.getArray()) {
             if (teacher != null && teacher.getPersonId() == teacherId) {
                 for (Lecture value : lecture) {
-                    if (value != null && value.getObjectId() == lectureId) {
+                    if (value != null && value.getLectureId() == lectureId) {
                         value.setPersonId(teacherId);
                         value.setFirstPersonName(teacher.getFirstName());
                         value.setLastPersonName(teacher.getLastName());
-                        teacher.setLectureId(value.getObjectId());
+                        teacher.setLectureId(value.getLectureId());
                         teacher.setLectureName(value.getLectureName());
                         System.out.printf("Вчителя з номером ID: \"%d\" присвоєно лекції з номером ID: \"%d\"\n", teacherId, lectureId);
-                        isPresent = true;
+                        isPresent = false;
                         break;
                     }
                 }
             }
-            if (isPresent) {
-                break;
-            }
         }
-        return !isPresent;
+        if (isPresent) {
+            throw new EntityNotFoundException("Id teacher is not found!!!");
+        }
     }
 
     public static int getTeacherCounter() {
