@@ -10,16 +10,16 @@ public class StudentService {
 
     private static int counter;
 
-    public Person createStudent(Role role, long personId, String firstName, String lastName, String phone, String email) {
+    public Person createStudent(Role role, Long personId, String firstName, String lastName, String phone, String email) {
         return new Person(role, personId + counter++, firstName, lastName, phone, email);
     }
 
-    public void searchStudent(long studentId, long lectureId, Lecture[] lecture, SchoolArray<Person> studentsArray) {
+    public void searchStudent(long studentId, Long lectureId, Lecture[] lecture, SchoolArray<Person> studentsArray) {
         boolean isPresent = true;
-        for (Person student : studentsArray.getArray()) {
+        for (Person student : studentsArray.findAll()) {
             if (student != null && student.getPersonId() == studentId) {
                 for (Lecture value : lecture) {
-                    if (value != null && value.getLectureId() == lectureId) {
+                    if (value != null && value.getLectureId().equals(lectureId)) {
                         student.setLectureId(value.getLectureId());
                         student.setLectureName(value.getLectureName());
                         System.out.printf("Студента з номером ID: \"%d\" присвоєно лекції з ID: \"%d\"\n", studentId, lectureId);

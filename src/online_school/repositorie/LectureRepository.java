@@ -2,18 +2,18 @@ package online_school.repositorie;
 
 import online_school.exception.EntityNotFoundException;
 import online_school.course.model.Lecture;
-import online_school.course.task_for_lecture.HomeWork;
+import online_school.course.task_for_lecture.Homework;
 import online_school.generic.SchoolArray;
 import online_school.my_interface.InterfaceRepository;
 
 public class LectureRepository implements InterfaceRepository {
-    private boolean isPresent;
-    private final SchoolArray<Lecture> lectureArray = new SchoolArray<>(new Lecture[3]);
+    private int indexLecture = -1;
+    private final SchoolArray<Lecture> lectureArrayTemplate = new SchoolArray<>(new Lecture[3]);
 
-    public void getLecture(long lectureId, Lecture[] lectures) {
-        isPresent = true;
+    public void getLecture(Long lectureId, Lecture[] lectures) {
+        boolean isPresent = true;
         for (Lecture lecture : lectures) {
-            if (lecture != null && lecture.getLectureId() == lectureId) {
+            if (lecture != null && lecture.getLectureId().equals(lectureId)) {
                 isPresent = false;
                 break;
             }
@@ -23,10 +23,10 @@ public class LectureRepository implements InterfaceRepository {
         }
     }
 
-    public void addHomework(long lectureId, HomeWork homework) {
-        for (int i = 0; i < lectureArray.getArray().length; i++) {
-            if (lectureArray.getArray()[i] != null && lectureArray.getArray()[i].getLectureId() == lectureId) {
-                lectureArray.getArray()[i].getHomeWorkArray().add(homework);
+    public void addHomework(Long lectureId, Homework homework) {
+        for (int i = 0; i < getLectureArray().length; i++) {
+            if (getLectureArray()[i] != null && getLectureArray()[i].getLectureId().equals(lectureId)) {
+                getLectureArray()[i].getHomeWorkArrayTemplate().add(homework);
                 System.out.printf("Чудово, ви створили домашнє завдання з номером ID: \"%d\" i присвоїли його лекції з номером ID: \"%d\".\n",
                         homework.getHomeworkId(), lectureId);
                 break;
@@ -34,65 +34,27 @@ public class LectureRepository implements InterfaceRepository {
         }
     }
 
-    public void showAllHomework() {
-        for (int i = 0; i < lectureArray.getArray().length; i++) {
-            if (lectureArray.getArray()[i] != null) {
-                for (int j = 0; j < lectureArray.getArray()[i].getHomeWorkArray().getArray().length; j++) {
-                    if (lectureArray.getArray()[i].getHomeWorkArray().getArray()[j] != null) {
-                        System.out.println(lectureArray.getArray()[i].getHomeWorkArray().getArray()[j]);
-                    }
-                }
-            }
-        }
-    }
-
-    public void deleteHomework(long homeworkId) {
-        isPresent = true;
-        for (int i = 0; i < lectureArray.getArray().length; i++) {
-            if (lectureArray.getArray()[i] != null) {
-                for (int j = 0; j < lectureArray.getArray()[i].getHomeWorkArray().getArray().length; j++) {
-                    if (lectureArray.getArray()[i].getHomeWorkArray().getArray()[j] != null && lectureArray.getArray()[i].getHomeWorkArray().getArray()[j]
-                            .getHomeworkId() == homeworkId) {
-                        lectureArray.getArray()[i].getHomeWorkArray().getArray()[j] = null;
-                        System.out.printf("Об'єктт з номером ID:\"%d\"видалено !!!\n", homeworkId);
-                        isPresent = false;
-                        for (int k = 0; k < lectureArray.getArray()[i].getHomeWorkArray().getArray().length - 1; k++) {
-                            if (lectureArray.getArray()[i].getHomeWorkArray().getArray()[k] == null) {
-                                lectureArray.getArray()[i].getHomeWorkArray().getArray()[k] = lectureArray.getArray()[i].getHomeWorkArray()
-                                        .getArray()[k + 1];
-                                lectureArray.getArray()[i].getHomeWorkArray().getArray()[k + 1] = null;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if (isPresent) {
-            throw new EntityNotFoundException("Id homework is not found!!!");
-        }
-    }
-
-    public SchoolArray<Lecture> getLecturesArrayObject() {
-        return lectureArray;
-    }
-
     public Lecture[] getLectureArray() {
-        return lectureArray.getArray();
+        return lectureArrayTemplate.findAll();
     }
 
     public long getLectureID() {
-        return lectureArray.getArray()[counter() - 1].getLectureId();
+        return lectureArrayTemplate.findAll()[counter() - 1].getLectureId();
+    }
+
+    public int getIndexLecture() {
+        return indexLecture;
     }
 
     public void setIdCourseOfLecture(Long ID, String name) {
-        lectureArray.getArray()[counter() - 1].setCourseID(ID);
-        lectureArray.getArray()[counter() - 1].setNameCourse(name);
+        getLectureArray()[counter() - 1].setCourseID(ID);
+        getLectureArray()[counter() - 1].setNameCourse(name);
     }
 
     @Override
     public int counter() {
         int result = 0;
-        for (Lecture lecture : lectureArray.getArray()) {
+        for (Lecture lecture : getLectureArray()) {
             if (lecture == null) {
                 break;
             } else {
@@ -102,30 +64,23 @@ public class LectureRepository implements InterfaceRepository {
         return result;
     }
 
-    public void deleteLecture(long lectureId) {
-        isPresent = true;
-        for (int i = 0; i < lectureArray.getArray().length; i++) {
-            if (lectureArray.getArray()[i] == null) {
-                return;
-            } else if (lectureArray.getArray()[i].getLectureId() == lectureId) {
-                lectureArray.getArray()[i] = null;
-                System.out.printf("Об'єкт з номером ID: \"%d\" видалено!!!\n", lectureId);
-                for (int j = 0; j < lectureArray.getArray().length - 1; j++) {
-                    if (lectureArray.getArray()[j] == null) {
-                        lectureArray.getArray()[j] = lectureArray.getArray()[j + 1];
-                        lectureArray.getArray()[j + 1] = null;
-                    }
-                }
-                isPresent = false;
-            }
-        }
-        if (isPresent) {
-            throw new EntityNotFoundException("Id lecture is not found!!!");
-        }
+    @Override
+    public <E> void add(E lecture) {
+        lectureArrayTemplate.add((Lecture) lecture);
     }
 
     @Override
-    public <E> void add(E lecture) {
-        lectureArray.add((Lecture) lecture);
+    public int returnIndex(Long idHomework) {
+        int indexHomework = -1;
+        for (int i = 0; i < getLectureArray().length; i++) {
+            for (int j = 0; j < getLectureArray()[i].getHomeWorkArray().length; j++) {
+                if (getLectureArray()[i].getHomeWorkArray()[j] != null
+                        && getLectureArray()[i].getHomeWorkArray()[j].getHomeworkId().equals(idHomework)) {
+                    indexHomework = j;
+                    indexLecture = i;
+                }
+            }
+        }
+        return indexHomework;
     }
 }

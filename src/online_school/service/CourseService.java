@@ -5,26 +5,22 @@ import online_school.exception.EntityNotFoundException;
 
 public class CourseService {
 
-    public Course createCourse(long ID, String name) {
+    public Course createCourse(Long ID, String name) {
         return new Course(ID, name);
     }
 
-    public void showInformCourse(long courseId, Course[] courses) {
-        boolean isPresent = true;
+    public void showInformCourse(Long courseId, Course[] courses) {
         for (Course course : courses) {
             if (course == null) {
-                return;
-            } else if (course.getCourseId() == courseId) {
+                break;
+            } else if (course.getCourseId().equals(courseId)) {
                 System.out.println("===============================================");
                 System.out.println("Курс: " + course);
                 System.out.println("============================================================================================================");
-                isPresent = false;
-                break;
+                return;
             }
         }
-        if (isPresent) {
-            throw new EntityNotFoundException("Id of the course is not found!!!");
-        }
+        throw new EntityNotFoundException("Id of the course is not found!!!");
     }
 }
 

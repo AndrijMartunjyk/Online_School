@@ -6,7 +6,7 @@ public class Main {
     private static final MainService mainService = new MainService();
 
     public static void main(String[] args) {
-        mainService.showInform();
+        mainService.showFrontInform();
         boolean isPresent = true;
         while (isPresent) {
             if (mainService.getNameModelAndPerson().equalsIgnoreCase("курс") || mainService.getCourseRepository().counter() > 1

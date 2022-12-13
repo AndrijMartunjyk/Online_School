@@ -1,12 +1,18 @@
 package online_school.service;
 
+import online_school.course.model.Course;
+import online_school.course.model.Lecture;
+import online_school.course.model.Person;
+import online_school.course.task_for_lecture.Homework;
 import online_school.exception.EntityNotFoundException;
 import online_school.course.model.Role;
+import online_school.iterator.SimpleIterator;
 import online_school.repositorie.CourseRepository;
 import online_school.repositorie.LectureRepository;
 import online_school.repositorie.StudentRepository;
 import online_school.repositorie.TeacherRepository;
 
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import static online_school.course.model.RegularExpression.*;
@@ -23,7 +29,7 @@ public class MainService {
     private static final TeacherService teacherService = new TeacherService();
     private static final HomeworkService homeworkService = new HomeworkService();
 
-    private long number;
+    private Long number;
     private String name;
     private String nameModelAndPerson;
     private String description;
@@ -32,29 +38,33 @@ public class MainService {
     private String phone;
     private String email;
     private String task;
+
     private final String course = "курсу";
     private final String lecture = "лекції";
     private final String student = "студента";
     private final String teacher = "вчителя";
     private final String homework = "Домашнього завдання";
     private final String stringIncorrect = "String is incorrect!!!";
+    private final String iDIsNotFound = "ID is not found !!!";
+    private final String delete = "Видалено!!!";
+    private final String object = "Об'єкт: %s\n";
 
     public void autoObject(CourseRepository courseRepository, CourseService courseService, LectureRepository lectureRepository,
                            LectureService lectureService) {
-        courseRepository.add(courseService.createCourse(1, "Auto course"));
-        for (int i = 1; i < 4; i++) {
+        courseRepository.add(courseService.createCourse(1L, "Auto course"));
+        for (long i = 0; i < 3; i++) {
             lectureRepository.add(lectureService.createLecture(i, "No name", "No description"));
             lectureRepository.setIdCourseOfLecture(courseRepository.getCourseID(), courseRepository.getCourseName());
         }
         System.out.println("==========================================================================");
         System.out.printf("Створено автоматичний курс з іменем \"Auto course\"\n з ID \"%d\" і з трьома лекціями \"No name\".\n",
-                courseRepository.getCourseArray()[0].getCourseId());
+                courseRepository.getCoursesArray()[0].getCourseId());
         System.out.println("==========================================================================");
         System.out.println("Для виводу всієї інфрмації про курс, введіть: \n\"Course data\"");
         System.out.println("==========================================================================");
     }
 
-    public void showInform() {
+    public void showFrontInform() {
         System.out.println("========================\n\"РЕГІСТР НЕ ВАЖЛИВИЙ !!!\"");
         autoObject(courseRepository, courseService, lectureRepository, lectureService);
         System.out.println("Для виводу інфрмації про всі об'єкти одного типу, введіть: \n\"Course info\"\n\"Lecture info\"\n\"Teacher info\"\n\"Student info\"\n\"Homework info\"");
@@ -148,7 +158,6 @@ public class MainService {
         System.out.println("Виберіть лекцію якій хочете присвоїти домашне завдання.");
         checkNumber(lecture);
         lectureRepository.getLecture(getCheckNumber(), lectureRepository.getLectureArray());
-        checkNumber(lecture);
         lectureRepository.addHomework(getCheckNumber(), homeworkService.createHomework(homeWorkId,
                 getCheckNumber(), getTask()));
         putBorder();
@@ -160,7 +169,7 @@ public class MainService {
     public void creatCourseData() {
         checkNumber(course);
         try {
-            courseService.showInformCourse(getCheckNumber(), courseRepository.getCourseArray());
+            courseService.showInformCourse(getCheckNumber(), courseRepository.getCoursesArray());
             lectureService.showLecturesInCourse(getCheckNumber(), lectureRepository.getLectureArray());
             putBorder();
             teacherRepository.showInformPerson(getCheckNumber(), lectureRepository.getLectureArray(),
@@ -202,45 +211,106 @@ public class MainService {
 
     public void creatCourseInfo() {
         System.out.println("Інформація про всі курси:");
-        courseRepository.getCoursesArrayObject().showAllObject();
-        putBorder();
-        showInformAboutCreation();
+        try {
+            SimpleIterator<Course> simpleIteratorCourse = new SimpleIterator<>(courseRepository.getCoursesArray());
+            while (simpleIteratorCourse.hasNext()) {
+                System.out.println(simpleIteratorCourse.next());
+            }
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
+            System.err.println(iDIsNotFound);
+        } catch (NoSuchElementException | IllegalStateException n) {
+            System.err.println(n.getMessage());
+        } finally {
+            putBorder();
+            showInformAboutCreation();
+        }
     }
 
     public void createLectureInfo() {
         System.out.println("Інформація про всі лекції:");
-        lectureRepository.getLecturesArrayObject().showAllObject();
-        putBorder();
-        showInformAboutCreation();
+        try {
+            SimpleIterator<Lecture> simpleIteratorLecture = new SimpleIterator<>(lectureRepository.getLectureArray());
+            while (simpleIteratorLecture.hasNext()) {
+                System.out.println(simpleIteratorLecture.next());
+            }
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
+            System.err.println(iDIsNotFound);
+        } catch (NoSuchElementException | IllegalStateException n) {
+            System.err.println(n.getMessage());
+        } finally {
+            putBorder();
+            showInformAboutCreation();
+        }
     }
 
     public void creatTeacherInfo() {
         System.out.println("Інформація про всіх вчителів:");
-        teacherRepository.getTeachersArrayObject().showAllObject();
-        putBorder();
-        showInformAboutCreation();
+        try {
+            SimpleIterator<Person> simpleIteratorTeacher = new SimpleIterator<>(teacherRepository.getTeacherArray());
+            while (simpleIteratorTeacher.hasNext()) {
+                System.out.println(simpleIteratorTeacher.next());
+            }
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
+            System.err.println(iDIsNotFound);
+        } catch (NoSuchElementException | IllegalStateException n) {
+            System.err.println(n.getMessage());
+        } finally {
+            putBorder();
+            showInformAboutCreation();
+        }
     }
 
     public void creatStudentInfo() {
         System.out.println("Інформація про всіх студентів:");
-        studentRepository.getStudentsArrayObject().showAllObject();
-        putBorder();
-        showInformAboutCreation();
+        try {
+            SimpleIterator<Person> simpleIteratorStudent = new SimpleIterator<>(studentRepository.getStudentArray());
+            while (simpleIteratorStudent.hasNext()) {
+                System.out.println(simpleIteratorStudent.next());
+            }
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
+            System.err.println(iDIsNotFound);
+        } catch (NoSuchElementException | IllegalStateException n) {
+            System.err.println(n.getMessage());
+        } finally {
+            putBorder();
+            showInformAboutCreation();
+        }
     }
 
     public void creatHomeworkInfo() {
         System.out.println("Інформація про всі об'єкти Homework:");
-        lectureRepository.showAllHomework();
-        putBorder();
-        showInformAboutCreation();
+        try {
+            for (int i = 0; i < lectureRepository.getLectureArray().length; i++) {
+                SimpleIterator<Homework> simpleIteratorHomework = new SimpleIterator<>(lectureRepository.getLectureArray()[i].getHomeWorkArray());
+                while (simpleIteratorHomework.hasNext()) {
+                    System.out.println(simpleIteratorHomework.next());
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
+            System.err.println(iDIsNotFound);
+        } catch (NoSuchElementException | IllegalStateException n) {
+            System.err.println(n.getMessage());
+        } finally {
+            putBorder();
+            showInformAboutCreation();
+        }
     }
 
     public void creatDeleteCourse() {
         checkNumber(course);
         try {
-            courseRepository.deleteCourse(getCheckNumber());
-        } catch (NullPointerException | EntityNotFoundException e) {
-            System.err.println(e.getMessage());
+            int index = courseRepository.returnIndex(getCheckNumber());
+            SimpleIterator<Course> simpleIteratorCourse = new SimpleIterator<>(courseRepository.getCoursesArray());
+            simpleIteratorCourse.setIndex(index);
+            if (simpleIteratorCourse.hasNext()) {
+                System.out.printf(object, simpleIteratorCourse.next());
+                simpleIteratorCourse.remove();
+                System.out.println(delete);
+            }
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
+            System.err.println(iDIsNotFound);
+        } catch (NoSuchElementException | IllegalStateException n) {
+            System.err.println(n.getMessage());
         } finally {
             showInformAboutCreation();
         }
@@ -249,9 +319,18 @@ public class MainService {
     public void creatDeleteLecture() {
         checkNumber(lecture);
         try {
-            lectureRepository.deleteLecture(getCheckNumber());
-        } catch (NullPointerException | EntityNotFoundException e) {
-            System.err.println(e.getMessage());
+            int index = lectureRepository.returnIndex(getCheckNumber());
+            SimpleIterator<Lecture> simpleIteratorLecture = new SimpleIterator<>(lectureRepository.getLectureArray());
+            simpleIteratorLecture.setIndex(index);
+            if (simpleIteratorLecture.hasNext()) {
+                System.out.printf(object, simpleIteratorLecture.next());
+                simpleIteratorLecture.remove();
+                System.out.println(delete);
+            }
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
+            System.err.println(iDIsNotFound);
+        } catch (NoSuchElementException | IllegalStateException n) {
+            System.err.println(n.getMessage());
         } finally {
             showInformAboutCreation();
         }
@@ -260,9 +339,18 @@ public class MainService {
     public void creatDeleteTeacher() {
         checkNumber(teacher);
         try {
-            teacherRepository.deleteTeacher(getCheckNumber());
-        } catch (NullPointerException | EntityNotFoundException e) {
-            System.err.println(e.getMessage());
+            int index = teacherRepository.returnIndex(getCheckNumber());
+            SimpleIterator<Person> simpleIteratorTeacher = new SimpleIterator<>(teacherRepository.getTeacherArray());
+            simpleIteratorTeacher.setIndex(index);
+            if (simpleIteratorTeacher.hasNext()) {
+                System.out.printf(object, simpleIteratorTeacher.next());
+                simpleIteratorTeacher.remove();
+                System.out.println(delete);
+            }
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
+            System.err.println(iDIsNotFound);
+        } catch (NoSuchElementException | IllegalStateException n) {
+            System.err.println(n.getMessage());
         } finally {
             showInformAboutCreation();
         }
@@ -271,9 +359,18 @@ public class MainService {
     public void creatDeleteStudent() {
         checkNumber(student);
         try {
-            studentRepository.deleteStudent(getCheckNumber());
-        } catch (NullPointerException | EntityNotFoundException e) {
-            System.err.println(e.getMessage());
+            int index = studentRepository.returnIndex(getCheckNumber());
+            SimpleIterator<Person> simpleIteratorStudent = new SimpleIterator<>(studentRepository.getStudentArray());
+            simpleIteratorStudent.setIndex(index);
+            if (simpleIteratorStudent.hasNext()) {
+                System.out.printf(object, simpleIteratorStudent.next());
+                simpleIteratorStudent.remove();
+                System.out.println(delete);
+            }
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
+            System.err.println(iDIsNotFound);
+        } catch (NoSuchElementException | IllegalStateException n) {
+            System.err.println(n.getMessage());
         } finally {
             showInformAboutCreation();
         }
@@ -282,9 +379,19 @@ public class MainService {
     public void creatDeleteHomework() {
         checkNumber(homework);
         try {
-            lectureRepository.deleteHomework(getCheckNumber());
-        } catch (NullPointerException | EntityNotFoundException e) {
-            System.err.println(e.getMessage());
+            int indexHomework = lectureRepository.returnIndex(getCheckNumber());
+            SimpleIterator<Homework> simpleIteratorHomework =
+                    new SimpleIterator<>(lectureRepository.getLectureArray()[lectureRepository.getIndexLecture()].getHomeWorkArray());
+            simpleIteratorHomework.setIndex(indexHomework);
+            if (simpleIteratorHomework.hasNext()) {
+                System.out.printf(object, simpleIteratorHomework.next());
+                simpleIteratorHomework.remove();
+                System.out.println(delete);
+            }
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
+            System.err.println(iDIsNotFound);
+        } catch (NoSuchElementException | IllegalStateException n) {
+            System.err.println(n.getMessage());
         } finally {
             showInformAboutCreation();
         }
@@ -300,7 +407,7 @@ public class MainService {
             System.out.printf("Є така лекція з номером ID \"%d\"\n", lectureId);
             checkNumber(teacher);
             teacherService.searchTeacher(getCheckNumber(), lectureId, lectureRepository.getLectureArray(),
-                    teacherRepository.getTeachersArrayObject());
+                    teacherRepository.getTeachersArrayTemplate());
 
         } catch (EntityNotFoundException e) {
             System.err.println(e.getMessage());
@@ -320,7 +427,7 @@ public class MainService {
             System.out.printf("Є така лекція з номером ID \"%d\"\n", lectureId);
             checkNumber(student);
             studentService.searchStudent(getCheckNumber(), lectureId, lectureRepository.getLectureArray(),
-                    studentRepository.getStudentsArrayObject());
+                    studentRepository.getStudentsArrayTemplate());
         } catch (EntityNotFoundException e) {
             System.err.println(e.getMessage());
         } finally {
@@ -357,11 +464,11 @@ public class MainService {
         long test;
         boolean isPresent = true;
         while (isPresent) {
-            System.out.printf("Введіть ID %s, число не менше \"0\", i не більше \"%d\":\n", outName, Integer.MAX_VALUE);
+            System.out.printf("Введіть ID %s, число бшльше \"0\":\n", outName);
             if (scanner.hasNextLong()) {
                 test = scanner.nextLong();
                 scanner.nextLine();
-                if (test > 0 && test < Integer.MAX_VALUE) {
+                if (test > 0 && test < Long.MAX_VALUE) {
                     number = test;
                     isPresent = false;
                 }
@@ -539,7 +646,7 @@ public class MainService {
         return courseRepository;
     }
 
-    public long getCheckNumber() {
+    public Long getCheckNumber() {
         return number;
     }
 

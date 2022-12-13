@@ -1,6 +1,5 @@
 package online_school.generic;
 
-
 import java.util.Arrays;
 
 public class SchoolArray<E> {
@@ -47,7 +46,6 @@ public class SchoolArray<E> {
             array[index] = element;
             System.out.println("Об'єкт замінено на новий !!!");
         }
-
     }
 
     public void remove(int index) {
@@ -70,7 +68,7 @@ public class SchoolArray<E> {
         }
     }
 
-    public E[] getArray() {
+    public E[] findAll() {
         return array;
     }
 

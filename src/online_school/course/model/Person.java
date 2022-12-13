@@ -3,8 +3,8 @@ package online_school.course.model;
 import java.util.Random;
 
 public class Person extends Model {
-    private final long personId;
-    private long lectureId;
+    private final Long personId;
+    private Long lectureId;
     private String lectureName;
     private final Role role;
     private final String firstName;
@@ -12,8 +12,8 @@ public class Person extends Model {
     private final String phone;
     private final String email;
 
-    public Person(Role role, long personId, String firstName, String lastName, String phone, String email) {
-        this.personId = personId + new Random().nextInt(Integer.MAX_VALUE);
+    public Person(Role role, Long personId, String firstName, String lastName, String phone, String email) {
+        this.personId = personId + new Random().nextLong(Long.MAX_VALUE);
         this.role = role;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -21,11 +21,11 @@ public class Person extends Model {
         this.email = email;
     }
 
-    public long getLectureId() {
+    public Long getLectureId() {
         return lectureId;
     }
 
-    public void setLectureId(long lectureId) {
+    public void setLectureId(Long lectureId) {
         this.lectureId = lectureId;
     }
 
@@ -33,7 +33,7 @@ public class Person extends Model {
         this.lectureName = lectureName;
     }
 
-    public long getPersonId() {
+    public Long getPersonId() {
         return personId;
     }
 

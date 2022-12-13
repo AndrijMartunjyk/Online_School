@@ -2,22 +2,23 @@ package online_school.service;
 
 import online_school.exception.EntityNotFoundException;
 import online_school.course.model.Lecture;
-import online_school.course.task_for_lecture.HomeWork;
+import online_school.course.task_for_lecture.Homework;
 
 public class HomeworkService {
-    public HomeWork createHomework(long id, long lectureId, String task) {
-        return new HomeWork(id, lectureId, task);
+    public Homework createHomework(Long id, Long lectureId, String task) {
+        return new Homework(id, lectureId, task);
     }
 
-    public void showInformHomework(long lectureId, Lecture[] lectures) {
+    public void showInformHomework(Long lectureId, Lecture[] lectures) {
         boolean isPresent = true;
         for (Lecture lecture : lectures) {
             if (lecture == null) {
-                return;
+                break;
             }
-            for (int j = 0; j < lecture.getHomeWorkArray().getArray().length; j++) {
-                if (lecture.getHomeWorkArray().getArray()[j] != null && lecture.getHomeWorkArray().getArray()[j].getLectureId() == lectureId) {
-                    System.out.println(lecture.getHomeWorkArray().getArray()[j]);
+            for (int j = 0; j < lecture.getHomeWorkArray().length; j++) {
+                if (lecture.getHomeWorkArray()[j] != null &&
+                        lecture.getHomeWorkArray()[j].getLectureId().equals(lectureId)) {
+                    System.out.println(lecture.getHomeWorkArray()[j]);
                     isPresent = false;
                 }
             }
