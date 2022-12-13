@@ -9,16 +9,16 @@ import online_school.generic.SchoolArray;
 public class TeacherService {
     private static int counter;
 
-    public Person createTeacher(Role role, long personId, String firstName, String lastName, String phone, String email) {
+    public Person createTeacher(Role role, Long personId, String firstName, String lastName, String phone, String email) {
         return new Person(role, personId + counter++, firstName, lastName, phone, email);
     }
 
-    public void searchTeacher(long teacherId, long lectureId, Lecture[] lecture, SchoolArray<Person> teachersArray) {
+    public void searchTeacher(Long teacherId, Long lectureId, Lecture[] lecture, SchoolArray<Person> teachersArray) {
         boolean isPresent = true;
-        for (Person teacher : teachersArray.getArray()) {
-            if (teacher != null && teacher.getPersonId() == teacherId) {
+        for (Person teacher : teachersArray.findAll()) {
+            if (teacher != null && teacher.getPersonId().equals(teacherId)) {
                 for (Lecture value : lecture) {
-                    if (value != null && value.getLectureId() == lectureId) {
+                    if (value != null && value.getLectureId().equals(lectureId)) {
                         value.setPersonId(teacherId);
                         value.setFirstPersonName(teacher.getFirstName());
                         value.setLastPersonName(teacher.getLastName());

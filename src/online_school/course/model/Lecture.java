@@ -1,36 +1,40 @@
 package online_school.course.model;
 
-import online_school.course.task_for_lecture.HomeWork;
+import online_school.course.task_for_lecture.Homework;
 import online_school.generic.SchoolArray;
 
 import java.util.Random;
 
 public class Lecture extends Model {
-    private final long lectureId;
+    private final Long lectureId;
     private final String lectureName;
     private final String description;
     private static int counter;
-    private long personId;
+    private Long personId;
     private Long courseID;
     private String nameCourse;
 
-    public Lecture(long lectureId, String lectureName, String description) {
-        this.lectureId = lectureId + counter++ + new Random().nextInt(Integer.MAX_VALUE);
+    public Lecture(Long lectureId, String lectureName, String description) {
+        this.lectureId = lectureId + counter++ + new Random().nextLong(Long.MAX_VALUE);
         this.lectureName = lectureName;
         this.description = description;
     }
 
-    private final SchoolArray<HomeWork> homeWorkArray = new SchoolArray<>(new HomeWork[1]);
+    private final SchoolArray<Homework> homeWorkArrayTemplate = new SchoolArray<>(new Homework[1]);
 
-    public SchoolArray<HomeWork> getHomeWorkArray() {
-        return homeWorkArray;
+    public SchoolArray<Homework> getHomeWorkArrayTemplate() {
+        return homeWorkArrayTemplate;
+    }
+
+    public Homework[] getHomeWorkArray() {
+        return homeWorkArrayTemplate.findAll();
     }
 
     public String getLectureName() {
         return lectureName;
     }
 
-    public void setPersonId(long personId) {
+    public void setPersonId(Long personId) {
         this.personId = personId;
     }
 
@@ -51,6 +55,10 @@ public class Lecture extends Model {
         return counter;
     }
 
+    public Long getLectureId() {
+        return lectureId;
+    }
+
     @Override
     public String toString() {
         return "LECTURE {" +
@@ -63,9 +71,5 @@ public class Lecture extends Model {
                 ", courseID=" + courseID +
                 ", nameCourse='" + nameCourse + '\'' +
                 '}';
-    }
-
-    public long getLectureId() {
-        return lectureId;
     }
 }

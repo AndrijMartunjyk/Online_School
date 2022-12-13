@@ -5,34 +5,30 @@ import online_school.course.model.Lecture;
 
 public class LectureService {
 
-    public Lecture createLecture(long ID, String nameLecture, String description) {
+    public Lecture createLecture(Long ID, String nameLecture, String description) {
         return new Lecture(ID, nameLecture, description);
     }
 
-    public void showLectures(long lectureId, Lecture[] lectures) {
-        boolean isPresent = true;
+    public void showLectures(Long lectureId, Lecture[] lectures) {
         for (Lecture lecture : lectures) {
             if (lecture == null) {
-               return;
-            }
-            if (lecture.getLectureId() == lectureId) {
-                System.out.println(lecture);
-                isPresent = false;
                 break;
             }
+            if (lecture.getLectureId().equals(lectureId)) {
+                System.out.println(lecture);
+                return;
+            }
         }
-        if (isPresent) {
-            throw new EntityNotFoundException("Id lecture is not found!!!");
-        }
+        throw new EntityNotFoundException("Id lecture is not found!!!");
     }
 
 
-    public void showLecturesInCourse(long idCourse, Lecture[] lectures) {
+    public void showLecturesInCourse(Long idCourse, Lecture[] lectures) {
         boolean isPresent = true;
         for (Lecture lecture : lectures) {
             if (lecture == null) {
-                return;
-            }else if (lecture.getCourseID() == idCourse) {
+                break;
+            } else if (lecture.getCourseID().equals(idCourse)) {
                 isPresent = false;
                 System.out.println(lecture);
             }

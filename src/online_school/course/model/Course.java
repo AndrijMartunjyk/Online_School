@@ -4,12 +4,12 @@ import java.util.Random;
 
 public class Course extends Model {
     private final String courseName;
-    private final long courseId;
+    private final Long courseId;
     private static int counter;
 
-    public Course(long courseId, String courseName) {
+    public Course(Long courseId, String courseName) {
         this.courseName = courseName;
-        this.courseId = courseId + counter++ + new Random().nextInt(Integer.MAX_VALUE);
+        this.courseId = courseId + counter++ + new Random().nextLong(Long.MAX_VALUE);
     }
 
     public String getCourseName() {
@@ -20,15 +20,15 @@ public class Course extends Model {
         return counter;
     }
 
+    public Long getCourseId() {
+        return courseId;
+    }
+
     @Override
     public String toString() {
         return "Course{" +
                 "ID=" + courseId +
                 ", name='" + courseName + '\'' +
                 '}';
-    }
-
-    public long getCourseId() {
-        return courseId;
     }
 }

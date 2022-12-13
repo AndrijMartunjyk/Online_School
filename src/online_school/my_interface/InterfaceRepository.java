@@ -9,20 +9,23 @@ public interface InterfaceRepository {
 
     <E> void add(E object);
 
-    default void showInformPerson(long id, Lecture[] lectures, Person[] persons) {
+    int returnIndex(Long id);
+
+    default void showInformPerson(Long id, Lecture[] lectures, Person[] persons) {
         boolean isPresent = true;
         for (Lecture lecture : lectures) {
             for (Person person : persons) {
                 if (lecture == null || person == null) {
                     return;
-                } else if (lecture.getLectureId() == person.getLectureId() && (lecture.getCourseID() == id || lecture.getLectureId() == id)) {
+                } else if (lecture.getLectureId().equals(person.getLectureId()) &&
+                        (lecture.getCourseID().equals(id) || lecture.getLectureId().equals(id))) {
                     System.out.println(person);
                     isPresent = false;
                 }
             }
-            if (isPresent) {
-                throw new EntityNotFoundException("Id person is not found!!!");
-            }
+        }
+        if (isPresent) {
+            throw new EntityNotFoundException("Id person is not found!!!");
         }
     }
 }
