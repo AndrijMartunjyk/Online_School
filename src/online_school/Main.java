@@ -9,14 +9,15 @@ public class Main {
         mainService.showFrontInform();
         boolean isPresent = true;
         while (isPresent) {
-            if (mainService.getNameModelAndPerson().equalsIgnoreCase("курс") || mainService.getCourseRepository().counter() > 1
-                    || mainService.getNameModelAndPerson().equalsIgnoreCase("Course data")) {
+            if (mainService.getNameModelAndPerson().equalsIgnoreCase(MainService.COURSE) || mainService.getCourseRepository().counter() > 1
+                    || mainService.getNameModelAndPerson().equalsIgnoreCase(MainService.COURSE_DATA)) {
                 switch (mainService.getNameModelAndPerson().toLowerCase()) {
                     case "курс" -> mainService.creatCourse();
                     case "лекція" -> mainService.creatLecture();
                     case "вчитель" -> mainService.creatTeacher();
                     case "студент" -> mainService.creatStudent();
-                    case "homework" -> mainService.creatHomework();
+                    case "add homework" -> mainService.creatHomework();
+                    case "add resource" -> mainService.createResourceType();
                     case "course data" -> mainService.creatCourseData();
                     case "lecture data" -> mainService.creatLectureData();
                     case "course info" -> mainService.creatCourseInfo();
@@ -24,14 +25,16 @@ public class Main {
                     case "teacher info" -> mainService.creatTeacherInfo();
                     case "student info" -> mainService.creatStudentInfo();
                     case "homework info" -> mainService.creatHomeworkInfo();
+                    case "additional material info" -> mainService.creatAdditionalMaterialInfo();
                     case "delete course" -> mainService.creatDeleteCourse();
                     case "delete lecture" -> mainService.creatDeleteLecture();
                     case "delete teacher" -> mainService.creatDeleteTeacher();
                     case "delete student" -> mainService.creatDeleteStudent();
                     case "delete homework" -> mainService.creatDeleteHomework();
+                    case "delete additional material" -> mainService.creatDeleteAdditionalMaterial();
                     case "вчитель для лекції" -> mainService.creatTeacherForLecture();
                     case "студент для лекції" -> mainService.creatStudentForLecture();
-                    case "add" -> mainService.creatAddPersonForLecture();
+                    case "add someone" -> mainService.creatAddPersonForLecture();
                     case "stop" -> isPresent = false;
                     default -> mainService.creatDefault();
                 }

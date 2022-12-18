@@ -9,7 +9,8 @@ public class Course extends Model {
 
     public Course(Long courseId, String courseName) {
         this.courseName = courseName;
-        this.courseId = courseId + counter++ + new Random().nextLong(Long.MAX_VALUE);
+        this.courseId = courseId + new Random().nextLong(Long.MAX_VALUE);
+        counter++;
     }
 
     public String getCourseName() {

@@ -1,4 +1,4 @@
-package online_school.course.model;
+package online_school.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -1,15 +1,41 @@
 package online_school.course.task_for_lecture;
 
-public class AdditionalMaterial {
-    private static int ID;
-    private String nameBook;
-    private String nameSite;
+import online_school.my_enum.Resource;
 
-    public AdditionalMaterial() {
-        ID++;
+import java.util.Random;
+
+public class AdditionalMaterial {
+    private final Long Id;
+    private final String name;
+    private final Long lectureId;
+    private final Resource resourceType;
+
+    public AdditionalMaterial(Long id, String name, Long lectureId, Resource resourceType) {
+        Id = id + new Random().nextLong(Long.MAX_VALUE);
+        this.name = name;
+        this.lectureId = lectureId;
+        this.resourceType = resourceType;
     }
 
-    public static int getID() {
-        return ID;
+    public Long getId() {
+        return Id;
+    }
+
+    public Long getLectureId() {
+        return lectureId;
+    }
+
+    @Override
+    public String toString() {
+        return "AdditionalMaterial{" +
+                "Id=" + Id +
+                ", name='" + name + '\'' +
+                ", lectureId=" + lectureId +
+                ", resource type=" + resourceType +
+                '}';
     }
 }
+
+
+
+

@@ -3,13 +3,15 @@ package online_school.service;
 import online_school.course.model.Course;
 import online_school.exception.EntityNotFoundException;
 
+import java.util.List;
+
 public class CourseService {
 
     public Course createCourse(Long ID, String name) {
         return new Course(ID, name);
     }
 
-    public void showInformCourse(Long courseId, Course[] courses) {
+    public void showInformCourse(Long courseId, List<Course> courses) {
         for (Course course : courses) {
             if (course == null) {
                 break;
