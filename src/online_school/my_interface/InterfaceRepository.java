@@ -4,14 +4,12 @@ import online_school.exception.EntityNotFoundException;
 import online_school.course.model.Lecture;
 import online_school.course.model.Person;
 
+import java.util.List;
+
 public interface InterfaceRepository {
     int counter();
 
-    <E> void add(E object);
-
-    int returnIndex(Long id);
-
-    default void showInformPerson(Long id, Lecture[] lectures, Person[] persons) {
+    default void showInformPerson(String personName, Long id, List<Lecture> lectures, List<Person> persons) {
         boolean isPresent = true;
         for (Lecture lecture : lectures) {
             for (Person person : persons) {
@@ -25,7 +23,7 @@ public interface InterfaceRepository {
             }
         }
         if (isPresent) {
-            throw new EntityNotFoundException("Id person is not found!!!");
+            throw new EntityNotFoundException("Id of the " + personName + " is not found!!!");
         }
     }
 }

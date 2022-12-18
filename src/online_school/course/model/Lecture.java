@@ -1,8 +1,10 @@
 package online_school.course.model;
 
+import online_school.course.task_for_lecture.AdditionalMaterial;
 import online_school.course.task_for_lecture.Homework;
-import online_school.generic.SchoolArray;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Lecture extends Model {
@@ -15,19 +17,21 @@ public class Lecture extends Model {
     private String nameCourse;
 
     public Lecture(Long lectureId, String lectureName, String description) {
-        this.lectureId = lectureId + counter++ + new Random().nextLong(Long.MAX_VALUE);
+        this.lectureId = lectureId + new Random().nextLong(Long.MAX_VALUE);
         this.lectureName = lectureName;
         this.description = description;
+        counter++;
     }
 
-    private final SchoolArray<Homework> homeWorkArrayTemplate = new SchoolArray<>(new Homework[1]);
+    private final List<Homework> homeworkList = new ArrayList<>();
+    private final List<AdditionalMaterial> additionalMaterialList = new ArrayList<>();
 
-    public SchoolArray<Homework> getHomeWorkArrayTemplate() {
-        return homeWorkArrayTemplate;
+    public List<Homework> getHomeworkList() {
+        return homeworkList;
     }
 
-    public Homework[] getHomeWorkArray() {
-        return homeWorkArrayTemplate.findAll();
+    public List<AdditionalMaterial> getAdditionalMaterialList() {
+        return additionalMaterialList;
     }
 
     public String getLectureName() {
@@ -45,7 +49,6 @@ public class Lecture extends Model {
     public void setCourseID(Long courseID) {
         this.courseID = courseID;
     }
-
 
     public void setNameCourse(String nameCourse) {
         this.nameCourse = nameCourse;

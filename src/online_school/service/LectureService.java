@@ -3,13 +3,15 @@ package online_school.service;
 import online_school.exception.EntityNotFoundException;
 import online_school.course.model.Lecture;
 
+import java.util.List;
+
 public class LectureService {
 
     public Lecture createLecture(Long ID, String nameLecture, String description) {
         return new Lecture(ID, nameLecture, description);
     }
 
-    public void showLectures(Long lectureId, Lecture[] lectures) {
+    public void showLectures(Long lectureId, List<Lecture> lectures) {
         for (Lecture lecture : lectures) {
             if (lecture == null) {
                 break;
@@ -19,11 +21,10 @@ public class LectureService {
                 return;
             }
         }
-        throw new EntityNotFoundException("Id lecture is not found!!!");
+        throw new EntityNotFoundException(MainService.ID_LECTURE_IS_NOT_FOUND);
     }
 
-
-    public void showLecturesInCourse(Long idCourse, Lecture[] lectures) {
+    public void showLecturesInCourse(Long idCourse, List<Lecture> lectures) {
         boolean isPresent = true;
         for (Lecture lecture : lectures) {
             if (lecture == null) {
@@ -34,7 +35,7 @@ public class LectureService {
             }
         }
         if (isPresent) {
-            throw new EntityNotFoundException("Id of the lecture is not found!!!");
+            throw new EntityNotFoundException(MainService.ID_LECTURE_IS_NOT_FOUND);
         }
     }
 }

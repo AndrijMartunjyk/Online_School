@@ -1,21 +1,16 @@
 package online_school.service;
 
-import online_school.course.model.Course;
-import online_school.course.model.Lecture;
-import online_school.course.model.Person;
-import online_school.course.task_for_lecture.Homework;
+import online_school.my_enum.Resource;
 import online_school.exception.EntityNotFoundException;
-import online_school.course.model.Role;
-import online_school.iterator.SimpleIterator;
-import online_school.repositorie.CourseRepository;
-import online_school.repositorie.LectureRepository;
-import online_school.repositorie.StudentRepository;
-import online_school.repositorie.TeacherRepository;
+import online_school.my_enum.Role;
+import online_school.repository.CourseRepository;
+import online_school.repository.LectureRepository;
+import online_school.repository.StudentRepository;
+import online_school.repository.TeacherRepository;
 
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import static online_school.course.model.RegularExpression.*;
+import static online_school.util.RegularExpression.*;
 
 public class MainService {
     private final Scanner scanner = new Scanner(System.in);
@@ -28,6 +23,7 @@ public class MainService {
     private static final TeacherRepository teacherRepository = new TeacherRepository();
     private static final TeacherService teacherService = new TeacherService();
     private static final HomeworkService homeworkService = new HomeworkService();
+    private static final AdditionalMaterialService additionalMaterialService = new AdditionalMaterialService();
 
     private Long number;
     private String name;
@@ -38,42 +34,70 @@ public class MainService {
     private String phone;
     private String email;
     private String task;
+    private boolean isPresent;
+    private Resource resourceType;
 
-    private final String course = "курсу";
-    private final String lecture = "лекції";
-    private final String student = "студента";
-    private final String teacher = "вчителя";
-    private final String homework = "Домашнього завдання";
-    private final String stringIncorrect = "String is incorrect!!!";
-    private final String iDIsNotFound = "ID is not found !!!";
-    private final String delete = "Видалено!!!";
-    private final String object = "Об'єкт: %s\n";
+    public static final String OF_COURSE = "курсу";
+    public static final String OF_LECTURE = "лекції";
+    public static final String OF_STUDENT = "студента";
+    public static final String OF_TEACHER = "вчителя";
+    public static final String COURSE = "\"Курс\"";
+    public static final String LECTURE = "\"Лекція\"";
+    public static final String STUDENT = "\"Студент\"";
+    public static final String TEACHER = "\"Вчитель\"";
+    public static final String TEACHER_ENG = "teacher";
+    public static final String STUDENT_ENG = "student";
+    public static final String HOMEWORK = "Домашнього завдання";
+    public static final String ADDITIONAL_MATERIAL = "Додаткового матеріалу";
+    public static final String STRING_IS_INCORRECT = "String is incorrect!!!";
+    public static final String OBJECT_IS_DELETE = "Об'єкт %s ВИДАЛЕНО!!!\n";
+    public static final String ID_IS_NOT_FOUND = "ID is not found !!!";
+    public static final String ID_LECTURE_IS_NOT_FOUND = "Id of the lecture is not found!!!";
+    public static final String SYMBOL_IS_INCORRECT = "Symbol is incorrect !!!";
+    public static final String YOU_CREATING_AN_OBJECT = "Ви створюєте об'єкт: ";
+    public static final String COURSE_DATA = "Course data";
 
     public void autoObject(CourseRepository courseRepository, CourseService courseService, LectureRepository lectureRepository,
                            LectureService lectureService) {
-        courseRepository.add(courseService.createCourse(1L, "Auto course"));
+        courseRepository.getCourseList().add(courseService.createCourse(1L, "Auto course"));
         for (long i = 0; i < 3; i++) {
-            lectureRepository.add(lectureService.createLecture(i, "No name", "No description"));
+            lectureRepository.getLectureList().add(lectureService.createLecture(i, "No name", "No description"));
             lectureRepository.setIdCourseOfLecture(courseRepository.getCourseID(), courseRepository.getCourseName());
         }
         System.out.println("==========================================================================");
         System.out.printf("Створено автоматичний курс з іменем \"Auto course\"\n з ID \"%d\" і з трьома лекціями \"No name\".\n",
-                courseRepository.getCoursesArray()[0].getCourseId());
+                courseRepository.getCourseList().get(0).getCourseId());
         System.out.println("==========================================================================");
-        System.out.println("Для виводу всієї інфрмації про курс, введіть: \n\"Course data\"");
+        System.out.println("Для виводу всієї інфрмації про курс, введіть: \n\"" + COURSE_DATA + "\"");
         System.out.println("==========================================================================");
     }
 
     public void showFrontInform() {
         System.out.println("========================\n\"РЕГІСТР НЕ ВАЖЛИВИЙ !!!\"");
         autoObject(courseRepository, courseService, lectureRepository, lectureService);
-        System.out.println("Для виводу інфрмації про всі об'єкти одного типу, введіть: \n\"Course info\"\n\"Lecture info\"\n\"Teacher info\"\n\"Student info\"\n\"Homework info\"");
+        System.out.println("""
+                Для виводу інфрмації про всі об'єкти одного типу, введіть:
+                "Course info"
+                "Lecture info"
+                "Teacher info"
+                "Student info"
+                "Homework info"
+                "Additional material info\"""");
         System.out.println("================================");
-        System.out.println("Щоб видалити об'єкт введіть:\n\"Delete course\"\n\"Delete lecture\"\n\"Delete teacher\"\n\"Delete student\"\n\"Delete homework\"");
+        System.out.println("""
+                Щоб видалити об'єкт введіть:
+                "Delete course"
+                "Delete lecture"
+                "Delete teacher"
+                "Delete student"
+                "Delete homework"
+                "Delete additional material\"""");
         System.out.println("==================================================");
-        System.out.println("Щоб додати студента або вчителя до лекції введіть:\n\"Add\"");
+        System.out.println("Щоб додати студента або вчителя до лекції введіть:\n\"Add someone\"");
         System.out.println("==================================================");
-        System.out.println("Щоб додати домашнє завдання до лекції введіть:\n\"Homework\"");
+        System.out.println("Щоб додати домашнє завдання до лекції введіть:\n\"Add homework\"");
+        System.out.println("==================================================");
+        System.out.println("Щоб додати Додаткові матеріали до лекції введіть:\n\"Add resource\"");
         System.out.println("==================================================");
         System.out.println("Створіть об'єкт курсу, ввівши:\n\"Курс\"");
         System.out.println("================================\nДля завершення програми,\n введіть \"Stop\"\n========================");
@@ -81,13 +105,13 @@ public class MainService {
     }
 
     public void creatCourse() {
-        System.out.println(showJustMessage() + "\"Курс\"");
-        checkNumber(course);
+        System.out.println(YOU_CREATING_AN_OBJECT + COURSE);
+        checkNumber(OF_COURSE);
         System.out.println("Введіть назву курсу:");
         scannerName();
-        courseRepository.add(courseService.createCourse(getCheckNumber(), getName()));
+        courseRepository.getCourseList().add(courseService.createCourse(getCheckNumber(), getName()));
         System.out.printf("Чудово, ви створили курс з назвою: \"%s\", і номером ID: \"%d\".\n", getName(), courseRepository.getCourseID());
-        System.out.println("Тепер створіть об'єкти ввівши:\n\"Лекція\".\n\"Студент\".\n\"Вчитель\".");
+        System.out.println("Тепер створіть об'єкти ввівши:\n" + LECTURE + ".\n" + STUDENT + ".\n" + TEACHER + ".");
         putBorder();
         showInformCourseAndLecture();
         putBorder();
@@ -95,12 +119,12 @@ public class MainService {
     }
 
     public void creatLecture() {
-        System.out.println(showJustMessage() + "\"Лекція\"");
-        checkNumber(lecture);
+        System.out.println(YOU_CREATING_AN_OBJECT + LECTURE);
+        checkNumber(OF_LECTURE);
         System.out.println("Введіть назву лекції:");
         scannerName();
         scannerDescription();
-        lectureRepository.add(lectureService.createLecture(getCheckNumber(), getName(), getDescription()));
+        lectureRepository.getLectureList().add(lectureService.createLecture(getCheckNumber(), getName(), getDescription()));
         lectureRepository.setIdCourseOfLecture(courseRepository.getCourseID(), courseRepository.getCourseName());
         System.out.printf("Чудово, ви створили лекцію з назвою: \"%s\", і номером ID: \"%d\".\n", getName(), lectureRepository.getLectureID());
         putBorder();
@@ -110,8 +134,8 @@ public class MainService {
     }
 
     public void creatStudent() {
-        System.out.println(showJustMessage() + "\"Студент\"");
-        checkNumber(student);
+        System.out.println(YOU_CREATING_AN_OBJECT + STUDENT);
+        checkNumber(OF_STUDENT);
         System.out.println("Введіть ім'я студента:");
         scannerFirstName();
         System.out.println("Введіть прізвище студента:");
@@ -120,7 +144,7 @@ public class MainService {
         scannerPhone();
         System.out.println("Введіть Email студента:");
         scannerEmail();
-        studentRepository.add(studentService.createStudent(Role.STUDENT, getCheckNumber(), getFirstname(),
+        studentRepository.getStudentList().add(studentService.createStudent(Role.STUDENT, getCheckNumber(), getFirstname(),
                 getLastName(), getPhone(), getEmail()));
         System.out.printf("Чудово, ви створили об'єкт студента з іменем: \"%s\", прізвищем: \"%s\" і номером ID: \"%d\".\n",
                 getFirstname(), getLastName(), studentRepository.getStudentId());
@@ -131,8 +155,8 @@ public class MainService {
     }
 
     public void creatTeacher() {
-        System.out.println(showJustMessage() + "\"Вчитель\"");
-        checkNumber(teacher);
+        System.out.println(YOU_CREATING_AN_OBJECT + TEACHER);
+        checkNumber(OF_TEACHER);
         System.out.println("Введіть ім'я вчителя:");
         scannerFirstName();
         System.out.println("Введіть прізвище вчителя:");
@@ -141,7 +165,8 @@ public class MainService {
         scannerPhone();
         System.out.println("Введіть Email вчителя:");
         scannerEmail();
-        teacherRepository.add(teacherService.createTeacher(Role.TEACHER, getCheckNumber(), getFirstname(), getLastName(), getPhone(), getEmail()));
+        teacherRepository.getTeacherList().add(teacherService.createTeacher(Role.TEACHER, getCheckNumber(), getFirstname(), getLastName(),
+                getPhone(), getEmail()));
         System.out.printf("Чудово, ви створили об'єкт вчителя з іменем: \"%s\", прізвищем: \"%s\" і номером ID: \"%d\".\n", getFirstname(),
                 getLastName(), teacherRepository.getTeacherId());
         putBorder();
@@ -151,57 +176,125 @@ public class MainService {
     }
 
     public void creatHomework() {
-        System.out.println(showJustMessage() + "\"Homework\" для лекції");
-        checkNumber(homework);
-        long homeWorkId = getCheckNumber();
+        System.out.println(YOU_CREATING_AN_OBJECT + "\"Homework\" для лекції");
+        checkNumber(HOMEWORK);
+        long homeworkId = getCheckNumber();
         scannerHomeTask();
+        String homeTask = getTask();
         System.out.println("Виберіть лекцію якій хочете присвоїти домашне завдання.");
-        checkNumber(lecture);
-        lectureRepository.getLecture(getCheckNumber(), lectureRepository.getLectureArray());
-        lectureRepository.addHomework(getCheckNumber(), homeworkService.createHomework(homeWorkId,
-                getCheckNumber(), getTask()));
-        putBorder();
-        showInformCourseAndLecture();
-        putBorder();
-        showInformAboutCreation();
+        checkNumber(OF_LECTURE);
+        long lectureId = getCheckNumber();
+        try {
+            lectureRepository.addHomework(lectureId, homeworkService.createHomework(homeworkId, lectureId, homeTask));
+        } catch (NullPointerException n) {
+            n.printStackTrace();
+        } catch (EntityNotFoundException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            putBorder();
+            showInformCourseAndLecture();
+            putBorder();
+            showInformAboutCreation();
+        }
+    }
+
+    public void createResourceType() {
+        System.out.println(YOU_CREATING_AN_OBJECT + "\"додаткові матеріали\" для лекції");
+        String resource = "Додаткових матеріалів";
+        checkNumber(resource);
+        long additionalMaterialId = getCheckNumber();
+        System.out.println("Введіть назву для об'єкта додаткові матеріали:");
+        scannerName();
+        String resourceName = getName();
+        System.out.println("""
+                Виберіть які додаткові матеріли ви хочете додати до лекції:
+                "Url адреса"
+                "Відео матеріали"
+                "Книжка"
+                Ввівши відповідно:
+                "Url"
+                "Video"
+                "Book\"""");
+        try {
+            Resource resourceType = getResource();
+            System.out.printf("Виберіть лекцію якій хочете присвоїти %s.\n", resourceType);
+            checkNumber(OF_LECTURE);
+            long lectureId = getCheckNumber();
+            lectureRepository.addAdditionalMaterials(lectureId,
+                    additionalMaterialService.createAdditionalMaterials(additionalMaterialId, resourceName, lectureId, resourceType));
+        } catch (NullPointerException n) {
+            n.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            putBorder();
+            showInformCourseAndLecture();
+            putBorder();
+            showInformAboutCreation();
+        }
     }
 
     public void creatCourseData() {
-        checkNumber(course);
+        checkNumber(OF_COURSE);
+        long courseId = getCheckNumber();
         try {
-            courseService.showInformCourse(getCheckNumber(), courseRepository.getCoursesArray());
-            lectureService.showLecturesInCourse(getCheckNumber(), lectureRepository.getLectureArray());
+            courseService.showInformCourse(courseId, courseRepository.getCourseList());
+            lectureService.showLecturesInCourse(courseId, lectureRepository.getLectureList());
             putBorder();
-            teacherRepository.showInformPerson(getCheckNumber(), lectureRepository.getLectureArray(),
-                    teacherRepository.getTeacherArray());
-            putBorder();
-            studentRepository.showInformPerson(getCheckNumber(), lectureRepository.getLectureArray(),
-                    studentRepository.getStudentArray());
-        } catch (NullPointerException | EntityNotFoundException e) {
+            try {
+                teacherRepository.showInformPerson(TEACHER_ENG, courseId, lectureRepository.getLectureList(), teacherRepository.getTeacherList());
+                putBorder();
+            } catch (EntityNotFoundException e) {
+                System.err.println(e.getMessage());
+            } finally {
+                studentRepository.showInformPerson(STUDENT_ENG, courseId, lectureRepository.getLectureList(), studentRepository.getStudentList());
+            }
+        } catch (NullPointerException n) {
+            n.printStackTrace();
+        } catch (EntityNotFoundException e) {
             System.err.println(e.getMessage());
         } finally {
             putBorder();
             if (courseRepository.counter() > 1) {
                 showInformAboutCreation();
             } else {
-                System.out.println("Створіть об'єкт курсу, ввівши: \"Курс\"");
+                System.out.println("Створіть об'єкт курсу, ввівши: " + COURSE);
                 scannerNameModelAndPerson();
             }
         }
     }
 
     public void creatLectureData() {
-        checkNumber(lecture);
+        checkNumber(OF_LECTURE);
+        long lectureId = getCheckNumber();
         try {
-            lectureService.showLectures(getCheckNumber(), lectureRepository.getLectureArray());
+            lectureService.showLectures(getCheckNumber(), lectureRepository.getLectureList());
             putBorder();
-            teacherRepository.showInformPerson(getCheckNumber(), lectureRepository.getLectureArray(),
-                    teacherRepository.getTeacherArray());
-            putBorder();
-            studentRepository.showInformPerson(getCheckNumber(), lectureRepository.getLectureArray(),
-                    studentRepository.getStudentArray());
-            homeworkService.showInformHomework(getCheckNumber(), lectureRepository.getLectureArray());
-        } catch (NullPointerException | EntityNotFoundException e) {
+            try {
+                teacherRepository.showInformPerson(TEACHER_ENG, lectureId, lectureRepository.getLectureList(), teacherRepository.getTeacherList());
+                putBorder();
+            } catch (EntityNotFoundException e) {
+                System.err.println(e.getMessage());
+            } finally {
+                try {
+                    studentRepository.showInformPerson(STUDENT_ENG, lectureId, lectureRepository.getLectureList(), studentRepository.getStudentList());
+                    putBorder();
+                } catch (EntityNotFoundException e) {
+                    System.err.println(e.getMessage());
+                } finally {
+                    try {
+                        homeworkService.showInformHomework(getCheckNumber(), lectureRepository.getLectureList());
+                        putBorder();
+                    } catch (EntityNotFoundException e) {
+                        System.err.println(e.getMessage());
+                    } finally {
+                        additionalMaterialService.showInformAdditionalMaterial(lectureId, lectureRepository.getLectureList());
+                    }
+                }
+            }
+        } catch (NullPointerException n) {
+            n.printStackTrace();
+        } catch (EntityNotFoundException e) {
             System.err.println(e.getMessage());
         } finally {
             putBorder();
@@ -211,204 +304,177 @@ public class MainService {
 
     public void creatCourseInfo() {
         System.out.println("Інформація про всі курси:");
-        try {
-            SimpleIterator<Course> simpleIteratorCourse = new SimpleIterator<>(courseRepository.getCoursesArray());
-            while (simpleIteratorCourse.hasNext()) {
-                System.out.println(simpleIteratorCourse.next());
-            }
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
-            System.err.println(iDIsNotFound);
-        } catch (NoSuchElementException | IllegalStateException n) {
-            System.err.println(n.getMessage());
-        } finally {
-            putBorder();
-            showInformAboutCreation();
+        for (int i = 0; i < courseRepository.getCourseList().size(); i++) {
+            System.out.println(courseRepository.getCourseList().get(i));
         }
+        putBorder();
+        showInformAboutCreation();
     }
 
     public void createLectureInfo() {
         System.out.println("Інформація про всі лекції:");
-        try {
-            SimpleIterator<Lecture> simpleIteratorLecture = new SimpleIterator<>(lectureRepository.getLectureArray());
-            while (simpleIteratorLecture.hasNext()) {
-                System.out.println(simpleIteratorLecture.next());
-            }
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
-            System.err.println(iDIsNotFound);
-        } catch (NoSuchElementException | IllegalStateException n) {
-            System.err.println(n.getMessage());
-        } finally {
-            putBorder();
-            showInformAboutCreation();
+        for (int i = 0; i < lectureRepository.getLectureList().size(); i++) {
+            System.out.println(lectureRepository.getLectureList().get(i));
         }
+        putBorder();
+        showInformAboutCreation();
     }
 
     public void creatTeacherInfo() {
         System.out.println("Інформація про всіх вчителів:");
-        try {
-            SimpleIterator<Person> simpleIteratorTeacher = new SimpleIterator<>(teacherRepository.getTeacherArray());
-            while (simpleIteratorTeacher.hasNext()) {
-                System.out.println(simpleIteratorTeacher.next());
-            }
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
-            System.err.println(iDIsNotFound);
-        } catch (NoSuchElementException | IllegalStateException n) {
-            System.err.println(n.getMessage());
-        } finally {
-            putBorder();
-            showInformAboutCreation();
+        for (int i = 0; i < teacherRepository.getTeacherList().size(); i++) {
+            System.out.println(teacherRepository.getTeacherList().get(i));
         }
+        putBorder();
+        showInformAboutCreation();
     }
 
     public void creatStudentInfo() {
         System.out.println("Інформація про всіх студентів:");
-        try {
-            SimpleIterator<Person> simpleIteratorStudent = new SimpleIterator<>(studentRepository.getStudentArray());
-            while (simpleIteratorStudent.hasNext()) {
-                System.out.println(simpleIteratorStudent.next());
-            }
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
-            System.err.println(iDIsNotFound);
-        } catch (NoSuchElementException | IllegalStateException n) {
-            System.err.println(n.getMessage());
-        } finally {
-            putBorder();
-            showInformAboutCreation();
+        for (int i = 0; i < studentRepository.getStudentList().size(); i++) {
+            System.out.println(studentRepository.getStudentList().get(i));
         }
+        putBorder();
+        showInformAboutCreation();
     }
 
     public void creatHomeworkInfo() {
         System.out.println("Інформація про всі об'єкти Homework:");
-        try {
-            for (int i = 0; i < lectureRepository.getLectureArray().length; i++) {
-                SimpleIterator<Homework> simpleIteratorHomework = new SimpleIterator<>(lectureRepository.getLectureArray()[i].getHomeWorkArray());
-                while (simpleIteratorHomework.hasNext()) {
-                    System.out.println(simpleIteratorHomework.next());
-                }
+        for (int i = 0; i < lectureRepository.getLectureList().size(); i++) {
+            for (int j = 0; j < lectureRepository.getLectureList().get(i).getHomeworkList().size(); j++) {
+                System.out.println(lectureRepository.getLectureList().get(i).getHomeworkList().get(j));
             }
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
-            System.err.println(iDIsNotFound);
-        } catch (NoSuchElementException | IllegalStateException n) {
-            System.err.println(n.getMessage());
-        } finally {
-            putBorder();
-            showInformAboutCreation();
         }
+        putBorder();
+        showInformAboutCreation();
+    }
+
+    public void creatAdditionalMaterialInfo() {
+        System.out.println("Інформація про всі об'єкти Additional Material:");
+        for (int i = 0; i < lectureRepository.getLectureList().size(); i++) {
+            for (int j = 0; j < lectureRepository.getLectureList().get(i).getAdditionalMaterialList().size(); j++) {
+                System.out.println(lectureRepository.getLectureList().get(i).getAdditionalMaterialList().get(j));
+            }
+        }
+        putBorder();
+        showInformAboutCreation();
     }
 
     public void creatDeleteCourse() {
-        checkNumber(course);
-        try {
-            int index = courseRepository.returnIndex(getCheckNumber());
-            SimpleIterator<Course> simpleIteratorCourse = new SimpleIterator<>(courseRepository.getCoursesArray());
-            simpleIteratorCourse.setIndex(index);
-            if (simpleIteratorCourse.hasNext()) {
-                System.out.printf(object, simpleIteratorCourse.next());
-                simpleIteratorCourse.remove();
-                System.out.println(delete);
+        isPresent = true;
+        checkNumber(OF_COURSE);
+        long courseId = getCheckNumber();
+        for (int i = 0; i < courseRepository.getCourseList().size(); i++) {
+            if (courseRepository.getCourseList().get(i).getCourseId().equals(courseId)) {
+                System.out.printf(OBJECT_IS_DELETE, courseRepository.getCourseList().remove(i));
+                isPresent = false;
+                break;
             }
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
-            System.err.println(iDIsNotFound);
-        } catch (NoSuchElementException | IllegalStateException n) {
-            System.err.println(n.getMessage());
-        } finally {
-            showInformAboutCreation();
         }
+        if (isPresent) {
+            System.err.println(ID_IS_NOT_FOUND);
+        }
+        showInformAboutCreation();
     }
 
     public void creatDeleteLecture() {
-        checkNumber(lecture);
-        try {
-            int index = lectureRepository.returnIndex(getCheckNumber());
-            SimpleIterator<Lecture> simpleIteratorLecture = new SimpleIterator<>(lectureRepository.getLectureArray());
-            simpleIteratorLecture.setIndex(index);
-            if (simpleIteratorLecture.hasNext()) {
-                System.out.printf(object, simpleIteratorLecture.next());
-                simpleIteratorLecture.remove();
-                System.out.println(delete);
+        isPresent = true;
+        checkNumber(OF_LECTURE);
+        long lectureId = getCheckNumber();
+        for (int i = 0; i < lectureRepository.getLectureList().size(); i++) {
+            if (lectureRepository.getLectureList().get(i).getLectureId().equals(lectureId)) {
+                System.out.printf(OBJECT_IS_DELETE, lectureRepository.getLectureList().remove(i));
+                isPresent = false;
+                break;
             }
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
-            System.err.println(iDIsNotFound);
-        } catch (NoSuchElementException | IllegalStateException n) {
-            System.err.println(n.getMessage());
-        } finally {
-            showInformAboutCreation();
         }
+        if (isPresent) {
+            System.err.println(ID_IS_NOT_FOUND);
+        }
+        showInformAboutCreation();
     }
 
     public void creatDeleteTeacher() {
-        checkNumber(teacher);
-        try {
-            int index = teacherRepository.returnIndex(getCheckNumber());
-            SimpleIterator<Person> simpleIteratorTeacher = new SimpleIterator<>(teacherRepository.getTeacherArray());
-            simpleIteratorTeacher.setIndex(index);
-            if (simpleIteratorTeacher.hasNext()) {
-                System.out.printf(object, simpleIteratorTeacher.next());
-                simpleIteratorTeacher.remove();
-                System.out.println(delete);
+        isPresent = true;
+        checkNumber(OF_TEACHER);
+        long teacherId = getCheckNumber();
+        for (int i = 0; i < teacherRepository.getTeacherList().size(); i++) {
+            if (teacherRepository.getTeacherList().get(i).getPersonId().equals(teacherId)) {
+                System.out.printf(OBJECT_IS_DELETE, teacherRepository.getTeacherList().remove(i));
+                isPresent = false;
+                break;
             }
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
-            System.err.println(iDIsNotFound);
-        } catch (NoSuchElementException | IllegalStateException n) {
-            System.err.println(n.getMessage());
-        } finally {
-            showInformAboutCreation();
         }
+        if (isPresent) {
+            System.err.println(ID_IS_NOT_FOUND);
+        }
+        showInformAboutCreation();
     }
 
     public void creatDeleteStudent() {
-        checkNumber(student);
-        try {
-            int index = studentRepository.returnIndex(getCheckNumber());
-            SimpleIterator<Person> simpleIteratorStudent = new SimpleIterator<>(studentRepository.getStudentArray());
-            simpleIteratorStudent.setIndex(index);
-            if (simpleIteratorStudent.hasNext()) {
-                System.out.printf(object, simpleIteratorStudent.next());
-                simpleIteratorStudent.remove();
-                System.out.println(delete);
+        checkNumber(OF_STUDENT);
+        long studentId = getCheckNumber();
+        for (int i = 0; i < studentRepository.getStudentList().size(); i++) {
+            if (studentRepository.getStudentList().get(i).getPersonId().equals(studentId)) {
+                System.out.printf(OBJECT_IS_DELETE, studentRepository.getStudentList().remove(i));
+                isPresent = false;
+                break;
             }
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
-            System.err.println(iDIsNotFound);
-        } catch (NoSuchElementException | IllegalStateException n) {
-            System.err.println(n.getMessage());
-        } finally {
-            showInformAboutCreation();
         }
+        if (isPresent) {
+            System.err.println(ID_IS_NOT_FOUND);
+        }
+        showInformAboutCreation();
     }
 
     public void creatDeleteHomework() {
-        checkNumber(homework);
-        try {
-            int indexHomework = lectureRepository.returnIndex(getCheckNumber());
-            SimpleIterator<Homework> simpleIteratorHomework =
-                    new SimpleIterator<>(lectureRepository.getLectureArray()[lectureRepository.getIndexLecture()].getHomeWorkArray());
-            simpleIteratorHomework.setIndex(indexHomework);
-            if (simpleIteratorHomework.hasNext()) {
-                System.out.printf(object, simpleIteratorHomework.next());
-                simpleIteratorHomework.remove();
-                System.out.println(delete);
+        isPresent = true;
+        checkNumber(HOMEWORK);
+        for (int i = 0; i < lectureRepository.getLectureList().size(); i++) {
+            for (int j = 0; j < lectureRepository.getLectureList().get(i).getHomeworkList().size(); j++) {
+                if (lectureRepository.getLectureList().get(i).getHomeworkList().get(j).getHomeworkId().equals(getCheckNumber())) {
+                    System.out.printf(OBJECT_IS_DELETE, lectureRepository.getLectureList().get(i).getHomeworkList().remove(j));
+                    isPresent = false;
+                    break;
+                }
             }
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException a) {
-            System.err.println(iDIsNotFound);
-        } catch (NoSuchElementException | IllegalStateException n) {
-            System.err.println(n.getMessage());
-        } finally {
+            if (isPresent) {
+                System.err.println(ID_IS_NOT_FOUND);
+            }
             showInformAboutCreation();
         }
     }
 
-    public void creatTeacherForLecture() {
-        System.out.println("Виберіть лекцію якій хочете присвоїти Вчителя.");
-        checkNumber(lecture);
-        long lectureId;
-        try {
-            lectureRepository.getLecture(getCheckNumber(), lectureRepository.getLectureArray());
-            lectureId = getCheckNumber();
-            System.out.printf("Є така лекція з номером ID \"%d\"\n", lectureId);
-            checkNumber(teacher);
-            teacherService.searchTeacher(getCheckNumber(), lectureId, lectureRepository.getLectureArray(),
-                    teacherRepository.getTeachersArrayTemplate());
+    public void creatDeleteAdditionalMaterial() {
+        isPresent = true;
+        checkNumber(ADDITIONAL_MATERIAL);
+        long additionalMaterialId = getCheckNumber();
+        for (int i = 0; i < lectureRepository.getLectureList().size(); i++) {
+            for (int j = 0; j < lectureRepository.getLectureList().get(i).getAdditionalMaterialList().size(); j++) {
+                if (lectureRepository.getLectureList().get(i).getAdditionalMaterialList().get(j).getId().equals(additionalMaterialId)) {
+                    System.out.printf(OBJECT_IS_DELETE, lectureRepository.getLectureList().get(i).getAdditionalMaterialList().remove(j));
+                    isPresent = false;
+                    break;
+                }
+            }
+        }
+        if (isPresent) {
+            System.err.println(ID_IS_NOT_FOUND);
+        }
+        showInformAboutCreation();
+    }
 
+
+    public void creatTeacherForLecture() {
+        System.out.println("Виберіть лекцію якій хочете присвоїти вчителя.");
+        checkNumber(OF_LECTURE);
+        long lectureId = getCheckNumber();
+        checkNumber(OF_TEACHER);
+        long teacherId = getCheckNumber();
+        try {
+            teacherService.addPersonToLecture(OF_TEACHER, lectureId, teacherId, lectureRepository.getLectureList(), teacherRepository.getTeacherList());
+        } catch (NullPointerException n) {
+            n.printStackTrace();
         } catch (EntityNotFoundException e) {
             System.err.println(e.getMessage());
         } finally {
@@ -418,16 +484,15 @@ public class MainService {
     }
 
     public void creatStudentForLecture() {
-        System.out.println("Виберіть лекцію якій хочете присвоїти Студента.");
-        checkNumber(lecture);
-        long lectureId;
+        System.out.println("Виберіть лекцію якій хочете присвоїти студента.");
+        checkNumber(OF_LECTURE);
+        long lectureId = getCheckNumber();
+        checkNumber(OF_STUDENT);
+        long studentId = getCheckNumber();
         try {
-            lectureRepository.getLecture(getCheckNumber(), lectureRepository.getLectureArray());
-            lectureId = getCheckNumber();
-            System.out.printf("Є така лекція з номером ID \"%d\"\n", lectureId);
-            checkNumber(student);
-            studentService.searchStudent(getCheckNumber(), lectureId, lectureRepository.getLectureArray(),
-                    studentRepository.getStudentsArrayTemplate());
+            studentService.addPersonToLecture(OF_STUDENT, lectureId, studentId, lectureRepository.getLectureList(), studentRepository.getStudentList());
+        } catch (NullPointerException n) {
+            n.printStackTrace();
         } catch (EntityNotFoundException e) {
             System.err.println(e.getMessage());
         } finally {
@@ -437,23 +502,23 @@ public class MainService {
     }
 
     public void creatAddPersonForLecture() {
-        System.out.println("Введіть кого хочете додати до лекції: \n\"Вчитель\"\n\"Студент\"");
+        System.out.println("Введіть кого хочете додати до лекції: \n" + TEACHER + "\n" + STUDENT);
         scannerNameModelAndPerson();
-        if (getNameModelAndPerson().equalsIgnoreCase("вчитель")) {
+        if (getNameModelAndPerson().equalsIgnoreCase(TEACHER)) {
             setNameModelAndPerson("вчитель для лекції");
-        } else if (getNameModelAndPerson().equalsIgnoreCase("студент")) {
+        } else if (getNameModelAndPerson().equalsIgnoreCase(STUDENT)) {
             setNameModelAndPerson("студент для лекції");
         } else {
-            System.out.println("Не правильний ввід, введіть \"Add\" ще раз, або");
+            System.out.println("Не правильний ввід, введіть \"Add someone\" ще раз, або");
             showInformAboutCreation();
         }
     }
 
     public void creatDefault() {
         try {
-            throw new IllegalArgumentException("Symbol is incorrect !!!");
+            throw new IllegalArgumentException(SYMBOL_IS_INCORRECT);
         } catch (IllegalArgumentException il) {
-            il.printStackTrace();
+            System.err.println(il.getMessage());
         } finally {
             System.out.println("Спробуйте ще раз.");
             scannerNameModelAndPerson();
@@ -464,7 +529,7 @@ public class MainService {
         long test;
         boolean isPresent = true;
         while (isPresent) {
-            System.out.printf("Введіть ID %s, число бшльше \"0\":\n", outName);
+            System.out.printf("Введіть ID %s, число більше \"0\":\n", outName);
             if (scanner.hasNextLong()) {
                 test = scanner.nextLong();
                 scanner.nextLine();
@@ -495,7 +560,7 @@ public class MainService {
                 }
             } catch (IllegalArgumentException i) {
                 try {
-                    throw new EntityNotFoundException(stringIncorrect, i);
+                    throw new EntityNotFoundException(STRING_IS_INCORRECT, i);
                 } catch (EntityNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -519,7 +584,7 @@ public class MainService {
                 }
             } catch (IllegalArgumentException i) {
                 try {
-                    throw new EntityNotFoundException(stringIncorrect, i);
+                    throw new EntityNotFoundException(STRING_IS_INCORRECT, i);
                 } catch (EntityNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -543,7 +608,7 @@ public class MainService {
                 }
             } catch (IllegalArgumentException i) {
                 try {
-                    throw new EntityNotFoundException(stringIncorrect, i);
+                    throw new EntityNotFoundException(STRING_IS_INCORRECT, i);
                 } catch (EntityNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -621,13 +686,28 @@ public class MainService {
                 }
             } catch (IllegalArgumentException i) {
                 try {
-                    throw new EntityNotFoundException(stringIncorrect, i);
+                    throw new EntityNotFoundException(STRING_IS_INCORRECT, i);
                 } catch (EntityNotFoundException e) {
                     e.printStackTrace();
                 }
             }
         }
         return result;
+    }
+
+    public Resource getResource() {
+        if (scanner.hasNextLine()) {
+            String type = scanner.nextLine();
+            switch (type.toLowerCase()) {
+                case "url" -> resourceType = Resource.URL;
+                case "video" -> resourceType = Resource.VIDEO;
+                case "book" -> resourceType = Resource.BOOk;
+                default -> throw new IllegalArgumentException(SYMBOL_IS_INCORRECT);
+            }
+        } else {
+            System.out.println("Введіть буквений символ!!!");
+        }
+        return resourceType;
     }
 
     public void scannerNameModelAndPerson() {
@@ -695,16 +775,12 @@ public class MainService {
     }
 
     public void showInformCourseAndLecture() {
-        System.out.println("Для виводу всієї інфрмації про курс, або про лекцію, введіть: \n\"Course data\"\n\"Lecture data\"");
+        System.out.println("Для виводу всієї інфрмації про курс, або про лекцію, введіть: \n\"" + COURSE_DATA + "\"\n\"Lecture data\"");
     }
 
     public void showInformAboutCreation() {
         System.out.println("Можете продовжувати створювати студентів, вчителів, лекції.");
         nameModelAndPerson = scanner.nextLine();
-    }
-
-    public String showJustMessage() {
-        return "Ви створюєте об'єкт: ";
     }
 }
 

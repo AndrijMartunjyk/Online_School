@@ -6,10 +6,9 @@ public class Homework {
     private final Long homeworkId;
     private final Long lectureId;
     private final String task;
-    private static int counter;
 
     public Homework(Long homeworkId, Long lectureId, String task) {
-        this.homeworkId = homeworkId + counter++ + new Random().nextLong(Long.MAX_VALUE);
+        this.homeworkId = homeworkId + new Random().nextLong(Long.MAX_VALUE);
         this.lectureId = lectureId;
         this.task = task;
     }
