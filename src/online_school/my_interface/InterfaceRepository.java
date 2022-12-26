@@ -16,7 +16,7 @@ public interface InterfaceRepository {
                 if (lecture == null || person == null) {
                     return;
                 } else if (lecture.getLectureId().equals(person.getLectureId()) &&
-                        (lecture.getCourseID().equals(id) || lecture.getLectureId().equals(id))) {
+                        (lecture.getCourseId().equals(id) || lecture.getLectureId().equals(id))) {
                     System.out.println(person);
                     isPresent = false;
                 }

@@ -7,8 +7,8 @@ import java.util.List;
 
 public class CourseService {
 
-    public Course createCourse(Long ID, String name) {
-        return new Course(ID, name);
+    public Course createCourse(Long iD, String name) {
+        return new Course(iD, name);
     }
 
     public void showInformCourse(Long courseId, List<Course> courses) {

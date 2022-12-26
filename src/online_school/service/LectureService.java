@@ -7,8 +7,8 @@ import java.util.List;
 
 public class LectureService {
 
-    public Lecture createLecture(Long ID, String nameLecture, String description) {
-        return new Lecture(ID, nameLecture, description);
+    public Lecture createLecture(Long lectureId, String lectureName, String description, Long courseId, String nameCourse) {
+        return new Lecture(lectureId, lectureName, description, courseId, nameCourse);
     }
 
     public void showLectures(Long lectureId, List<Lecture> lectures) {
@@ -29,7 +29,7 @@ public class LectureService {
         for (Lecture lecture : lectures) {
             if (lecture == null) {
                 break;
-            } else if (lecture.getCourseID().equals(idCourse)) {
+            } else if (lecture.getCourseId().equals(idCourse)) {
                 isPresent = false;
                 System.out.println(lecture);
             }

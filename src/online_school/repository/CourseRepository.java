@@ -7,18 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CourseRepository implements InterfaceRepository {
-    private final List<Course> courseList = new ArrayList<>();
+    public static List<Course> courseList = new ArrayList<>();
 
     public List<Course> getCourseList() {
         return courseList;
     }
 
-    public long getCourseID() {
-        return courseList.get(counter() - 1).getCourseId();
-    }
-
-    public String getCourseName() {
-        return courseList.get(counter() - 1).getCourseName();
+    public long getCourseID(Course c) {
+        for (Course course : courseList) {
+            if (course.equals(c)) {
+                return course.getCourseId();
+            }
+        }
+        return 0;
     }
 
     @Override

@@ -33,7 +33,12 @@ public class StudentRepository implements InterfaceRepository {
         return result;
     }
 
-    public long getStudentId() {
-        return studentList.get(counter() - 1).getPersonId();
+    public long getStudentId(Person s) {
+        for (Person student : studentList) {
+            if (student.equals(s)) {
+                return student.getPersonId();
+            }
+        }
+        return 0;
     }
 }
