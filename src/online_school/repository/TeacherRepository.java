@@ -33,7 +33,12 @@ public class TeacherRepository implements InterfaceRepository {
         InterfaceRepository.super.showInformPerson(personName, courseOrLectureId, lectures, teacher);
     }
 
-    public Long getTeacherId() {
-        return teacherList.get(counter() - 1).getPersonId();
+    public long getTeacherId(Person t) {
+        for (Person teacher : teacherList) {
+            if (teacher.equals(t)) {
+                return teacher.getPersonId();
+            }
+        }
+        return 0;
     }
 }

@@ -1,5 +1,11 @@
 package online_school.service;
 
+import online_school.util.AdditionalMaterialSortLectureId;
+import online_school.course.model.Course;
+import online_school.course.model.Lecture;
+import online_school.course.model.Person;
+import online_school.course.task_for_lecture.AdditionalMaterial;
+import online_school.course.task_for_lecture.Homework;
 import online_school.my_enum.Resource;
 import online_school.exception.EntityNotFoundException;
 import online_school.my_enum.Role;
@@ -7,8 +13,12 @@ import online_school.repository.CourseRepository;
 import online_school.repository.LectureRepository;
 import online_school.repository.StudentRepository;
 import online_school.repository.TeacherRepository;
+import online_school.util.AdditionalMaterialSortType;
 
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static online_school.util.RegularExpression.*;
 
@@ -24,6 +34,14 @@ public class MainService {
     private static final TeacherService teacherService = new TeacherService();
     private static final HomeworkService homeworkService = new HomeworkService();
     private static final AdditionalMaterialService additionalMaterialService = new AdditionalMaterialService();
+    private static final TreeSet<Course> courseTreeSet = new TreeSet<>();
+    private static final TreeSet<Lecture> lectureTreeSet = new TreeSet<>();
+    private static final TreeSet<Person> teacherTreeSet = new TreeSet<>();
+    private static final TreeSet<Person> studentTreeSet = new TreeSet<>();
+    private static final java.util.List<Homework> allHomework = new ArrayList<>();
+    private static final TreeSet<Homework> homeworkTreeSet = new TreeSet<>();
+    private static final java.util.List<AdditionalMaterial> allAdditionalMaterials = new ArrayList<>();
+    private static final TreeSet<AdditionalMaterial> additionalMaterialTreeSet = new TreeSet<>();
 
     private Long number;
     private String name;
@@ -36,15 +54,18 @@ public class MainService {
     private String task;
     private boolean isPresent;
     private Resource resourceType;
+    private long courseId;
+    private long lectureId;
+    private String courseName;
 
     public static final String OF_COURSE = "курсу";
     public static final String OF_LECTURE = "лекції";
     public static final String OF_STUDENT = "студента";
     public static final String OF_TEACHER = "вчителя";
-    public static final String COURSE = "\"Курс\"";
-    public static final String LECTURE = "\"Лекція\"";
-    public static final String STUDENT = "\"Студент\"";
-    public static final String TEACHER = "\"Вчитель\"";
+    public static final String COURSE = "Курс";
+    public static final String LECTURE = "Лекція";
+    public static final String STUDENT = "Студент";
+    public static final String TEACHER = "Вчитель";
     public static final String TEACHER_ENG = "teacher";
     public static final String STUDENT_ENG = "student";
     public static final String HOMEWORK = "Домашнього завдання";
@@ -56,61 +77,59 @@ public class MainService {
     public static final String SYMBOL_IS_INCORRECT = "Symbol is incorrect !!!";
     public static final String YOU_CREATING_AN_OBJECT = "Ви створюєте об'єкт: ";
     public static final String COURSE_DATA = "Course data";
-
-    public void autoObject(CourseRepository courseRepository, CourseService courseService, LectureRepository lectureRepository,
-                           LectureService lectureService) {
-        courseRepository.getCourseList().add(courseService.createCourse(1L, "Auto course"));
-        for (long i = 0; i < 3; i++) {
-            lectureRepository.getLectureList().add(lectureService.createLecture(i, "No name", "No description"));
-            lectureRepository.setIdCourseOfLecture(courseRepository.getCourseID(), courseRepository.getCourseName());
-        }
-        System.out.println("==========================================================================");
-        System.out.printf("Створено автоматичний курс з іменем \"Auto course\"\n з ID \"%d\" і з трьома лекціями \"No name\".\n",
-                courseRepository.getCourseList().get(0).getCourseId());
-        System.out.println("==========================================================================");
-        System.out.println("Для виводу всієї інфрмації про курс, введіть: \n\"" + COURSE_DATA + "\"");
-        System.out.println("==========================================================================");
-    }
+    public static final String IS_EMPTY = "Is empty.";
 
     public void showFrontInform() {
-        System.out.println("========================\n\"РЕГІСТР НЕ ВАЖЛИВИЙ !!!\"");
+        System.out.print("""
+                ========================
+                "РЕГІСТР НЕ ВАЖЛИВИЙ !!!"
+                """);
         autoObject(courseRepository, courseService, lectureRepository, lectureService);
-        System.out.println("""
+        System.out.print("""
                 Для виводу інфрмації про всі об'єкти одного типу, введіть:
                 "Course info"
                 "Lecture info"
                 "Teacher info"
                 "Student info"
                 "Homework info"
-                "Additional material info\"""");
-        System.out.println("================================");
-        System.out.println("""
-                Щоб видалити об'єкт введіть:
+                "Additional material info"
+                ================================
+                 Щоб видалити об'єкт введіть:
                 "Delete course"
                 "Delete lecture"
                 "Delete teacher"
                 "Delete student"
                 "Delete homework"
-                "Delete additional material\"""");
-        System.out.println("==================================================");
-        System.out.println("Щоб додати студента або вчителя до лекції введіть:\n\"Add someone\"");
-        System.out.println("==================================================");
-        System.out.println("Щоб додати домашнє завдання до лекції введіть:\n\"Add homework\"");
-        System.out.println("==================================================");
-        System.out.println("Щоб додати Додаткові матеріали до лекції введіть:\n\"Add resource\"");
-        System.out.println("==================================================");
-        System.out.println("Створіть об'єкт курсу, ввівши:\n\"Курс\"");
-        System.out.println("================================\nДля завершення програми,\n введіть \"Stop\"\n========================");
+                "Delete additional material"
+                ==================================================
+                Щоб додати студента або вчителя до лекції введіть:
+                "Add someone"
+                ==================================================
+                Щоб додати домашнє завдання до лекції введіть:
+                "Add homework"
+                ==================================================
+                Щоб додати Додаткові матеріали до лекції введіть:
+                "Add resource"
+                ==================================================
+                Створіть об'єкт курсу, ввівши:
+                "Курс"
+                ==================================
+                Для завершення програми, введіть:
+                "Stop"
+                =======
+                """);
         scannerNameModelAndPerson();
     }
 
     public void creatCourse() {
+        Course course;
         System.out.println(YOU_CREATING_AN_OBJECT + COURSE);
         checkNumber(OF_COURSE);
         System.out.println("Введіть назву курсу:");
         scannerName();
-        courseRepository.getCourseList().add(courseService.createCourse(getCheckNumber(), getName()));
-        System.out.printf("Чудово, ви створили курс з назвою: \"%s\", і номером ID: \"%d\".\n", getName(), courseRepository.getCourseID());
+        course = courseService.createCourse(getCheckNumber(), getName());
+        courseRepository.getCourseList().add(course);
+        System.out.printf("Чудово, ви створили курс з назвою: \"%s\", і номером ID: \"%d\".\n", getName(), courseRepository.getCourseID(course));
         System.out.println("Тепер створіть об'єкти ввівши:\n" + LECTURE + ".\n" + STUDENT + ".\n" + TEACHER + ".");
         putBorder();
         showInformCourseAndLecture();
@@ -119,14 +138,21 @@ public class MainService {
     }
 
     public void creatLecture() {
+        isPresent = true;
+        Lecture lecture;
         System.out.println(YOU_CREATING_AN_OBJECT + LECTURE);
         checkNumber(OF_LECTURE);
+        lectureId = getCheckNumber();
         System.out.println("Введіть назву лекції:");
         scannerName();
         scannerDescription();
-        lectureRepository.getLectureList().add(lectureService.createLecture(getCheckNumber(), getName(), getDescription()));
-        lectureRepository.setIdCourseOfLecture(courseRepository.getCourseID(), courseRepository.getCourseName());
-        System.out.printf("Чудово, ви створили лекцію з назвою: \"%s\", і номером ID: \"%d\".\n", getName(), lectureRepository.getLectureID());
+        System.out.println("Виберіть ID курсу якому хочете присвоїти лекцію:");
+        putBorder();
+        findCourse();
+        lecture = lectureService.createLecture(lectureId, getName(), getDescription(), courseId, courseName);
+        lectureRepository.getLectureList().add(lecture);
+        System.out.printf("Чудово, ви створили лекцію з назвою: \"%s\", і номером ID: \"%d\" і присвоїли її курсу з ID: \"%d\".\n",
+                getName(), lectureRepository.getLectureId(lecture), courseId);
         putBorder();
         showInformCourseAndLecture();
         putBorder();
@@ -134,6 +160,7 @@ public class MainService {
     }
 
     public void creatStudent() {
+        Person student;
         System.out.println(YOU_CREATING_AN_OBJECT + STUDENT);
         checkNumber(OF_STUDENT);
         System.out.println("Введіть ім'я студента:");
@@ -144,10 +171,11 @@ public class MainService {
         scannerPhone();
         System.out.println("Введіть Email студента:");
         scannerEmail();
-        studentRepository.getStudentList().add(studentService.createStudent(Role.STUDENT, getCheckNumber(), getFirstname(),
-                getLastName(), getPhone(), getEmail()));
+        student = studentService.createStudent(Role.STUDENT, getCheckNumber(), getFirstname(),
+                getLastName(), getPhone(), getEmail());
+        studentRepository.getStudentList().add(student);
         System.out.printf("Чудово, ви створили об'єкт студента з іменем: \"%s\", прізвищем: \"%s\" і номером ID: \"%d\".\n",
-                getFirstname(), getLastName(), studentRepository.getStudentId());
+                getFirstname(), getLastName(), studentRepository.getStudentId(student));
         putBorder();
         showInformCourseAndLecture();
         putBorder();
@@ -155,6 +183,7 @@ public class MainService {
     }
 
     public void creatTeacher() {
+        Person teacher;
         System.out.println(YOU_CREATING_AN_OBJECT + TEACHER);
         checkNumber(OF_TEACHER);
         System.out.println("Введіть ім'я вчителя:");
@@ -165,10 +194,11 @@ public class MainService {
         scannerPhone();
         System.out.println("Введіть Email вчителя:");
         scannerEmail();
-        teacherRepository.getTeacherList().add(teacherService.createTeacher(Role.TEACHER, getCheckNumber(), getFirstname(), getLastName(),
-                getPhone(), getEmail()));
+        teacher = teacherService.createTeacher(Role.TEACHER, getCheckNumber(), getFirstname(), getLastName(),
+                getPhone(), getEmail());
+        teacherRepository.getTeacherList().add(teacher);
         System.out.printf("Чудово, ви створили об'єкт вчителя з іменем: \"%s\", прізвищем: \"%s\" і номером ID: \"%d\".\n", getFirstname(),
-                getLastName(), teacherRepository.getTeacherId());
+                getLastName(), teacherRepository.getTeacherId(teacher));
         putBorder();
         showInformCourseAndLecture();
         putBorder();
@@ -182,8 +212,9 @@ public class MainService {
         scannerHomeTask();
         String homeTask = getTask();
         System.out.println("Виберіть лекцію якій хочете присвоїти домашне завдання.");
+        printAllLecture();
         checkNumber(OF_LECTURE);
-        long lectureId = getCheckNumber();
+        lectureId = getCheckNumber();
         try {
             lectureRepository.addHomework(lectureId, homeworkService.createHomework(homeworkId, lectureId, homeTask));
         } catch (NullPointerException n) {
@@ -206,18 +237,11 @@ public class MainService {
         System.out.println("Введіть назву для об'єкта додаткові матеріали:");
         scannerName();
         String resourceName = getName();
-        System.out.println("""
-                Виберіть які додаткові матеріли ви хочете додати до лекції:
-                "Url адреса"
-                "Відео матеріали"
-                "Книжка"
-                Ввівши відповідно:
-                "Url"
-                "Video"
-                "Book\"""");
+        printResourceTypeInfo();
         try {
             Resource resourceType = getResource();
             System.out.printf("Виберіть лекцію якій хочете присвоїти %s.\n", resourceType);
+            printAllLecture();
             checkNumber(OF_LECTURE);
             long lectureId = getCheckNumber();
             lectureRepository.addAdditionalMaterials(lectureId,
@@ -235,20 +259,12 @@ public class MainService {
     }
 
     public void creatCourseData() {
+        System.out.println("Виберіть курс про який хочете вивести інформацію:");
+        printAllCourse();
         checkNumber(OF_COURSE);
-        long courseId = getCheckNumber();
+        courseId = getCheckNumber();
         try {
-            courseService.showInformCourse(courseId, courseRepository.getCourseList());
-            lectureService.showLecturesInCourse(courseId, lectureRepository.getLectureList());
-            putBorder();
-            try {
-                teacherRepository.showInformPerson(TEACHER_ENG, courseId, lectureRepository.getLectureList(), teacherRepository.getTeacherList());
-                putBorder();
-            } catch (EntityNotFoundException e) {
-                System.err.println(e.getMessage());
-            } finally {
-                studentRepository.showInformPerson(STUDENT_ENG, courseId, lectureRepository.getLectureList(), studentRepository.getStudentList());
-            }
+            creatCourseDataExceptionLogic();
         } catch (NullPointerException n) {
             n.printStackTrace();
         } catch (EntityNotFoundException e) {
@@ -265,33 +281,12 @@ public class MainService {
     }
 
     public void creatLectureData() {
+        System.out.println("Виберіть лекцію про яку хочете вивести інформацію:");
+        printAllLecture();
         checkNumber(OF_LECTURE);
-        long lectureId = getCheckNumber();
+        lectureId = getCheckNumber();
         try {
-            lectureService.showLectures(getCheckNumber(), lectureRepository.getLectureList());
-            putBorder();
-            try {
-                teacherRepository.showInformPerson(TEACHER_ENG, lectureId, lectureRepository.getLectureList(), teacherRepository.getTeacherList());
-                putBorder();
-            } catch (EntityNotFoundException e) {
-                System.err.println(e.getMessage());
-            } finally {
-                try {
-                    studentRepository.showInformPerson(STUDENT_ENG, lectureId, lectureRepository.getLectureList(), studentRepository.getStudentList());
-                    putBorder();
-                } catch (EntityNotFoundException e) {
-                    System.err.println(e.getMessage());
-                } finally {
-                    try {
-                        homeworkService.showInformHomework(getCheckNumber(), lectureRepository.getLectureList());
-                        putBorder();
-                    } catch (EntityNotFoundException e) {
-                        System.err.println(e.getMessage());
-                    } finally {
-                        additionalMaterialService.showInformAdditionalMaterial(lectureId, lectureRepository.getLectureList());
-                    }
-                }
-            }
+            creatLectureDataExceptionLogic();
         } catch (NullPointerException n) {
             n.printStackTrace();
         } catch (EntityNotFoundException e) {
@@ -303,70 +298,170 @@ public class MainService {
     }
 
     public void creatCourseInfo() {
-        System.out.println("Інформація про всі курси:");
-        for (int i = 0; i < courseRepository.getCourseList().size(); i++) {
-            System.out.println(courseRepository.getCourseList().get(i));
+        try {
+            if (!(courseRepository.getCourseList().isEmpty())) {
+                System.out.println("Інформацію про всі курси відсортовано по назві:");
+                putBorder();
+                if (courseTreeSet.isEmpty()) {
+                    courseTreeSet.addAll(courseRepository.getCourseList());
+                } else {
+                    courseTreeSet.retainAll(courseRepository.getCourseList());
+                }
+                for (Course course : courseTreeSet) {
+                    System.out.println(course);
+                }
+            } else System.out.println(IS_EMPTY);
+        } catch (NullPointerException n) {
+            n.printStackTrace();
+        } finally {
+            putBorder();
+            showInformAboutCreation();
         }
-        putBorder();
-        showInformAboutCreation();
     }
 
     public void createLectureInfo() {
-        System.out.println("Інформація про всі лекції:");
-        for (int i = 0; i < lectureRepository.getLectureList().size(); i++) {
-            System.out.println(lectureRepository.getLectureList().get(i));
+        try {
+            if (!(lectureRepository.getLectureList().isEmpty())) {
+                System.out.println("Інформацію про всі лекції відсортовано по назві:");
+                putBorder();
+                if (lectureTreeSet.isEmpty()) {
+                    lectureTreeSet.addAll(lectureRepository.getLectureList());
+                } else {
+                    lectureTreeSet.retainAll(lectureRepository.getLectureList());
+                }
+                for (Lecture lecture : lectureTreeSet) {
+                    System.out.println(lecture);
+                }
+            } else System.out.println(IS_EMPTY);
+        } catch (NullPointerException n) {
+            n.printStackTrace();
+        } finally {
+            putBorder();
+            showInformAboutCreation();
         }
-        putBorder();
-        showInformAboutCreation();
     }
 
     public void creatTeacherInfo() {
-        System.out.println("Інформація про всіх вчителів:");
-        for (int i = 0; i < teacherRepository.getTeacherList().size(); i++) {
-            System.out.println(teacherRepository.getTeacherList().get(i));
+        try {
+            if (!(teacherRepository.getTeacherList().isEmpty())) {
+                System.out.println("Інформацію про всіх вчителів відсортовано по прізвищу:");
+                putBorder();
+                if (teacherTreeSet.isEmpty()) {
+                    teacherTreeSet.addAll(teacherRepository.getTeacherList());
+                } else {
+                    teacherTreeSet.retainAll(teacherRepository.getTeacherList());
+                }
+                for (Person teacher : teacherTreeSet) {
+                    System.out.println(teacher);
+                }
+            } else System.out.println(IS_EMPTY);
+        } catch (NullPointerException n) {
+            n.printStackTrace();
+        } finally {
+            putBorder();
+            showInformAboutCreation();
         }
-        putBorder();
-        showInformAboutCreation();
     }
 
     public void creatStudentInfo() {
-        System.out.println("Інформація про всіх студентів:");
-        for (int i = 0; i < studentRepository.getStudentList().size(); i++) {
-            System.out.println(studentRepository.getStudentList().get(i));
+        try {
+            if (!(studentRepository.getStudentList().isEmpty())) {
+                System.out.println("Інформацію про всіх студентів відсортовано по прізвищу:");
+                putBorder();
+                if (studentTreeSet.isEmpty()) {
+                    studentTreeSet.addAll(studentRepository.getStudentList());
+                } else {
+                    studentTreeSet.retainAll(studentRepository.getStudentList());
+                }
+                for (Person student : studentTreeSet) {
+                    System.out.println(student);
+                }
+            } else System.out.println(IS_EMPTY);
+        } catch (NullPointerException n) {
+            n.printStackTrace();
+        } finally {
+            putBorder();
+            showInformAboutCreation();
         }
-        putBorder();
-        showInformAboutCreation();
     }
 
     public void creatHomeworkInfo() {
-        System.out.println("Інформація про всі об'єкти Homework:");
-        for (int i = 0; i < lectureRepository.getLectureList().size(); i++) {
-            for (int j = 0; j < lectureRepository.getLectureList().get(i).getHomeworkList().size(); j++) {
-                System.out.println(lectureRepository.getLectureList().get(i).getHomeworkList().get(j));
+        isPresent = false;
+        for (Lecture l : lectureRepository.getLectureList()) {
+            if (!(l.getHomeworkList().isEmpty())) {
+                isPresent = true;
+                break;
             }
         }
-        putBorder();
-        showInformAboutCreation();
+        try {
+            if (isPresent) {
+                System.out.println("Інформацію про всі об'єкти Homework відсортовано по ID:");
+                putBorder();
+                allHomework.clear();
+                for (int i = 0; i < lectureRepository.getLectureList().size(); i++) {
+                    allHomework.addAll(lectureRepository.getLectureList().get(i).getHomeworkList());
+                }
+                if (homeworkTreeSet.isEmpty()) {
+                    homeworkTreeSet.addAll(allHomework);
+                } else {
+                    homeworkTreeSet.retainAll(allHomework);
+                }
+                for (Homework homework : homeworkTreeSet) {
+                    System.out.println(homework);
+                }
+            } else System.out.println(IS_EMPTY);
+        } catch (NullPointerException n) {
+            n.printStackTrace();
+        } finally {
+            putBorder();
+            showInformAboutCreation();
+        }
     }
 
     public void creatAdditionalMaterialInfo() {
-        System.out.println("Інформація про всі об'єкти Additional Material:");
-        for (int i = 0; i < lectureRepository.getLectureList().size(); i++) {
-            for (int j = 0; j < lectureRepository.getLectureList().get(i).getAdditionalMaterialList().size(); j++) {
-                System.out.println(lectureRepository.getLectureList().get(i).getAdditionalMaterialList().get(j));
+        isPresent = false;
+        for (Lecture l : lectureRepository.getLectureList()) {
+            if (!(l.getAdditionalMaterialList().isEmpty())) {
+                isPresent = true;
+                break;
             }
         }
-        putBorder();
-        showInformAboutCreation();
+        try {
+            if (isPresent) {
+                System.out.println("Інформацію про всі об'єкти Additional Material відсортовано по ID (за замовчуванням):");
+                putBorder();
+                allAdditionalMaterials.clear();
+                for (int i = 0; i < lectureRepository.getLectureList().size(); i++) {
+                    allAdditionalMaterials.addAll(lectureRepository.getLectureList().get(i).getAdditionalMaterialList());
+                }
+                if (additionalMaterialTreeSet.isEmpty()) {
+                    additionalMaterialTreeSet.addAll(allAdditionalMaterials);
+                } else {
+                    additionalMaterialTreeSet.retainAll(allAdditionalMaterials);
+                }
+                for (AdditionalMaterial additionalMaterial : additionalMaterialTreeSet) {
+                    System.out.println(additionalMaterial);
+                }
+                additionalMaterialSort();
+            } else System.out.println(IS_EMPTY);
+        } catch (NullPointerException n) {
+            n.printStackTrace();
+        } finally {
+            putBorder();
+            showInformAboutCreation();
+        }
     }
 
     public void creatDeleteCourse() {
         isPresent = true;
+        System.out.println("Виберіть курс який хочете видалити:");
+        printAllCourse();
         checkNumber(OF_COURSE);
         long courseId = getCheckNumber();
         for (int i = 0; i < courseRepository.getCourseList().size(); i++) {
             if (courseRepository.getCourseList().get(i).getCourseId().equals(courseId)) {
                 System.out.printf(OBJECT_IS_DELETE, courseRepository.getCourseList().remove(i));
+
                 isPresent = false;
                 break;
             }
@@ -379,6 +474,8 @@ public class MainService {
 
     public void creatDeleteLecture() {
         isPresent = true;
+        System.out.println("Виберіть лекцію яку хочете видалити:");
+        printAllLecture();
         checkNumber(OF_LECTURE);
         long lectureId = getCheckNumber();
         for (int i = 0; i < lectureRepository.getLectureList().size(); i++) {
@@ -396,6 +493,8 @@ public class MainService {
 
     public void creatDeleteTeacher() {
         isPresent = true;
+        System.out.println("Виберіть вчителя якого хочете видалити:");
+        printAllTeacher();
         checkNumber(OF_TEACHER);
         long teacherId = getCheckNumber();
         for (int i = 0; i < teacherRepository.getTeacherList().size(); i++) {
@@ -412,6 +511,9 @@ public class MainService {
     }
 
     public void creatDeleteStudent() {
+        isPresent = true;
+        System.out.println("Виберіть учня якого хочете видалити:");
+        printAllStudent();
         checkNumber(OF_STUDENT);
         long studentId = getCheckNumber();
         for (int i = 0; i < studentRepository.getStudentList().size(); i++) {
@@ -429,24 +531,29 @@ public class MainService {
 
     public void creatDeleteHomework() {
         isPresent = true;
+        System.out.println("Виберіть homework який хочете видалити:");
+        printAllHomework();
         checkNumber(HOMEWORK);
+        long homeworkId = getCheckNumber();
         for (int i = 0; i < lectureRepository.getLectureList().size(); i++) {
             for (int j = 0; j < lectureRepository.getLectureList().get(i).getHomeworkList().size(); j++) {
-                if (lectureRepository.getLectureList().get(i).getHomeworkList().get(j).getHomeworkId().equals(getCheckNumber())) {
+                if (lectureRepository.getLectureList().get(i).getHomeworkList().get(j).getHomeworkId().equals(homeworkId)) {
                     System.out.printf(OBJECT_IS_DELETE, lectureRepository.getLectureList().get(i).getHomeworkList().remove(j));
                     isPresent = false;
                     break;
                 }
             }
-            if (isPresent) {
-                System.err.println(ID_IS_NOT_FOUND);
-            }
-            showInformAboutCreation();
         }
+        if (isPresent) {
+            System.err.println(ID_IS_NOT_FOUND);
+        }
+        showInformAboutCreation();
     }
 
     public void creatDeleteAdditionalMaterial() {
         isPresent = true;
+        System.out.println("Виберіть ресурс який хочете видалити:");
+        printAllAdditionalMaterial();
         checkNumber(ADDITIONAL_MATERIAL);
         long additionalMaterialId = getCheckNumber();
         for (int i = 0; i < lectureRepository.getLectureList().size(); i++) {
@@ -467,8 +574,11 @@ public class MainService {
 
     public void creatTeacherForLecture() {
         System.out.println("Виберіть лекцію якій хочете присвоїти вчителя.");
+        printAllLecture();
         checkNumber(OF_LECTURE);
         long lectureId = getCheckNumber();
+        System.out.println("Виберіть вчителя.");
+        printAllTeacher();
         checkNumber(OF_TEACHER);
         long teacherId = getCheckNumber();
         try {
@@ -485,8 +595,11 @@ public class MainService {
 
     public void creatStudentForLecture() {
         System.out.println("Виберіть лекцію якій хочете присвоїти студента.");
+        printAllLecture();
         checkNumber(OF_LECTURE);
         long lectureId = getCheckNumber();
+        System.out.println("Виберіть студента.");
+        printAllStudent();
         checkNumber(OF_STUDENT);
         long studentId = getCheckNumber();
         try {
@@ -527,7 +640,7 @@ public class MainService {
 
     public void checkNumber(String outName) {
         long test;
-        boolean isPresent = true;
+        isPresent = true;
         while (isPresent) {
             System.out.printf("Введіть ID %s, число більше \"0\":\n", outName);
             if (scanner.hasNextLong()) {
@@ -545,7 +658,7 @@ public class MainService {
     }
 
     public void scannerName() {
-        boolean isPresent = true;
+        isPresent = true;
         String result;
         while (isPresent) {
             System.out.println("Введіть від одного до чотирьох слів !!!");
@@ -569,7 +682,7 @@ public class MainService {
     }
 
     public void scannerDescription() {
-        boolean isPresent = true;
+        isPresent = true;
         String testDescription;
         while (isPresent) {
             System.out.printf("Введіть опис лекції, від \"%d\" до \"%d\" символів.\n", 3, 20);
@@ -593,7 +706,7 @@ public class MainService {
     }
 
     public void scannerHomeTask() {
-        boolean isPresent = true;
+        isPresent = true;
         String task;
         while (isPresent) {
             System.out.printf("Запишіть домашнє завдання, від \"%d\" до \"%d\" символів.\n", 3, 20);
@@ -617,7 +730,7 @@ public class MainService {
     }
 
     public void scannerPhone() {
-        boolean isPresent = true;
+        isPresent = true;
         String format = "«+38(044)555-55-55»";
         String testPhoneNumber;
         while (isPresent) {
@@ -638,14 +751,12 @@ public class MainService {
                     e.printStackTrace();
                 }
             }
-
-
         }
     }
 
 
     public void scannerEmail() {
-        boolean isPresent = true;
+        isPresent = true;
         String testEmail;
         while (isPresent) {
             System.out.println("Формат електронної пошти: «nick@mail.com»");
@@ -670,7 +781,7 @@ public class MainService {
 
 
     public String checkFirstAndLastName() {
-        boolean isPresent = true;
+        isPresent = true;
         String result = "";
         String testFirstOrLastName;
         while (isPresent) {
@@ -708,6 +819,184 @@ public class MainService {
             System.out.println("Введіть буквений символ!!!");
         }
         return resourceType;
+    }
+
+    public void findCourse() {
+        isPresent = true;
+        for (Course c : courseRepository.getCourseList()) {
+            System.out.println(c);
+        }
+        putBorder();
+        while (isPresent) {
+            checkNumber(OF_COURSE);
+            for (Course c : courseRepository.getCourseList()) {
+                if (c.getCourseId().equals(getCheckNumber())) {
+                    courseId = getCheckNumber();
+                    courseName = c.getCourseName();
+                    isPresent = false;
+                    break;
+                }
+            }
+            if (isPresent) {
+                System.out.println("Не правильний ID!!!");
+            }
+        }
+    }
+
+    public void printResourceTypeInfo() {
+        System.out.println("""
+                Виберіть які додаткові матеріли ви хочете додати до лекції:
+                "Url адреса"
+                "Відео матеріали"
+                "Книжка"
+                Ввівши відповідно:
+                "Url"
+                "Video"
+                "Book\"""");
+    }
+
+    public void additionalMaterialSort() {
+        isPresent = true;
+        while (isPresent) {
+            putBorder();
+            System.out.print("""
+                    Виберіть варіант сортування і введіть ключове слово:
+                    По ID лекцій --> "lectureID"
+                    За видом додаткових матеріалів --> "type"
+                    ============================================
+                    Для виходу з сортування введіть будь що інше.
+                    """);
+            scannerNameModelAndPerson();
+            if (getNameModelAndPerson().equalsIgnoreCase("lectureID")) {
+                putBorder();
+                System.out.println("Додаткві матеріали вдсортовано по ID лецій.");
+                AdditionalMaterialSortLectureId materialSortLectureId = new AdditionalMaterialSortLectureId();
+                Set<AdditionalMaterial> materialSet = new TreeSet<>(materialSortLectureId);
+                materialSet.addAll(allAdditionalMaterials);
+                for (AdditionalMaterial material : materialSet) {
+                    System.out.println(material);
+                }
+            } else if (getNameModelAndPerson().equalsIgnoreCase("type")) {
+                putBorder();
+                System.out.println("Додаткві матеріали вдсортовано по типу.");
+                AdditionalMaterialSortType materialSortType = new AdditionalMaterialSortType();
+                Set<AdditionalMaterial> materialSet = new TreeSet<>(materialSortType);
+                materialSet.addAll(allAdditionalMaterials);
+                for (AdditionalMaterial material : materialSet) {
+                    System.out.println(material);
+                }
+            } else {
+                isPresent = false;
+            }
+        }
+    }
+
+    public void printAllLecture() {
+        putBorder();
+        for (Lecture l : lectureRepository.getLectureList()) {
+            System.out.println(l);
+        }
+        putBorder();
+    }
+
+    public void printAllCourse() {
+        putBorder();
+        for (Course c : courseRepository.getCourseList()) {
+            System.out.println(c);
+        }
+        putBorder();
+    }
+
+    public void printAllTeacher() {
+        putBorder();
+        for (Person t : teacherRepository.getTeacherList()) {
+            System.out.println(t);
+        }
+        putBorder();
+    }
+
+    public void printAllStudent() {
+        putBorder();
+        for (Person s : studentRepository.getStudentList()) {
+            System.out.println(s);
+        }
+        putBorder();
+    }
+
+    public void printAllHomework() {
+        putBorder();
+        for (Lecture lecture : lectureRepository.getLectureList()) {
+            for (Homework h : lecture.getHomeworkList())
+                System.out.println(h);
+        }
+        putBorder();
+    }
+
+    public void printAllAdditionalMaterial() {
+        putBorder();
+        for (Lecture lecture : lectureRepository.getLectureList()) {
+            for (AdditionalMaterial a : lecture.getAdditionalMaterialList())
+                System.out.println(a);
+        }
+        putBorder();
+    }
+
+    public void creatLectureDataExceptionLogic() {
+        lectureService.showLectures(getCheckNumber(), lectureRepository.getLectureList());
+        putBorder();
+        try {
+            teacherRepository.showInformPerson(TEACHER_ENG, lectureId, lectureRepository.getLectureList(), teacherRepository.getTeacherList());
+            putBorder();
+        } catch (EntityNotFoundException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            try {
+                studentRepository.showInformPerson(STUDENT_ENG, lectureId, lectureRepository.getLectureList(), studentRepository.getStudentList());
+                putBorder();
+            } catch (EntityNotFoundException e) {
+                System.err.println(e.getMessage());
+            } finally {
+                try {
+                    homeworkService.showInformHomework(getCheckNumber(), lectureRepository.getLectureList());
+                    putBorder();
+                } catch (EntityNotFoundException e) {
+                    System.err.println(e.getMessage());
+                } finally {
+                    additionalMaterialService.showInformAdditionalMaterial(lectureId, lectureRepository.getLectureList());
+                }
+            }
+        }
+    }
+
+    public void creatCourseDataExceptionLogic() {
+        courseService.showInformCourse(courseId, courseRepository.getCourseList());
+        lectureService.showLecturesInCourse(courseId, lectureRepository.getLectureList());
+        putBorder();
+        try {
+            teacherRepository.showInformPerson(TEACHER_ENG, courseId, lectureRepository.getLectureList(), teacherRepository.getTeacherList());
+            putBorder();
+        } catch (EntityNotFoundException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            studentRepository.showInformPerson(STUDENT_ENG, courseId, lectureRepository.getLectureList(), studentRepository.getStudentList());
+        }
+    }
+
+    public void autoObject(CourseRepository courseRepository, CourseService courseService, LectureRepository lectureRepository,
+                           LectureService lectureService) {
+        int indexCourse = 0;
+        courseRepository.getCourseList().add(courseService.createCourse(1L, "Auto course"));
+        courseId = courseRepository.getCourseList().get(indexCourse).getCourseId();
+        courseName = courseRepository.getCourseList().get(indexCourse).getCourseName();
+        for (long i = 0; i < 3; i++) {
+            lectureRepository.getLectureList().add(lectureService.createLecture(i, "No name", "No description", courseId, courseName));
+        }
+        System.out.println("==========================================================================");
+        System.out.printf("Створено автоматичний курс з іменем \"Auto course\"\n з ID \"%d\" і з трьома лекціями \"No name\".\n",
+                courseRepository.getCourseList().get(indexCourse).getCourseId());
+        System.out.println("==========================================================================");
+        System.out.println("Для виводу всієї інфрмації про курс, введіть: \n\"" + COURSE_DATA + "\"");
+        System.out.println("==========================================================================");
     }
 
     public void scannerNameModelAndPerson() {

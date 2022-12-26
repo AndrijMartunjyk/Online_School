@@ -41,13 +41,13 @@ public class LectureRepository implements InterfaceRepository {
         return lectureList;
     }
 
-    public long getLectureID() {
-        return lectureList.get(counter() - 1).getLectureId();
-    }
-
-    public void setIdCourseOfLecture(Long ID, String name) {
-        lectureList.get(counter() - 1).setCourseID(ID);
-        lectureList.get(counter() - 1).setNameCourse(name);
+    public long getLectureId(Lecture l) {
+        for (Lecture lecture : lectureList) {
+            if (lecture.equals(l)) {
+                return lecture.getLectureId();
+            }
+        }
+        return 0;
     }
 
     @Override
