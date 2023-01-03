@@ -1,6 +1,4 @@
-package online_school.course.model;
-
-import online_school.my_enum.Role;
+package online_school.domain.model;
 
 import java.util.Random;
 
@@ -105,16 +103,15 @@ public class Person extends Model implements Comparable<Person> {
 
     @Override
     public int compareTo(Person o) {
-        if (this.hashCode() == o.hashCode()) {
-            if (this.equals(o)) {
-                return 0;
-            }
-        }
-//        sorted by the first letter of the last name of the teacher and student
-        if (String.valueOf(super.getLastPersonName().charAt(0)).hashCode() < String.valueOf(o.getLastPersonName().charAt(0)).hashCode()) {
-            return -1;
+        int result = 1;
+        if (this.hashCode() == o.hashCode() && this.equals(o)) {
+            result = 0;
         } else
-            return 1;
+//        sorted by the first letter of the last name of the teacher and student
+            if (String.valueOf(super.getLastPersonName().charAt(0)).hashCode() < String.valueOf(o.getLastPersonName().charAt(0)).hashCode()) {
+                result = -1;
+            }
+        return result;
     }
 
     @Override

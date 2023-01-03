@@ -1,8 +1,7 @@
 package online_school.repository;
 
-import online_school.course.model.Lecture;
-import online_school.course.model.Person;
-import online_school.my_interface.InterfaceRepository;
+import online_school.domain.model.Lecture;
+import online_school.domain.model.Person;
 import online_school.service.StudentService;
 
 import java.util.ArrayList;

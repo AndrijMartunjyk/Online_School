@@ -1,14 +1,14 @@
 package online_school.service;
 
-import online_school.course.model.Course;
+import online_school.domain.model.Course;
 import online_school.exception.EntityNotFoundException;
 
 import java.util.List;
 
 public class CourseService {
 
-    public Course createCourse(Long iD, String name) {
-        return new Course(iD, name);
+    public Course createCourse(Long id, String name) {
+        return new Course(id, name);
     }
 
     public void showInformCourse(Long courseId, List<Course> courses) {

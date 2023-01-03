@@ -1,10 +1,5 @@
-package online_school.course.model;
+package online_school.domain.model;
 
-import online_school.course.task_for_lecture.AdditionalMaterial;
-import online_school.course.task_for_lecture.Homework;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class Lecture extends Model implements Comparable<Lecture> {
@@ -23,17 +18,6 @@ public class Lecture extends Model implements Comparable<Lecture> {
         this.courseId = courseId;
         this.nameCourse = nameCourse;
         counter++;
-    }
-
-    private final List<Homework> homeworkList = new ArrayList<>();
-    private final List<AdditionalMaterial> additionalMaterialList = new ArrayList<>();
-
-    public List<Homework> getHomeworkList() {
-        return homeworkList;
-    }
-
-    public List<AdditionalMaterial> getAdditionalMaterialList() {
-        return additionalMaterialList;
     }
 
     public String getLectureName() {
@@ -113,16 +97,15 @@ public class Lecture extends Model implements Comparable<Lecture> {
 
     @Override
     public int compareTo(Lecture o) {
-        if (this.hashCode() == o.hashCode()) {
-            if (this.equals(o)) {
-                return 0;
-            }
-        }
-//        sorted by the first letter of the lecture name
-        if (String.valueOf(this.lectureName.charAt(0)).hashCode() < String.valueOf(o.getLectureName().charAt(0)).hashCode()) {
-            return -1;
+        int result = 1;
+        if (this.hashCode() == o.hashCode() && this.equals(o)) {
+            result = 0;
         } else
-            return 1;
+//        sorted by the first letter of the lecture name
+            if (String.valueOf(this.lectureName.charAt(0)).hashCode() < String.valueOf(o.getLectureName().charAt(0)).hashCode()) {
+                result = -1;
+            }
+        return result;
     }
 
     @Override

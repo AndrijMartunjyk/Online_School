@@ -1,4 +1,4 @@
-package online_school.course.task_for_lecture;
+package online_school.domain.task_for_lecture;
 
 import java.util.Random;
 
@@ -57,16 +57,15 @@ public class Homework implements Comparable<Homework> {
 
     @Override
     public int compareTo(Homework o) {
-        if (this.hashCode() == o.hashCode()) {
-            if (this.equals(o)) {
-                return 0;
-            }
-        }
+        int result = 1;
+        if (this.hashCode() == o.hashCode() && this.equals(o)) {
+            result = 0;
+        }else
 //      sorted by ID
         if (homeworkId < o.getHomeworkId()) {
-            return -1;
-        } else
-            return 1;
+            result = -1;
+        }
+        return result;
     }
 
     @Override

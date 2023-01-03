@@ -1,7 +1,7 @@
 package online_school.service;
 
 import online_school.exception.EntityNotFoundException;
-import online_school.course.model.Lecture;
+import online_school.domain.model.Lecture;
 
 import java.util.List;
 

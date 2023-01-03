@@ -1,4 +1,4 @@
-package online_school.my_enum;
+package online_school.domain.model;
 
 public enum Resource {
     URL, VIDEO, BOOk

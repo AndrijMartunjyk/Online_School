@@ -1,9 +1,9 @@
 package online_school.service;
 
-import online_school.course.model.Model;
-import online_school.course.model.Lecture;
-import online_school.my_enum.Role;
-import online_school.course.model.Person;
+import online_school.domain.model.Model;
+import online_school.domain.model.Lecture;
+import online_school.domain.model.Role;
+import online_school.domain.model.Person;
 
 import java.util.List;
 
