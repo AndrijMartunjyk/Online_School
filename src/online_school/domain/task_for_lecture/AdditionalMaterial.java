@@ -1,24 +1,24 @@
-package online_school.course.task_for_lecture;
+package online_school.domain.task_for_lecture;
 
-import online_school.my_enum.Resource;
+import online_school.domain.model.Resource;
 
 import java.util.Random;
 
 public class AdditionalMaterial implements Comparable<AdditionalMaterial> {
-    private final Long id;
+    private final Long resourceId;
     private final String name;
     private final Long lectureId;
     private final Resource resourceType;
 
-    public AdditionalMaterial(Long id, String name, Long lectureId, Resource resourceType) {
-        this.id = id + new Random().nextLong(Long.MAX_VALUE);
+    public AdditionalMaterial(Long resourceId, String name, Long lectureId, Resource resourceType) {
+        this.resourceId = resourceId + new Random().nextLong(Long.MAX_VALUE);
         this.name = name;
         this.lectureId = lectureId;
         this.resourceType = resourceType;
     }
 
-    public Long getId() {
-        return id;
+    public Long getResourceId() {
+        return resourceId;
     }
 
     public String getName() {
@@ -44,7 +44,7 @@ public class AdditionalMaterial implements Comparable<AdditionalMaterial> {
         if (!(obj instanceof AdditionalMaterial additionalMaterial)) {
             return false;
         }
-        if (!(this.id.equals(additionalMaterial.getId()))) {
+        if (!(this.resourceId.equals(additionalMaterial.getResourceId()))) {
             return false;
         }
         if (!(this.name.equals(additionalMaterial.getName()))) {
@@ -60,7 +60,7 @@ public class AdditionalMaterial implements Comparable<AdditionalMaterial> {
     public int hashCode() {
         final int prime = 37;
         int result = 17;
-        result = prime * result + (int) (id - (id >>> 32));
+        result = prime * result + (int) (resourceId - (resourceId >>> 32));
         result = prime * result + ((this.name == null) ? 0 : name.hashCode());
         result = prime * result + ((this.resourceType == null) ? 0 : this.resourceType.hashCode());
         result = prime * result + ((this.lectureId == null) ? 0 : this.lectureId.hashCode());
@@ -70,7 +70,7 @@ public class AdditionalMaterial implements Comparable<AdditionalMaterial> {
     @Override
     public String toString() {
         return "AdditionalMaterial{" +
-                "Id=" + id +
+                "Id=" + resourceId +
                 ", name='" + name + '\'' +
                 ", lectureId=" + lectureId +
                 ", resource type=" + resourceType +
@@ -79,16 +79,15 @@ public class AdditionalMaterial implements Comparable<AdditionalMaterial> {
 
     @Override
     public int compareTo(AdditionalMaterial o) {
-        if (this.hashCode() == o.hashCode()) {
-            if (this.equals(o)) {
-                return 0;
-            }
-        }
-//        sorted by ID
-        if (id < o.getId()) {
-            return -1;
+        int result = 1;
+        if (this.hashCode() == o.hashCode() && this.equals(o)) {
+            result = 0;
         } else
-            return 1;
+//        sorted by ID
+            if (resourceId < o.getResourceId()) {
+                result = -1;
+            }
+        return result;
     }
 }
 

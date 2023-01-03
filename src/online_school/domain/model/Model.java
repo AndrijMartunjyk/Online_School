@@ -1,4 +1,4 @@
-package online_school.course.model;
+package online_school.domain.model;
 
 import online_school.exception.EntityNotFoundException;
 import online_school.service.MainService;

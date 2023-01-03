@@ -1,13 +1,13 @@
 package online_school.repository;
 
-import online_school.course.model.Course;
-import online_school.my_interface.InterfaceRepository;
+import online_school.domain.model.Course;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CourseRepository implements InterfaceRepository {
-    public static List<Course> courseList = new ArrayList<>();
+    private final List<Course> courseList = new ArrayList<>();
 
     public List<Course> getCourseList() {
         return courseList;

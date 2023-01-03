@@ -1,4 +1,4 @@
-package online_school.course.model;
+package online_school.domain.model;
 
 import java.util.Random;
 
@@ -53,16 +53,15 @@ public class Course extends Model implements Comparable<Course> {
 
     @Override
     public int compareTo(Course o) {
-        if (this.hashCode() == o.hashCode()) {
-            if (this.equals(o)) {
-                return 0;
-            }
-        }
-//      sorted by the first letter of the course name
-        if (String.valueOf(this.courseName.charAt(0)).hashCode() < String.valueOf(o.getCourseName().charAt(0)).hashCode()) {
-            return -1;
+        int result = 1;
+        if (this.hashCode() == o.hashCode() && this.equals(o)) {
+            result = 0;
         } else
-            return 1;
+//      sorted by the first letter of the course name
+            if (String.valueOf(this.courseName.charAt(0)).hashCode() < String.valueOf(o.getCourseName().charAt(0)).hashCode()) {
+                result = -1;
+            }
+        return result;
     }
 
     @Override
