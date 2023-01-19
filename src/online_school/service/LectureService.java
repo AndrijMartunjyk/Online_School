@@ -2,6 +2,7 @@ package online_school.service;
 
 import online_school.exception.EntityNotFoundException;
 import online_school.domain.model.Lecture;
+import online_school.util.Log;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class LectureService {
             }
             if (lecture.getLectureId().equals(lectureId)) {
                 System.out.println(lecture);
+                Log.info(LectureService.class.getName(), String.valueOf(lecture));
                 return;
             }
         }

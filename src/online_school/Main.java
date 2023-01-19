@@ -1,13 +1,18 @@
 package online_school;
 
+import online_school.util.Level;
 import online_school.service.*;
+import online_school.util.Log;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     private static final MainService mainService = new MainService();
 
     public static void main(String[] args) {
+        String info = "Спочатку введіть \"Курс\", або для виводу іформації про автоматичний курс, введіть\n\"Course data\"";
+        String programIsOver = "Програму завершено!!!";
         try (Scanner scanner = new Scanner(System.in)) {
             mainService.setScanner(scanner);
             mainService.showFrontInform();
@@ -39,19 +44,26 @@ public class Main {
                         case "вчитель для лекції" -> mainService.creatTeacherForLecture();
                         case "студент для лекції" -> mainService.creatStudentForLecture();
                         case "add someone" -> mainService.creatAddPersonForLecture();
+                        case "debug" -> mainService.logInfo(Level.DEBUG);
+                        case "info" -> mainService.logInfo(Level.INFO);
+                        case "warn" -> mainService.logInfo(Level.WARNING);
+                        case "error" -> mainService.logInfo(Level.ERROR);
                         case "stop" -> isPresent = false;
                         default -> mainService.creatDefault();
                     }
                 } else {
-                    System.out.println("Спочатку введіть \"Курс\", або для виводу іформації про автоматичний курс, введіть\n\"Course data\"");
+                    System.out.println(info);
+                    Log.info(Main.class.getName(), info);
                     mainService.putBorder();
                     mainService.scannerNameModelAndPerson();
                 }
             }
         } catch (RuntimeException r) {
+            Log.error(Main.class.getName(), "method->\"main\"", Arrays.toString(r.getStackTrace()));
             r.printStackTrace();
         }
-        System.out.println("Програму завершено!!!");
+        System.out.println(programIsOver);
+        Log.info(Main.class.getName(), programIsOver);
     }
 }
 
