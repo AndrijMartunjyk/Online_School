@@ -2,6 +2,7 @@ package online_school.repository;
 
 import online_school.domain.task_for_lecture.AdditionalMaterial;
 import online_school.service.MainService;
+import online_school.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,11 +24,15 @@ public class AdditionalMaterialRepository {
         boolean isPresent = true;
         if (listAdditionalMaterialMap.get(lectureIdKey) != null) {
             listAdditionalMaterialMap.get(lectureIdKey).add(additionalMaterial);
-            System.out.printf("AdditionalMaterial з ID: \"%s\" присвоєно лекції з ID: \"%s\"\n", additionalMaterial.getResourceId(), lectureIdKey);
+            String INFO_ABOUT_ADDITIONAL_MATERIAL = "AdditionalMaterial з ID: \"%s\" присвоєно лекції з ID: \"%s\"\n";
+            System.out.printf(INFO_ABOUT_ADDITIONAL_MATERIAL, additionalMaterial.getResourceId(), lectureIdKey);
+            Log.info(AdditionalMaterialRepository.class.getName(), INFO_ABOUT_ADDITIONAL_MATERIAL);
         } else {
             System.out.println(MainService.ID_IS_NOT_FOUND);
+            Log.info(AdditionalMaterialRepository.class.getName(), MainService.ID_IS_NOT_FOUND);
             isPresent = false;
         }
+        Log.debug(AdditionalMaterialRepository.class.getName(), "method-> \"addAdditionalMaterialToCollection\"");
         return isPresent;
     }
 }

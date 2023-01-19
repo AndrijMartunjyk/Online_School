@@ -3,6 +3,7 @@ package online_school.repository;
 import online_school.exception.EntityNotFoundException;
 import online_school.domain.model.Lecture;
 import online_school.domain.model.Person;
+import online_school.util.Log;
 
 import java.util.List;
 
@@ -18,10 +19,12 @@ public interface InterfaceRepository {
                 } else if (lecture.getLectureId().equals(person.getLectureId()) &&
                         (lecture.getCourseId().equals(id) || lecture.getLectureId().equals(id))) {
                     System.out.println(person);
+                    Log.info(InterfaceRepository.class.getName(), String.valueOf(person));
                     isPresent = false;
                 }
             }
         }
+        Log.debug(InterfaceRepository.class.getName(), "method->\"showInformPerson\"");
         if (isPresent) {
             throw new EntityNotFoundException("Id of the " + personName + " is not found!!!");
         }

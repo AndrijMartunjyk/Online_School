@@ -2,6 +2,7 @@ package online_school.repository;
 
 import online_school.domain.task_for_lecture.Homework;
 import online_school.service.MainService;
+import online_school.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,11 +24,15 @@ public class HomeworkRepository {
         boolean isPresent = true;
         if (listHomeworkMap.get(lectureIdKey) != null) {
             listHomeworkMap.get(lectureIdKey).add(homework);
-            System.out.printf("Homework з ID: \"%s\" присвоєно лекції з ID: \"%s\"\n", homework.getHomeworkId(), lectureIdKey);
+            String INFO_ABOUT_HOMEWORK = "Homework з ID: \"%s\" присвоєно лекції з ID: \"%s\"\n";
+            System.out.printf(INFO_ABOUT_HOMEWORK, homework.getHomeworkId(), lectureIdKey);
+            Log.info(HomeworkRepository.class.getName(), INFO_ABOUT_HOMEWORK);
         } else {
             System.out.println(MainService.ID_IS_NOT_FOUND);
+            Log.info(HomeworkRepository.class.getName(), MainService.ID_IS_NOT_FOUND);
             isPresent = false;
         }
+        Log.debug(HomeworkRepository.class.getName(), "method->\"addHomeworkToCollection\"");
         return isPresent;
     }
 }
