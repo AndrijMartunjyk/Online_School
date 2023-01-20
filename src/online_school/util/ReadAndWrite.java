@@ -1,7 +1,5 @@
 package online_school.util;
 
-import online_school.util.Level;
-
 import java.io.*;
 import java.util.Arrays;
 
@@ -61,6 +59,11 @@ public class ReadAndWrite {
         if (log.contains("ERROR") || log.contains("WARNING")) {
             System.err.println(log);
         } else System.out.println(log);
+    }
+
+    public void deleteLogFile() {
+        File file1 = new File(file);
+        System.out.println(file1.delete() ? "Файл з логами видалено!!!" : "Файл з логами не видалено!!!");
     }
 }
 
