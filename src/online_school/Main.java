@@ -64,6 +64,7 @@ public class Main {
         }
         System.out.println(programIsOver);
         Log.info(Main.class.getName(), programIsOver);
+        mainService.getReadAndWrite().deleteLogFile();
     }
 }
 

@@ -1,7 +1,5 @@
 package online_school.util;
 
-import online_school.util.Log;
-
 public class LogStorage {
     private final String[] logArray = new String[4];
 

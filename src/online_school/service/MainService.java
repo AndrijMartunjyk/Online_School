@@ -1377,7 +1377,6 @@ public class MainService {
         Log.debug(MAIN_SERVICE, METHOD_SCANNER_NAME_MODEL);
     }
 
-
     public void scannerFirstName() {
         firstname = checkFirstAndLastName();
     }
@@ -1432,6 +1431,10 @@ public class MainService {
 
     public String getTask() {
         return task;
+    }
+
+    public ReadAndWrite getReadAndWrite() {
+        return readAndWrite;
     }
 
     public void putBorder() {
