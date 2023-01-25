@@ -1,5 +1,6 @@
 package online_school.service;
 
+import online_school.domain.model.Student;
 import online_school.domain.model.*;
 import online_school.util.Level;
 import online_school.util.Log;
@@ -39,6 +40,8 @@ public class MainService {
     private final AdditionalMaterialRepository additionalMaterialRepository = new AdditionalMaterialRepository();
     private final Log log = new Log();
     private final ReadAndWrite readAndWrite = new ReadAndWrite();
+    private final ControlWorkService controlWork = new ControlWorkService();
+    private final List<Student> listOfStudentsForThread = new ArrayList<>();
 
     private Scanner scanner;
     private Long number;
@@ -59,6 +62,7 @@ public class MainService {
     private String courseName;
     private long additionalMaterialId;
     private String resourceName;
+    private Student[] studentsArray;
 
 
     private final String MAIN_SERVICE = MainService.class.getName();
@@ -99,6 +103,7 @@ public class MainService {
             "error" -> тільки "ERROR".""";
     public final String AUTO_COURSE = "Створено автоматичний курс з іменем \"Auto course\"\n з ID \"%d\" і з трьома лекціями \"No name\".\n";
     public final String ALL_INFO = "Для виводу всієї інфрмації про курс, введіть: \n\"" + COURSE_DATA + "\"";
+    public final String START = "START";
     public static final String OF_COURSE = "курсу";
     public static final String OF_LECTURE = "лекції";
     public static final String OF_STUDENT = "студента";
@@ -265,6 +270,7 @@ public class MainService {
             "Delete additional material"
             =======================================================================""";
 
+
     public void showFrontInform() {
         System.out.print(CASE_NOT_IMPORTANT);
         Log.info(MAIN_SERVICE, CASE_NOT_IMPORTANT);
@@ -273,7 +279,17 @@ public class MainService {
         Log.info(MAIN_SERVICE, START_INFO);
         System.out.println(INFO_ABOUT_LOGS);
         putBorder();
+        System.out.println("""
+                Контрольна робота.
+                ===================""");
+        takeRandomTask();
+        putBorder();
+        System.out.printf("Для початку введіть: \"%s\"\n", START);
         scannerNameModelAndPerson();
+        while (!nameModelAndPerson.equalsIgnoreCase(START)) {
+            System.out.println("Something wrong, try again!!!");
+            scannerNameModelAndPerson();
+        }
         Log.debug(MAIN_SERVICE, METHOD_SHOW_FRONT_INFORM);
     }
 
@@ -1454,5 +1470,32 @@ public class MainService {
         nameModelAndPerson = scanner.nextLine();
         Log.debug(MAIN_SERVICE, METHOD_SHOW_INFORM_ABOUT_CREATION);
     }
+
+    public void takeRandomTask() {
+        studentsArray = controlWork.createStudentsArray();
+        controlWork.creatTaskForStudent(studentsArray);
+        for (int i = 0; i < studentsArray.length; i++) {
+            studentsArray[i].setStudentNumber(i + 1);
+            listOfStudentsForThread.add(studentsArray[i]);
+            System.out.println(listOfStudentsForThread.get(i));
+        }
+    }
+
+    public void startControlWork() {
+        try {
+            controlWork.controlWorkStart(listOfStudentsForThread, studentsArray);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        studentRepository.getStudentList().addAll(listOfStudentsForThread);
+        putBorder();
+        System.out.println("Тепер створіть об'єкт курсу, ввівши: \"Курс\"");
+        scannerNameModelAndPerson();
+    }
 }
+
+
+
+
+
 
