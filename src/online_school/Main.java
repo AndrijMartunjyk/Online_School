@@ -19,7 +19,8 @@ public class Main {
             boolean isPresent = true;
             while (isPresent) {
                 if (mainService.getNameModelAndPerson().equalsIgnoreCase(MainService.COURSE) || mainService.getCourseRepository().counter() > 1
-                        || mainService.getNameModelAndPerson().equalsIgnoreCase(MainService.COURSE_DATA)) {
+                        || mainService.getNameModelAndPerson().equalsIgnoreCase(MainService.COURSE_DATA)
+                        || mainService.getNameModelAndPerson().equalsIgnoreCase(mainService.START)) {
                     switch (mainService.getNameModelAndPerson().toLowerCase()) {
                         case "курс" -> mainService.creatCourse();
                         case "лекція" -> mainService.creatLecture();
@@ -48,6 +49,7 @@ public class Main {
                         case "info" -> mainService.logInfo(Level.INFO);
                         case "warn" -> mainService.logInfo(Level.WARNING);
                         case "error" -> mainService.logInfo(Level.ERROR);
+                        case "start" -> mainService.startControlWork();
                         case "stop" -> isPresent = false;
                         default -> mainService.creatDefault();
                     }

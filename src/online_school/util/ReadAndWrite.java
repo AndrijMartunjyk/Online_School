@@ -63,7 +63,7 @@ public class ReadAndWrite {
 
     public void deleteLogFile() {
         File file1 = new File(file);
-        System.out.println(file1.delete() ? "Файл з логами видалено!!!" : "Файл з логами не видалено!!!");
+        System.out.println(file1.delete() ? "Файл з логами видалено!!!" : "");
     }
 }
 
