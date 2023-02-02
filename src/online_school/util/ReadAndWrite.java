@@ -1,69 +1,98 @@
 package online_school.util;
 
 import java.io.*;
-import java.util.Arrays;
+import java.nio.file.Path;
 
 public class ReadAndWrite {
+    private String pathToFileWithLevels;
+    private String pathToFileWithList;
+    private String result;
 
-    private final String file = "Loggers.txt";
-
-    public void info(Level logName, String[] getLogArray) {
-        writeIt(getLogArray);
-        int result;
-        StringBuilder s = new StringBuilder();
-        try (FileReader fileReader = new FileReader(file)) {
-            while ((result = fileReader.read()) != -1) {
-                s.append((char) result);
+    public void write(String[] logArray) {
+        String massage = "method-> \"write\"";
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(pathToFileWithLevels));
+             FileWriter fileWriter = new FileWriter(pathToFileWithList)) {
+            String result;
+            while ((result = bufferedReader.readLine()) != null) {
+                this.result = result;
             }
-            String[] logs = s.toString().split("\n");
-            for (String log : logs) {
-                switch (logName) {
-                    case DEBUG -> stringLog(log);
-                    case INFO -> {
-                        if (!log.contains("DEBUG")) {
-                            stringLog(log);
-                        }
-                    }
-                    case WARNING -> {
-                        if (log.contains("ERROR") || log.contains("WARNING")) {
-                            System.err.println(log);
-                        }
-                    }
-                    case ERROR -> {
-                        if (log.contains("ERROR")) {
-                            System.err.println(log);
-                        }
+            if (this.result.contains(Level.DEBUG)) {
+                for (String s : logArray) {
+                    if (s != null) {
+                        fileWriter.write(s);
                     }
                 }
             }
-        } catch (IOException n) {
-            System.out.println(n.getMessage());
-            Log.error(ReadAndWrite.class.getName(), "method->\"info\"", Arrays.toString(n.getStackTrace()));
-        }
-    }
-
-    private void writeIt(String[] getLogArray) {
-        try (FileWriter fileWriter = new FileWriter(file)) {
-            for (String log : getLogArray) {
-                if (log != null) {
-                    fileWriter.write(log);
+            if (this.result.contains(Level.INFO)) {
+                for (int i = 1; i < logArray.length; i++) {
+                    if (logArray[i] != null) {
+                        fileWriter.write(logArray[i]);
+                    }
                 }
             }
-        } catch (IOException n) {
-            System.out.println(n.getMessage());
-            Log.error(ReadAndWrite.class.getName(), "method->\" writeIt\"", Arrays.toString(n.getStackTrace()));
+            if (this.result.contains(Level.WARNING)) {
+                for (int i = 2; i < logArray.length; i++) {
+                    if (logArray[i] != null) {
+                        fileWriter.write(logArray[i]);
+                    }
+                }
+            }
+            if (this.result.contains(Level.ERROR)) {
+                if (logArray[3] != null) {
+                    fileWriter.write(logArray[3]);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.error(ReadAndWrite.class.getName(), massage, e.fillInStackTrace().getMessage());
         }
+        Log.debug(ReadAndWrite.class.getName(), massage);
     }
 
-    private void stringLog(String log) {
-        if (log.contains("ERROR") || log.contains("WARNING")) {
-            System.err.println(log);
-        } else System.out.println(log);
+    public void showLogsOnConsole(Level logName, String[] logArray) {
+        switch (logName) {
+            case DEBUG -> {
+                for (String log : logArray) {
+                    if (log != null) {
+                        System.out.println(log);
+                        Log.info(ReadAndWrite.class.getName(), log);
+                    }
+                }
+            }
+            case INFO -> {
+                for (int i = 1; i < logArray.length; i++) {
+                    if (logArray[i] != null) {
+                        System.out.println(logArray[i]);
+                        Log.info(ReadAndWrite.class.getName(), logArray[i]);
+                    }
+                }
+            }
+            case WARNING -> {
+                for (int i = 2; i < logArray.length; i++) {
+                    if (logArray[i] != null) {
+                        System.err.println(logArray[i]);
+                        Log.info(ReadAndWrite.class.getName(), logArray[i]);
+                    }
+                }
+            }
+            case ERROR -> {
+                if (logArray[3] != null) {
+                    System.err.println(logArray[3]);
+                    Log.info(ReadAndWrite.class.getName(), logArray[3]);
+                }
+            }
+        }
+        Log.debug(ReadAndWrite.class.getName(), "method-> \"showLogs\"");
     }
 
-    public void deleteLogFile() {
-        File file1 = new File(file);
-        System.out.println(file1.delete() ? "Файл з логами видалено!!!" : "");
+    public void setPathToFileWithLevels(Path pathToFileWithLevels) {
+        this.pathToFileWithLevels = String.valueOf(pathToFileWithLevels);
+        Log.debug(ReadAndWrite.class.getName(), "method-> \"setPathToFileWithLevels\"");
+    }
+
+    public void setPathToFileWithList(Path pathToFileWithList) {
+        this.pathToFileWithList = String.valueOf(pathToFileWithList);
+        Log.debug(ReadAndWrite.class.getName(), "method-> \"setPathToFileWithList\"");
     }
 }
 

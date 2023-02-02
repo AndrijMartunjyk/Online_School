@@ -7,30 +7,33 @@ import online_school.util.Log;
 import java.util.List;
 
 public class CourseService {
-    private final String BORDER = "===============================================";
-    private final String COURSE = "Курс: ";
-    private final String BIG_BORDER = "============================================================================================================";
 
     public Course createCourse(Long id, String name) {
+        Log.debug(CourseService.class.getName(), "method->\"createCourse\"");
         return new Course(id, name);
     }
 
     public void showInformCourse(Long courseId, List<Course> courses) {
+        String stacktrace = "Id of the course is not found!!!";
         Log.debug(CourseService.class.getName(), "method->\"showInformCourse\"");
         for (Course course : courses) {
             if (course == null) {
                 break;
             } else if (course.getCourseId().equals(courseId)) {
+                String BORDER = "===============================================";
                 System.out.println(BORDER);
                 Log.info(CourseService.class.getName(), BORDER);
+                String COURSE = "Курс: ";
                 System.out.println(COURSE + course);
                 Log.info(CourseService.class.getName(), COURSE + course);
+                String BIG_BORDER = "============================================================================================================";
                 System.out.println(BIG_BORDER);
                 Log.info(CourseService.class.getName(), BIG_BORDER);
                 return;
             }
         }
-        throw new EntityNotFoundException("Id of the course is not found!!!");
+        Log.warning(CourseService.class.getName(), "EntityNotFoundException", stacktrace);
+        throw new EntityNotFoundException(stacktrace);
     }
 }
 

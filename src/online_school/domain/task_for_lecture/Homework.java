@@ -1,5 +1,7 @@
 package online_school.domain.task_for_lecture;
 
+import online_school.util.Log;
+
 import java.util.Random;
 
 public class Homework implements Comparable<Homework> {
@@ -14,19 +16,23 @@ public class Homework implements Comparable<Homework> {
     }
 
     public Long getLectureId() {
+        Log.debug(Homework.class.getName(), "method->\"getLectureId\"");
         return lectureId;
     }
 
     public Long getHomeworkId() {
+        Log.debug(Homework.class.getName(), "method->\"getHomeworkId\"");
         return homeworkId;
     }
 
     public String getTask() {
+        Log.debug(Homework.class.getName(), "method->\"getTask\"");
         return task;
     }
 
     @Override
     public boolean equals(Object obj) {
+        Log.debug(Homework.class.getName(), "method->\"equals\"");
         if (this == obj) {
             return true;
         }
@@ -47,6 +53,7 @@ public class Homework implements Comparable<Homework> {
 
     @Override
     public int hashCode() {
+        Log.debug(Homework.class.getName(), "method->\"hashCode\"");
         final int prime = 37;
         int result = 17;
         result = prime * result + (int) (homeworkId - (homeworkId >>> 32));
@@ -57,19 +64,21 @@ public class Homework implements Comparable<Homework> {
 
     @Override
     public int compareTo(Homework o) {
+        Log.debug(Homework.class.getName(), "method->\"compareTo\"");
         int result = 1;
         if (this.hashCode() == o.hashCode() && this.equals(o)) {
             result = 0;
-        }else
+        } else
 //      sorted by ID
-        if (homeworkId < o.getHomeworkId()) {
-            result = -1;
-        }
+            if (homeworkId < o.getHomeworkId()) {
+                result = -1;
+            }
         return result;
     }
 
     @Override
     public String toString() {
+        Log.debug(Homework.class.getName(), "method->\"toString\"");
         return "Homework{" +
                 "HomeworkId=" + homeworkId +
                 ", lectureId=" + lectureId +

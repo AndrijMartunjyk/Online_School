@@ -2,46 +2,47 @@ package online_school.service;
 
 import online_school.domain.model.Student;
 import online_school.domain.model.*;
-import online_school.util.Level;
-import online_school.util.Log;
-import online_school.util.ReadAndWrite;
+import online_school.util.*;
 import online_school.repository.*;
-import online_school.util.AdditionalMaterialSortLectureId;
 import online_school.domain.task_for_lecture.AdditionalMaterial;
 import online_school.domain.task_for_lecture.Homework;
 import online_school.exception.EntityNotFoundException;
-import online_school.util.AdditionalMaterialSortType;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static online_school.util.RegularExpression.*;
 
 public class MainService {
 
-    private final CourseRepository courseRepository = new CourseRepository();
-    private final CourseService courseService = new CourseService();
-    private final LectureRepository lectureRepository = new LectureRepository();
-    private final LectureService lectureService = new LectureService();
-    private final StudentRepository studentRepository = new StudentRepository();
-    private final StudentService studentService = new StudentService();
-    private final TeacherRepository teacherRepository = new TeacherRepository();
-    private final TeacherService teacherService = new TeacherService();
-    private final HomeworkService homeworkService = new HomeworkService();
-    private final AdditionalMaterialService additionalMaterialService = new AdditionalMaterialService();
-    private final TreeSet<Course> courseTreeSet = new TreeSet<>();
-    private final TreeSet<Lecture> lectureTreeSet = new TreeSet<>();
-    private final TreeSet<Person> teacherTreeSet = new TreeSet<>();
-    private final TreeSet<Person> studentTreeSet = new TreeSet<>();
-    private final java.util.List<Homework> allHomework = new ArrayList<>();
-    private final TreeSet<Homework> homeworkTreeSet = new TreeSet<>();
-    private final java.util.List<AdditionalMaterial> allAdditionalMaterials = new ArrayList<>();
-    private final TreeSet<AdditionalMaterial> additionalMaterialTreeSet = new TreeSet<>();
-    private final HomeworkRepository homeworkRepository = new HomeworkRepository();
-    private final AdditionalMaterialRepository additionalMaterialRepository = new AdditionalMaterialRepository();
-    private final Log log = new Log();
-    private final ReadAndWrite readAndWrite = new ReadAndWrite();
-    private final ControlWorkService controlWork = new ControlWorkService();
-    private final List<Student> listOfStudentsForThread = new ArrayList<>();
+    private static final CourseRepository courseRepository = new CourseRepository();
+    private static final CourseService courseService = new CourseService();
+    private static final LectureRepository lectureRepository = new LectureRepository();
+    private static final LectureService lectureService = new LectureService();
+    private static final StudentRepository studentRepository = new StudentRepository();
+    private static final StudentService studentService = new StudentService();
+    private static final TeacherRepository teacherRepository = new TeacherRepository();
+    private static final TeacherService teacherService = new TeacherService();
+    private static final HomeworkService homeworkService = new HomeworkService();
+    private static final AdditionalMaterialService additionalMaterialService = new AdditionalMaterialService();
+    private static final TreeSet<Course> courseTreeSet = new TreeSet<>();
+    private static final TreeSet<Lecture> lectureTreeSet = new TreeSet<>();
+    private static final TreeSet<Person> teacherTreeSet = new TreeSet<>();
+    private static final TreeSet<Person> studentTreeSet = new TreeSet<>();
+    private static final java.util.List<Homework> allHomework = new ArrayList<>();
+    private static final TreeSet<Homework> homeworkTreeSet = new TreeSet<>();
+    private static final java.util.List<AdditionalMaterial> allAdditionalMaterials = new ArrayList<>();
+    private static final TreeSet<AdditionalMaterial> additionalMaterialTreeSet = new TreeSet<>();
+    private static final HomeworkRepository homeworkRepository = new HomeworkRepository();
+    private static final AdditionalMaterialRepository additionalMaterialRepository = new AdditionalMaterialRepository();
+    private static final ReadAndWrite readAndWrite = new ReadAndWrite();
+    private static final ControlWorkService controlWork = new ControlWorkService();
+    private static final List<Student> listOfStudentsForThread = new ArrayList<>();
+
 
     private Scanner scanner;
     private Long number;
@@ -63,6 +64,8 @@ public class MainService {
     private long additionalMaterialId;
     private String resourceName;
     private Student[] studentsArray;
+    private WatchDirectory watchDirectory;
+    private Path fullPathToFile;
 
 
     private final String MAIN_SERVICE = MainService.class.getName();
@@ -137,7 +140,6 @@ public class MainService {
     public static final String YOU_CREAT_STUDENT = "Чудово, ви створили об'єкт студента з іменем: \"%s\", прізвищем: \"%s\" і номером ID: \"%d\".\n";
     public static final String YOU_CREAT_TEACHER = "Чудово, ви створили об'єкт вчителя з іменем: \"%s\", прізвищем: \"%s\" і номером ID: \"%d\".\n";
     public static final String NOW_CREAT_OBJECT = "Тепер створіть об'єкти ввівши:\n" + LECTURE + ".\n" + STUDENT + ".\n" + TEACHER + ".";
-    public static final String METHOD_SHOW_FRONT_INFORM = "method-> \"showFrontInform\"";
     public static final String METHOD_HOMEWORK = "method-> \"homework\"";
     public static final String METHOD_CREAT_COURSE_DATA = "method-> \"creatCourseData\"";
     public static final String METHOD_CREAT_RESOURCE_TYPE = "method-> \"createResourceType\"";
@@ -184,10 +186,7 @@ public class MainService {
     public static final String METHOD_CREAT_HOME_LOGIC = "method-> \"creatHomeworkLogic\"";
     public static final String METHOD_CREATE_RESOURCE_TYPE_LOGIC = "method-> \"createResourceTypeLogic\"";
     public static final String METHOD_LOGIC = "method-> \"logInfo\"";
-    public static final String METHOD_SCANNER_NAME_MODEL = "method-> \"scannerNameModelAndPerson\"";
-    public static final String METHOD_SHOW_INFORM_ABOUT_CREATION = "method-> \"showInformAboutCreation\"";
     public static final String CONTINUE_INFO = "Можете продовжувати створювати студентів, вчителів, лекції.";
-    public static final String METHOD_SHOW_INFORM = "method-> \"showInformCourseAndLecture\"";
     public static final String ALL_INFORM = "Для виводу всієї інфрмації про курс, або про лекцію, введіть: \n\"" + COURSE_DATA + "\"\n\"" + LECTURE_DATA + "\"";
     public static final String SO_LONG_BORDER = "================================================================================================================================================================";
     public static final String ENTER_NAME_OF_COURSE = "Введіть назву курсу:";
@@ -239,6 +238,9 @@ public class MainService {
     public static final String DESCRIPTION_OF_LECTURE_SAVED = "Опис лекції збережено!!!";
     public static final String PATTERN_OF_NUMBER = "Формат номера: «+38(044)555-55-55»";
     public static final String PATTERN_OF_EMAIL = "Формат електронної пошти: «nick@mail.com»";
+    public static final String START_ENTER = "Для початку введіть: \"%s\"\n";
+    public static final String SOMETHING_WRONG = "Something wrong, try again!!!";
+    public static final String NOW_CREAT_COURSE = "Тепер створіть об'єкт курсу, ввівши: \"Курс\"";
     public static final String BORDER_SHORT = "=================================";
     public static final String BORDER_LONG = "==================================================";
     public static final String BORDER_VERY_LONG = "==========================================================================";
@@ -270,27 +272,33 @@ public class MainService {
             "Delete additional material"
             =======================================================================""";
 
+    public static final String CONTROL_WORK_MASSAGE = """
+            Контрольна робота.
+            ===================""";
+
 
     public void showFrontInform() {
         System.out.print(CASE_NOT_IMPORTANT);
         Log.info(MAIN_SERVICE, CASE_NOT_IMPORTANT);
-        autoObject(courseRepository, courseService, lectureRepository, lectureService);
+        autoCourse(courseRepository, courseService, lectureRepository, lectureService);
         System.out.printf(START_INFO, BORDER_SHORT, BORDER_LONG, INFORM_FOR_LECTURE, BORDER_SHORT);
         Log.info(MAIN_SERVICE, START_INFO);
         System.out.println(INFO_ABOUT_LOGS);
+        Log.info(MAIN_SERVICE, INFO_ABOUT_LOGS);
         putBorder();
-        System.out.println("""
-                Контрольна робота.
-                ===================""");
+        System.out.println(CONTROL_WORK_MASSAGE);
+        Log.info(MAIN_SERVICE, CONTROL_WORK_MASSAGE);
         takeRandomTask();
         putBorder();
-        System.out.printf("Для початку введіть: \"%s\"\n", START);
+        System.out.printf(START_ENTER, START);
+        Log.info(MAIN_SERVICE, START_ENTER + START);
         scannerNameModelAndPerson();
         while (!nameModelAndPerson.equalsIgnoreCase(START)) {
-            System.out.println("Something wrong, try again!!!");
+            System.out.println(SOMETHING_WRONG);
+            Log.info(MAIN_SERVICE, SOMETHING_WRONG);
             scannerNameModelAndPerson();
         }
-        Log.debug(MAIN_SERVICE, METHOD_SHOW_FRONT_INFORM);
+        Log.debug(MAIN_SERVICE, "method -> \"showFrontInform\"");
     }
 
     public void creatCourse() {
@@ -303,7 +311,7 @@ public class MainService {
         scannerName();
         course = courseService.createCourse(getCheckNumber(), getName());
         courseRepository.getCourseList().add(course);
-        System.out.printf(YOU_CREAT_COURSE, getName(), courseRepository.getCourseID(course));
+        System.out.printf(YOU_CREAT_COURSE, getName(), courseRepository.getCourseId(course));
         System.out.println(NOW_CREAT_OBJECT);
         Log.info(MAIN_SERVICE, YOU_CREAT_COURSE + NOW_CREAT_OBJECT);
         putBorder();
@@ -513,9 +521,12 @@ public class MainService {
                 }
                 for (Course course : courseTreeSet) {
                     System.out.println(course);
+                    Log.info(MAIN_SERVICE, String.valueOf(course));
                 }
-            } else System.out.println(IS_EMPTY);
-            Log.info(MAIN_SERVICE, IS_EMPTY);
+            } else {
+                System.out.println(IS_EMPTY);
+                Log.info(MAIN_SERVICE, IS_EMPTY);
+            }
         } catch (NullPointerException n) {
             n.printStackTrace();
             Log.error(MAIN_SERVICE, METHOD_CREAT_COURSE_INFO + NULL_POINTER_EXCEPTION, Arrays.toString(n.getStackTrace()));
@@ -539,9 +550,12 @@ public class MainService {
                 }
                 for (Lecture lecture : lectureTreeSet) {
                     System.out.println(lecture);
+                    Log.info(MAIN_SERVICE, String.valueOf(lecture));
                 }
-            } else System.out.println(IS_EMPTY);
-            Log.info(MAIN_SERVICE, IS_EMPTY);
+            } else {
+                System.out.println(IS_EMPTY);
+                Log.info(MAIN_SERVICE, IS_EMPTY);
+            }
         } catch (NullPointerException n) {
             n.printStackTrace();
             Log.error(MAIN_SERVICE, METHOD_CREAT_LECTURE_INFO + NULL_POINTER_EXCEPTION, Arrays.toString(n.getStackTrace()));
@@ -565,9 +579,12 @@ public class MainService {
                 }
                 for (Person teacher : teacherTreeSet) {
                     System.out.println(teacher);
+                    Log.info(MAIN_SERVICE, String.valueOf(teacher));
                 }
-            } else System.out.println(IS_EMPTY);
-            Log.info(MAIN_SERVICE, IS_EMPTY);
+            } else {
+                System.out.println(IS_EMPTY);
+                Log.info(MAIN_SERVICE, IS_EMPTY);
+            }
         } catch (NullPointerException n) {
             n.printStackTrace();
             Log.error(MAIN_SERVICE, METHOD_CREAT_TEACHER_INFO + NULL_POINTER_EXCEPTION, Arrays.toString(n.getStackTrace()));
@@ -591,6 +608,7 @@ public class MainService {
                 }
                 for (Person student : studentTreeSet) {
                     System.out.println(student);
+                    Log.info(MAIN_SERVICE, String.valueOf(student));
                 }
             } else System.out.println(IS_EMPTY);
             Log.info(MAIN_SERVICE, IS_EMPTY);
@@ -615,8 +633,10 @@ public class MainService {
         try {
             if (isPresent) {
                 sortedHomework();
-            } else System.out.println(IS_EMPTY);
-            Log.info(MAIN_SERVICE, IS_EMPTY);
+            } else {
+                System.out.println(IS_EMPTY);
+                Log.info(MAIN_SERVICE, IS_EMPTY);
+            }
         } catch (NullPointerException n) {
             n.printStackTrace();
             Log.error(MAIN_SERVICE, METHOD_CREAT_HOMEWORK_INFO + NULL_POINTER_EXCEPTION, Arrays.toString(n.getStackTrace()));
@@ -639,8 +659,10 @@ public class MainService {
             if (isPresent) {
                 additionalMaterialSortDefault();
                 additionalMaterialSort();
-            } else System.out.println(IS_EMPTY);
-            Log.info(MAIN_SERVICE, IS_EMPTY);
+            } else {
+                System.out.println(IS_EMPTY);
+                Log.info(MAIN_SERVICE, IS_EMPTY);
+            }
         } catch (NullPointerException n) {
             n.printStackTrace();
             Log.error(MAIN_SERVICE, METHOD_CREAT_ADDITIONAL_MATERIAL_INFO + NULL_POINTER_EXCEPTION, Arrays.toString(n.getStackTrace()));
@@ -946,6 +968,7 @@ public class MainService {
                 } else {
                     description = testDescription;
                     System.out.println(DESCRIPTION_OF_LECTURE_SAVED);
+                    Log.info(MAIN_SERVICE, DESCRIPTION_OF_LECTURE_SAVED);
                     isPresent = false;
                 }
             } catch (IllegalArgumentException i) {
@@ -995,8 +1018,8 @@ public class MainService {
         String testPhoneNumber;
         while (isPresent) {
             System.out.println(PATTERN_OF_NUMBER);
-            testPhoneNumber = scanner.nextLine();
             Log.info(MAIN_SERVICE, PATTERN_OF_NUMBER);
+            testPhoneNumber = scanner.nextLine();
             try {
                 if (!(makeValidate(testPhoneNumber, phoneNumberPattern))) {
                     throw new IllegalArgumentException(testPhoneNumber);
@@ -1156,6 +1179,7 @@ public class MainService {
                 materialSet.addAll(allAdditionalMaterials);
                 for (AdditionalMaterial material : materialSet) {
                     System.out.println(material);
+                    Log.info(MAIN_SERVICE, String.valueOf(material));
                 }
             } else {
                 isPresent = false;
@@ -1279,7 +1303,7 @@ public class MainService {
         Log.debug(MAIN_SERVICE, METHOD_CREAT_COURSE_DATA_LOGIC);
     }
 
-    public void autoObject(CourseRepository courseRepository, CourseService courseService, LectureRepository lectureRepository,
+    public void autoCourse(CourseRepository courseRepository, CourseService courseService, LectureRepository lectureRepository,
                            LectureService lectureService) {
         int indexCourse = 0;
         courseRepository.getCourseList().add(courseService.createCourse(1L, "Auto course"));
@@ -1293,8 +1317,8 @@ public class MainService {
         System.out.printf(AUTO_COURSE,
                 courseRepository.getCourseList().get(indexCourse).getCourseId());
         Log.info(MAIN_SERVICE, AUTO_COURSE);
-        System.out.println(BORDER_LONG);
-        Log.info(MAIN_SERVICE, BORDER_LONG);
+        System.out.println(BORDER_VERY_LONG);
+        Log.info(MAIN_SERVICE, BORDER_VERY_LONG);
         System.out.println(ALL_INFO);
         Log.info(MAIN_SERVICE, ALL_INFO);
         System.out.println(BORDER_VERY_LONG);
@@ -1327,6 +1351,7 @@ public class MainService {
         }
         for (Homework homework : homeworkTreeSet) {
             System.out.println(homework);
+            Log.info(MAIN_SERVICE, String.valueOf(homework));
         }
         Log.debug(MAIN_SERVICE, METHOD_SORTED_HOME);
     }
@@ -1377,12 +1402,13 @@ public class MainService {
         }
         for (AdditionalMaterial additionalMaterial : additionalMaterialTreeSet) {
             System.out.println(additionalMaterial);
+            Log.info(MAIN_SERVICE, String.valueOf(additionalMaterial));
         }
         Log.debug(MAIN_SERVICE, METHOD_ADDITIONAL_MATERIAL_SORT_DEFAULT);
     }
 
     public void logInfo(Level logName) {
-        readAndWrite.info(logName, log.getLogArray());
+        readAndWrite.showLogsOnConsole(logName, Log.getLogArray());
         putBorder();
         showInformAboutCreation();
         Log.debug(MAIN_SERVICE, METHOD_LOGIC);
@@ -1390,85 +1416,96 @@ public class MainService {
 
     public void scannerNameModelAndPerson() {
         nameModelAndPerson = scanner.nextLine();
-        Log.debug(MAIN_SERVICE, METHOD_SCANNER_NAME_MODEL);
+        Log.debug(MAIN_SERVICE, "method-> \"scannerNameModelAndPerson\"");
     }
 
     public void scannerFirstName() {
         firstname = checkFirstAndLastName();
+        Log.debug(MAIN_SERVICE, "method-> \"scannerFirstName\"");
     }
 
     public void scannerLastName() {
         lastName = checkFirstAndLastName();
+        Log.debug(MAIN_SERVICE, "method-> \"scannerLastName\"");
     }
 
     public CourseRepository getCourseRepository() {
+        Log.debug(MAIN_SERVICE, "method-> \"getCourseRepository\"");
         return courseRepository;
     }
 
     public Long getCheckNumber() {
+        Log.debug(MAIN_SERVICE, "method-> \"getCheckNumber\"");
         return number;
     }
 
     public String getName() {
+        Log.debug(MAIN_SERVICE, "method-> \"getName\"");
         return name;
     }
 
     public String getNameModelAndPerson() {
+        Log.debug(MAIN_SERVICE, "method-> \"getNameModelAndPerson\"");
         return nameModelAndPerson;
     }
 
     public void setNameModelAndPerson(String nameModelAndPerson) {
         this.nameModelAndPerson = nameModelAndPerson;
+        Log.debug(MAIN_SERVICE, "method-> \"setNameModelAndPerson\"");
     }
 
     public String getFirstname() {
+        Log.debug(MAIN_SERVICE, "method-> \"getFirstname\"");
         return firstname;
     }
 
     public String getLastName() {
+        Log.debug(MAIN_SERVICE, "method-> \"getLastName\"");
         return lastName;
     }
 
     public String getDescription() {
+        Log.debug(MAIN_SERVICE, "method-> \"getDescription\"");
         return description;
     }
 
     public String getPhone() {
+        Log.debug(MAIN_SERVICE, "method-> \"getPhone\"");
         return phone;
     }
 
     public String getEmail() {
+        Log.debug(MAIN_SERVICE, "method-> \"getEmail\"");
         return email;
     }
 
     public void setScanner(Scanner scanner) {
         this.scanner = scanner;
+        Log.debug(MAIN_SERVICE, "method-> \"setScanner\"");
     }
 
     public String getTask() {
+        Log.debug(MAIN_SERVICE, "method-> \"getTask\"");
         return task;
-    }
-
-    public ReadAndWrite getReadAndWrite() {
-        return readAndWrite;
     }
 
     public void putBorder() {
         System.out.println(SO_LONG_BORDER);
         Log.info(MAIN_SERVICE, SO_LONG_BORDER);
+        Log.debug(MAIN_SERVICE, "method-> \"putBorder\"");
     }
 
     public void showInformCourseAndLecture() {
         System.out.println(ALL_INFORM);
         Log.info(MAIN_SERVICE, ALL_INFORM);
-        Log.debug(MAIN_SERVICE, METHOD_SHOW_INFORM);
+        Log.debug(MAIN_SERVICE, "method-> \"showInformCourseAndLecture\"");
     }
 
     public void showInformAboutCreation() {
         System.out.println(CONTINUE_INFO);
         Log.info(MAIN_SERVICE, CONTINUE_INFO);
         nameModelAndPerson = scanner.nextLine();
-        Log.debug(MAIN_SERVICE, METHOD_SHOW_INFORM_ABOUT_CREATION);
+        Log.debug(MAIN_SERVICE, "method-> \"showInformAboutCreation\"");
     }
 
     public void takeRandomTask() {
@@ -1478,19 +1515,62 @@ public class MainService {
             studentsArray[i].setStudentNumber(i + 1);
             listOfStudentsForThread.add(studentsArray[i]);
             System.out.println(listOfStudentsForThread.get(i));
+            Log.info(MAIN_SERVICE, String.valueOf(listOfStudentsForThread.get(i)));
         }
+        Log.debug(MAIN_SERVICE, "method-> \"takeRandomTask\"");
     }
 
     public void startControlWork() {
         try {
-            controlWork.controlWorkStart(listOfStudentsForThread, studentsArray);
+            controlWork.startControlWork(listOfStudentsForThread, studentsArray);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         studentRepository.getStudentList().addAll(listOfStudentsForThread);
         putBorder();
-        System.out.println("Тепер створіть об'єкт курсу, ввівши: \"Курс\"");
+        System.out.println(NOW_CREAT_COURSE);
+        Log.info(MAIN_SERVICE, NOW_CREAT_COURSE);
         scannerNameModelAndPerson();
+        Log.debug(MAIN_SERVICE, "method-> \"startControlWork\"");
+    }
+
+
+    private void startWatcher() {
+        Thread thread = new Thread(watchDirectory, "Watcher tread");
+        thread.start();
+        Log.debug(MAIN_SERVICE, "method-> \"startWatcher\"");
+    }
+
+    public void creatFile() {
+        Path pathToDirectory;
+        Path pathToFileWithList;
+        try {
+            Path pathToFileWithLevels = Paths.get("Level of logs.txt");
+            if (!Files.exists(pathToFileWithLevels)) {
+                Files.createFile(pathToFileWithLevels);
+            }
+            pathToFileWithList = Paths.get("list_of_logs.txt");
+            if (!Files.exists(pathToFileWithList)) {
+                Files.createFile(pathToFileWithList);
+            }
+            pathToDirectory = Paths.get("directory_with_log_levels");
+            if (!Files.exists(pathToDirectory)) {
+                Files.createDirectories(pathToDirectory);
+            }
+            if (fullPathToFile == null) {
+                Files.move(pathToFileWithLevels, fullPathToFile =
+                        Paths.get(pathToDirectory.resolve(pathToFileWithLevels).toUri()), REPLACE_EXISTING);
+            }
+
+        } catch (IOException e) {
+            Log.error(MAIN_SERVICE, "RuntimeException", e.fillInStackTrace().getMessage());
+            throw new RuntimeException(e);
+        }
+        watchDirectory = new WatchDirectory(pathToDirectory);
+        watchDirectory.getReadAndWrite().setPathToFileWithLevels(fullPathToFile);
+        watchDirectory.getReadAndWrite().setPathToFileWithList(pathToFileWithList);
+        startWatcher();
+        Log.debug(MAIN_SERVICE, "method-> \"creatFile\"");
     }
 }
 

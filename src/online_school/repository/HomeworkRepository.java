@@ -13,11 +13,13 @@ public class HomeworkRepository {
     private final Map<Long, List<Homework>> listHomeworkMap = new HashMap<>();
 
     public Map<Long, List<Homework>> getListHomeworkMap() {
+        Log.debug(HomeworkRepository.class.getName(), "method->\"getListHomeworkMap\"");
         return listHomeworkMap;
     }
 
     public void creatNewCollectionHomeworks(Long lectureIdKey) {
         listHomeworkMap.put(lectureIdKey, new ArrayList<>());
+        Log.debug(HomeworkRepository.class.getName(), "method->\"creatNewCollectionHomeworks\"");
     }
 
     public boolean addHomeworkToCollection(Long lectureIdKey, Homework homework) {

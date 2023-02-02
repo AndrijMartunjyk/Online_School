@@ -7,6 +7,7 @@ import java.util.Comparator;
 public class AdditionalMaterialSortLectureId implements Comparator<AdditionalMaterial> {
     @Override
     public int compare(AdditionalMaterial o1, AdditionalMaterial o2) {
+        Log.debug(AdditionalMaterialSortLectureId.class.getName(), "method-> \"compare\"");
         int result = 1;
         if (o1.hashCode() == o2.hashCode() && o1.equals(o2)) {
             result = 0;

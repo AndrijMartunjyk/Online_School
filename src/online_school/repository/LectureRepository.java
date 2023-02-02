@@ -1,6 +1,7 @@
 package online_school.repository;
 
 import online_school.domain.model.Lecture;
+import online_school.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ public class LectureRepository implements InterfaceRepository {
     private final List<Lecture> lectureList = new ArrayList<>();
 
     public List<Lecture> getLectureList() {
+        Log.debug(LectureRepository.class.getName(), "method-> \"getLectureList\"");
         return lectureList;
     }
 
@@ -18,6 +20,7 @@ public class LectureRepository implements InterfaceRepository {
                 return lecture.getLectureId();
             }
         }
+        Log.debug(LectureRepository.class.getName(), "method-> \"getLectureId\"");
         return 0;
     }
 
@@ -31,6 +34,7 @@ public class LectureRepository implements InterfaceRepository {
                 result = lecture.getCounter();
             }
         }
+        Log.debug(LectureRepository.class.getName(), "method-> \"counter\"");
         return result;
     }
 }

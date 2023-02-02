@@ -2,11 +2,13 @@ package online_school.service;
 
 import online_school.domain.model.Role;
 import online_school.domain.model.Student;
+import online_school.util.Log;
 
 import java.util.List;
 
 public class ControlWorkService {
     public Student[] createStudentsArray() {
+        Log.debug(ControlWorkService.class.getName(), "method-> \"createStudentsArray\"");
         return new Student[]{new Student(Role.STUDENT, 1L, "Андрій", "Мартинюк", "«+38(044)555-55-55»", "«anick@mail.com»"),
                 new Student(Role.STUDENT, 1L, "Олександр", "Гавриленко", "«+38(044)555-55-55»", "«bnick@mail.com»"),
                 new Student(Role.STUDENT, 1L, "Ірина", "Степанюк", "«+38(044)555-55-55»", "«cnick@mail.com»"),
@@ -32,9 +34,10 @@ public class ControlWorkService {
                 }
             }
         }
+        Log.debug(ControlWorkService.class.getName(), "method-> \"creatTaskForStudent\"");
     }
 
-    public void controlWorkStart(List<Student> listStudents, Student[] studentsArray) throws InterruptedException {
+    public void startControlWork(List<Student> listStudents, Student[] studentsArray) throws InterruptedException {
         Thread thread;
         for (int i = 0; i < studentsArray.length; i++) {
             thread = new Thread(listStudents.get(i));
@@ -45,17 +48,24 @@ public class ControlWorkService {
         for (byte i = 12; i > 0; i--) {
             Thread.sleep(1000);
             System.out.println(i);
+            Log.info(ControlWorkService.class.getName(), String.valueOf(i));
         }
         for (int i = 0; i < listStudents.size(); i++) {
             if (listStudents.get(i).getTime() <= 12) {
                 listStudents.get(i).setStudentNumber(i + 1);
                 System.out.printf("Студент: %d %s %s // час -> %d сек.\n", listStudents.get(i).getStudentNumber(),
                         listStudents.get(i).getFirstPersonName(), listStudents.get(i).getLastPersonName(), listStudents.get(i).getTime());
+                Log.info(ControlWorkService.class.getName(), "Студент: " + listStudents.get(i).getStudentNumber() + " "
+                        + listStudents.get(i).getFirstPersonName() + listStudents.get(i).getLastPersonName()
+                        + " // час -> " + listStudents.get(i).getTime() + " сек.\n");
             } else {
                 System.out.printf("Студент: %s %s // НЕ ВСТИГ(ЛА)!!! час -> %d сек.\n",
                         listStudents.get(i).getFirstPersonName(), listStudents.get(i).getLastPersonName(), listStudents.get(i).getTime());
+                Log.info(ControlWorkService.class.getName(), "Студент: " + listStudents.get(i).getFirstPersonName()
+                        + listStudents.get(i).getLastPersonName() + " // НЕ ВСТИГ(ЛА)!!! час -> " + listStudents.get(i).getTime() + " сек.\n");
             }
         }
+        Log.debug(ControlWorkService.class.getName(), "method-> \"startControlWork\"");
     }
 
     private void sortedStudents(List<Student> listStudents) {
@@ -68,5 +78,6 @@ public class ControlWorkService {
             }
             return result;
         });
+        Log.debug(ControlWorkService.class.getName(), "method-> \"sortedStudents\"");
     }
 }

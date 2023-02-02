@@ -1,6 +1,7 @@
 package online_school.domain.task_for_lecture;
 
 import online_school.domain.model.Resource;
+import online_school.util.Log;
 
 import java.util.Random;
 
@@ -18,23 +19,28 @@ public class AdditionalMaterial implements Comparable<AdditionalMaterial> {
     }
 
     public Long getResourceId() {
+        Log.debug(AdditionalMaterial.class.getName(), "method->\"getResourceId\"");
         return resourceId;
     }
 
     public String getName() {
+        Log.debug(AdditionalMaterial.class.getName(), "method->\"getName\"");
         return name;
     }
 
     public Long getLectureId() {
+        Log.debug(AdditionalMaterial.class.getName(), "method->\"getLectureId\"");
         return lectureId;
     }
 
     public Resource getResourceType() {
+        Log.debug(AdditionalMaterial.class.getName(), "method->\"getResourceType\"");
         return resourceType;
     }
 
     @Override
     public boolean equals(Object obj) {
+        Log.debug(AdditionalMaterial.class.getName(), "method->\"equals\"");
         if (this == obj) {
             return true;
         }
@@ -58,6 +64,7 @@ public class AdditionalMaterial implements Comparable<AdditionalMaterial> {
 
     @Override
     public int hashCode() {
+        Log.debug(AdditionalMaterial.class.getName(), "method->\"hashCode\"");
         final int prime = 37;
         int result = 17;
         result = prime * result + (int) (resourceId - (resourceId >>> 32));
@@ -69,6 +76,7 @@ public class AdditionalMaterial implements Comparable<AdditionalMaterial> {
 
     @Override
     public String toString() {
+        Log.debug(AdditionalMaterial.class.getName(), "method->\"toString\"");
         return "AdditionalMaterial{" +
                 "Id=" + resourceId +
                 ", name='" + name + '\'' +
@@ -79,6 +87,7 @@ public class AdditionalMaterial implements Comparable<AdditionalMaterial> {
 
     @Override
     public int compareTo(AdditionalMaterial o) {
+        Log.debug(AdditionalMaterial.class.getName(), "method->\"compareTo\"");
         int result = 1;
         if (this.hashCode() == o.hashCode() && this.equals(o)) {
             result = 0;
