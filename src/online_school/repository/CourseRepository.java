@@ -1,6 +1,7 @@
 package online_school.repository;
 
 import online_school.domain.model.Course;
+import online_school.util.Log;
 
 
 import java.util.ArrayList;
@@ -10,15 +11,17 @@ public class CourseRepository implements InterfaceRepository {
     private final List<Course> courseList = new ArrayList<>();
 
     public List<Course> getCourseList() {
+        Log.debug(CourseRepository.class.getName(), "method->\"getCourseList\"");
         return courseList;
     }
 
-    public long getCourseID(Course c) {
+    public long getCourseId(Course c) {
         for (Course course : courseList) {
             if (course.equals(c)) {
                 return course.getCourseId();
             }
         }
+        Log.debug(CourseRepository.class.getName(), "method->\"getCourseId\"");
         return 0;
     }
 
@@ -32,6 +35,7 @@ public class CourseRepository implements InterfaceRepository {
                 result = course.getCounter();
             }
         }
+        Log.debug(CourseRepository.class.getName(), "method->\"counter\"");
         return result;
     }
 }

@@ -10,10 +10,12 @@ import java.util.Map;
 
 public class AdditionalMaterialService {
     public AdditionalMaterial createAdditionalMaterials(Long additionalMaterialId, String recourseName, Long lectureId, Resource resourceType) {
+        Log.debug(AdditionalMaterialService.class.getName(), "method->\"createAdditionalMaterials\"");
         return new AdditionalMaterial(additionalMaterialId, recourseName, lectureId, resourceType);
     }
 
     public void showInformAdditionalMaterial(Long lectureId, Map<Long, List<AdditionalMaterial>> resourceListMap) {
+        String stacktrace = "List of the additional material is empty!!!";
         boolean isPresent = true;
         if (resourceListMap.get(lectureId) != null && (!resourceListMap.get(lectureId).isEmpty())) {
             for (AdditionalMaterial material : resourceListMap.get(lectureId)) {
@@ -26,7 +28,8 @@ public class AdditionalMaterialService {
         }
         Log.debug(AdditionalMaterialService.class.getName(), "method->\"showInformAdditionalMaterial\"");
         if (isPresent) {
-            throw new EntityNotFoundException("List of the additional material is empty!!!");
+            Log.warning(AdditionalMaterialService.class.getName(), "EntityNotFoundException", stacktrace);
+            throw new EntityNotFoundException(stacktrace);
         }
     }
 }

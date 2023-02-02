@@ -1,5 +1,7 @@
 package online_school.domain.model;
 
+import online_school.util.Log;
+
 import java.util.Random;
 
 public class Person extends Model implements Comparable<Person> {
@@ -20,39 +22,48 @@ public class Person extends Model implements Comparable<Person> {
     }
 
     public Long getPersonId() {
+        Log.debug(Person.class.getName(), "method->\"getPersonId\"");
         return personId;
     }
 
     public Long getLectureId() {
+        Log.debug(Person.class.getName(), "method->\"getLectureId\"");
         return lectureId;
     }
 
     public void setLectureId(Long lectureId) {
+        Log.debug(Person.class.getName(), "method->\"setLectureId\"");
         this.lectureId = lectureId;
     }
 
     public String getLectureName() {
+        Log.debug(Person.class.getName(), "method->\"getLectureName\"");
         return lectureName;
     }
 
     public void setLectureName(String lectureName) {
+        Log.debug(Person.class.getName(), "method->\"setLectureName\"");
         this.lectureName = lectureName;
     }
 
     public Role getRole() {
+        Log.debug(Person.class.getName(), "method->\"getRole\"");
         return role;
     }
 
     public String getPhone() {
+        Log.debug(Person.class.getName(), "method->\"getPhone\"");
         return phone;
     }
 
     public String getEmail() {
+        Log.debug(Person.class.getName(), "method->\"getEmail\"");
         return email;
     }
 
     @Override
     public boolean equals(Object obj) {
+        Log.debug(Person.class.getName(), "method->\"equals\"");
         if (this == obj) {
             return true;
         }
@@ -88,6 +99,7 @@ public class Person extends Model implements Comparable<Person> {
 
     @Override
     public int hashCode() {
+        Log.debug(Person.class.getName(), "method->\"hashCode\"");
         final int prime = 37;
         int result = 17;
         result = prime * result + (int) (personId - (personId >>> 32));
@@ -103,6 +115,7 @@ public class Person extends Model implements Comparable<Person> {
 
     @Override
     public int compareTo(Person o) {
+        Log.debug(Person.class.getName(), "method->\"compareTo\"");
         int result = 1;
         if (this.hashCode() == o.hashCode() && this.equals(o)) {
             result = 0;
@@ -116,6 +129,7 @@ public class Person extends Model implements Comparable<Person> {
 
     @Override
     public String toString() {
+        Log.debug(Person.class.getName(), "method->\"toString\"");
         return role + " {" +
                 "ID: " + personId +
                 ", First name: " + super.getFirstPersonName() +

@@ -9,6 +9,7 @@ import java.util.List;
 public class LectureService {
 
     public Lecture createLecture(Long lectureId, String lectureName, String description, Long courseId, String nameCourse) {
+        Log.debug(LectureService.class.getName(), "method-> \"createLecture\"");
         return new Lecture(lectureId, lectureName, description, courseId, nameCourse);
     }
 
@@ -23,6 +24,8 @@ public class LectureService {
                 return;
             }
         }
+        Log.debug(LectureService.class.getName(), "method-> \"showLectures\"");
+        Log.warning(LectureService.class.getName(), "EntityNotFoundException", MainService.ID_LECTURE_IS_NOT_FOUND);
         throw new EntityNotFoundException(MainService.ID_LECTURE_IS_NOT_FOUND);
     }
 
@@ -34,11 +37,13 @@ public class LectureService {
             } else if (lecture.getCourseId().equals(idCourse)) {
                 isPresent = false;
                 System.out.println(lecture);
+                Log.info(LectureService.class.getName(), String.valueOf(lecture));
             }
         }
         if (isPresent) {
             throw new EntityNotFoundException(MainService.ID_LECTURE_IS_NOT_FOUND);
         }
+        Log.debug(LectureService.class.getName(), "method-> \"showLecturesInCourse\"");
     }
 }
 

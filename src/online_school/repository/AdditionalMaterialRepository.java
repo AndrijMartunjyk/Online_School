@@ -13,10 +13,12 @@ public class AdditionalMaterialRepository {
     private final Map<Long, List<AdditionalMaterial>> listAdditionalMaterialMap = new HashMap<>();
 
     public Map<Long, List<AdditionalMaterial>> getListAdditionalMaterialMap() {
+        Log.debug(AdditionalMaterialRepository.class.getName(), "method->\"getListAdditionalMaterialMap\"");
         return listAdditionalMaterialMap;
     }
 
     public void creatNewCollectionAdditionalMaterials(Long lectureIdKey) {
+        Log.debug(AdditionalMaterialRepository.class.getName(), "method->\"creatNewCollectionAdditionalMaterials\"");
         listAdditionalMaterialMap.put(lectureIdKey, new ArrayList<>());
     }
 

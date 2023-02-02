@@ -1,5 +1,7 @@
 package online_school.domain.model;
 
+import online_school.util.Log;
+
 import java.util.Random;
 
 public class Lecture extends Model implements Comparable<Lecture> {
@@ -21,39 +23,48 @@ public class Lecture extends Model implements Comparable<Lecture> {
     }
 
     public String getLectureName() {
+        Log.debug(Lecture.class.getName(), "method->\"getLectureName\"");
         return lectureName;
     }
 
     public void setPersonId(Long personId) {
         this.personId = personId;
+        Log.debug(Lecture.class.getName(), "method->\"setPersonId\"");
     }
 
     public Long getCourseId() {
+        Log.debug(Lecture.class.getName(), "method->\"getCourseId\"");
         return courseId;
     }
 
     public String getDescription() {
+        Log.debug(Lecture.class.getName(), "method->\"getDescription\"");
         return description;
     }
 
     public Long getPersonId() {
+        Log.debug(Lecture.class.getName(), "method->\"getPersonId\"");
         return personId;
     }
 
     public String getNameCourse() {
+        Log.debug(Lecture.class.getName(), "method->\"getNameCourse\"");
         return nameCourse;
     }
 
     public int getCounter() {
+        Log.debug(Lecture.class.getName(), "method->\"getCounter\"");
         return counter;
     }
 
     public Long getLectureId() {
+        Log.debug(Lecture.class.getName(), "method->\"getLectureId\"");
         return lectureId;
     }
 
     @Override
     public boolean equals(Object obj) {
+        Log.debug(Lecture.class.getName(), "method->\"equals\"");
         if (this == obj) {
             return true;
         }
@@ -84,6 +95,7 @@ public class Lecture extends Model implements Comparable<Lecture> {
 
     @Override
     public int hashCode() {
+        Log.debug(Lecture.class.getName(), "method->\"hashCode\"");
         final int prime = 37;
         int result = 17;
         result = prime * result + (int) (lectureId - (lectureId >>> 32));
@@ -97,6 +109,7 @@ public class Lecture extends Model implements Comparable<Lecture> {
 
     @Override
     public int compareTo(Lecture o) {
+        Log.debug(Lecture.class.getName(), "method->\"compareTo\"");
         int result = 1;
         if (this.hashCode() == o.hashCode() && this.equals(o)) {
             result = 0;
@@ -110,6 +123,7 @@ public class Lecture extends Model implements Comparable<Lecture> {
 
     @Override
     public String toString() {
+        Log.debug(Lecture.class.getName(), "method->\"toString\"");
         return "LECTURE {" +
                 "ID=" + lectureId +
                 ", nameLecture='" + lectureName + '\'' +

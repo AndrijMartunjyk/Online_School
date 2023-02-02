@@ -11,6 +11,7 @@ public class Main {
     private static final MainService mainService = new MainService();
 
     public static void main(String[] args) {
+        mainService.creatFile();
         String info = "Спочатку введіть \"Курс\", або для виводу іформації про автоматичний курс, введіть\n\"Course data\"";
         String programIsOver = "Програму завершено!!!";
         try (Scanner scanner = new Scanner(System.in)) {
@@ -66,7 +67,6 @@ public class Main {
         }
         System.out.println(programIsOver);
         Log.info(Main.class.getName(), programIsOver);
-        mainService.getReadAndWrite().deleteLogFile();
     }
 }
 

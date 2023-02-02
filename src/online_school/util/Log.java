@@ -3,15 +3,12 @@ package online_school.util;
 import java.time.LocalDateTime;
 
 public class Log {
-    private static final LogStorage LOG_STORAGE = new LogStorage();
+    private static final LogStorage logStorage = new LogStorage();
     private final LocalDateTime date = LocalDateTime.now();
-    private Level level;
-    private String name;
-    private String message;
+    private final Level level;
+    private final String name;
+    private final String message;
     private String stacktrace;
-
-    public Log() {
-    }
 
     private Log(Level level, String name, String message) {
         this.level = level;
@@ -26,19 +23,19 @@ public class Log {
     }
 
     public static void error(String className, String message, String stacktrace) {
-        LOG_STORAGE.saveLogsArray(new Log(Level.ERROR, className, message, stacktrace));
+        logStorage.saveLogsArray(new Log(Level.ERROR, className, message, stacktrace));
     }
 
     public static void warning(String className, String message, String stacktrace) {
-        LOG_STORAGE.saveLogsArray(new Log(Level.WARNING, className, message, stacktrace));
+        logStorage.saveLogsArray(new Log(Level.WARNING, className, message, stacktrace));
     }
 
     public static void info(String className, String message) {
-        LOG_STORAGE.saveLogsArray(new Log(Level.INFO, className, message));
+        logStorage.saveLogsArray(new Log(Level.INFO, className, message));
     }
 
     public static void debug(String className, String message) {
-        LOG_STORAGE.saveLogsArray(new Log(Level.DEBUG, className, message));
+        logStorage.saveLogsArray(new Log(Level.DEBUG, className, message));
     }
 
     @Override
@@ -48,12 +45,12 @@ public class Log {
                 ", level=" + level +
                 ", class name='" + name + '\'' +
                 ", message='" + message + '\'' +
-                toString2() +
+                creatStacktrace() +
                 "}\n";
     }
 
 
-    public String toString2() {
+    public String creatStacktrace() {
         String result = "";
         if (level.equals(Level.ERROR) || level.equals(Level.WARNING)) {
             result = ", stacktrace='" + stacktrace;
@@ -66,7 +63,7 @@ public class Log {
         return level;
     }
 
-    public String[] getLogArray() {
-        return LOG_STORAGE.getLogArray();
+    public static String[] getLogArray() {
+        return logStorage.getLogArray();
     }
 }

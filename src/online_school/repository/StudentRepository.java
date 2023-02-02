@@ -3,6 +3,7 @@ package online_school.repository;
 import online_school.domain.model.Lecture;
 import online_school.domain.model.Person;
 import online_school.service.StudentService;
+import online_school.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,12 +12,14 @@ public class StudentRepository implements InterfaceRepository {
     private final List<Person> studentList = new ArrayList<>();
 
     public List<Person> getStudentList() {
+        Log.debug(StudentRepository.class.getName(), "method-> \"getStudentList\"");
         return studentList;
     }
 
     @Override
     public void showInformPerson(String personName, Long courseOrLectureId, List<Lecture> lectures, List<Person> student) {
         InterfaceRepository.super.showInformPerson(personName, courseOrLectureId, lectures, student);
+        Log.debug(StudentRepository.class.getName(), "method-> \"showInformPerson\"");
     }
 
     @Override
@@ -29,6 +32,7 @@ public class StudentRepository implements InterfaceRepository {
                 result = StudentService.getStudentCounter();
             }
         }
+        Log.debug(StudentRepository.class.getName(), "method-> \"counter\"");
         return result;
     }
 
@@ -38,6 +42,7 @@ public class StudentRepository implements InterfaceRepository {
                 return student.getPersonId();
             }
         }
+        Log.debug(StudentRepository.class.getName(), "method-> \"getStudentId\"");
         return 0;
     }
 }

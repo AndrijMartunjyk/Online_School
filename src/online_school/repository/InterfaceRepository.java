@@ -11,6 +11,7 @@ public interface InterfaceRepository {
     int counter();
 
     default void showInformPerson(String personName, Long id, List<Lecture> lectures, List<Person> persons) {
+        String stacktrace = "Id of the " + personName + " is not found!!!";
         boolean isPresent = true;
         for (Lecture lecture : lectures) {
             for (Person person : persons) {
@@ -26,7 +27,8 @@ public interface InterfaceRepository {
         }
         Log.debug(InterfaceRepository.class.getName(), "method->\"showInformPerson\"");
         if (isPresent) {
-            throw new EntityNotFoundException("Id of the " + personName + " is not found!!!");
+            Log.warning(InterfaceRepository.class.getName(), "EntityNotFoundException", stacktrace);
+            throw new EntityNotFoundException(stacktrace);
         }
     }
 }
