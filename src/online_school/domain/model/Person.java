@@ -2,9 +2,13 @@ package online_school.domain.model;
 
 import online_school.util.Log;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Random;
 
-public class Person extends Model implements Comparable<Person> {
+public class Person extends Model implements Comparable<Person>, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private final Long personId;
     private Long lectureId;
     private String lectureName;

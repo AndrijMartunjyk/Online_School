@@ -3,9 +3,13 @@ package online_school.domain.task_for_lecture;
 import online_school.domain.model.Resource;
 import online_school.util.Log;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Random;
 
-public class AdditionalMaterial implements Comparable<AdditionalMaterial> {
+public class AdditionalMaterial implements Comparable<AdditionalMaterial>, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private final Long resourceId;
     private final String name;
     private final Long lectureId;

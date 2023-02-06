@@ -25,6 +25,17 @@ public class CourseRepository implements InterfaceRepository {
         return 0;
     }
 
+    public Course objectOfCourse(Long idOfCourse) {
+        Course course = null;
+        for (Course c : courseList) {
+            if (c.getCourseId().equals(idOfCourse)) {
+                course = c;
+                break;
+            }
+        }
+        return course;
+    }
+
     @Override
     public int counter() {
         int result = 0;

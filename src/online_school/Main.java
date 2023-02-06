@@ -50,7 +50,10 @@ public class Main {
                         case "info" -> mainService.logInfo(Level.INFO);
                         case "warn" -> mainService.logInfo(Level.WARNING);
                         case "error" -> mainService.logInfo(Level.ERROR);
+                        case "control" -> mainService.creatControlWork();
                         case "start" -> mainService.startControlWork();
+                        case "save" -> mainService.creatSaveObjects();
+                        case "out" -> mainService.creatPrintSavedObjects();
                         case "stop" -> isPresent = false;
                         default -> mainService.creatDefault();
                     }

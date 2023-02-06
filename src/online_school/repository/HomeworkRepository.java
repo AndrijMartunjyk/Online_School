@@ -1,5 +1,6 @@
 package online_school.repository;
 
+import online_school.domain.model.Lecture;
 import online_school.domain.task_for_lecture.Homework;
 import online_school.service.MainService;
 import online_school.util.Log;
@@ -36,5 +37,20 @@ public class HomeworkRepository {
         }
         Log.debug(HomeworkRepository.class.getName(), "method->\"addHomeworkToCollection\"");
         return isPresent;
+    }
+
+    public List<Homework> creatHomeworkList(List<Lecture> lectureList) {
+        List<Homework> homework = new ArrayList<>();
+        for (Lecture lecture : lectureList) {
+            if (lecture != null) {
+                for (int j = 0; j < listHomeworkMap.size(); j++) {
+                    if (listHomeworkMap.get(lecture.getLectureId()) != null && lecture.getLectureId().equals(listHomeworkMap.get(lecture.getLectureId()).get(j).getLectureId())) {
+                        homework.add(listHomeworkMap.get(lecture.getLectureId()).get(j));
+                    }
+                }
+            }
+        }
+        Log.debug(HomeworkRepository.class.getName(), "method->\"creatHomeworkList\"");
+        return homework;
     }
 }
