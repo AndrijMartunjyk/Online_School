@@ -8,7 +8,7 @@ import online_school.domain.task_for_lecture.AdditionalMaterial;
 import online_school.domain.task_for_lecture.Homework;
 import online_school.exception.EntityNotFoundException;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -94,6 +94,14 @@ public class MainService {
             Створіть об'єкт курсу, ввівши:
             "Курс"
             %s
+            Щоб запустити контрольну роботу, введіть:
+            "Control"
+            %s
+            Для сереалізації курсу, введіть:
+            "Save"
+            Для десереалізації курсу, введіть:
+            "out"
+            %s
             Для завершення програми, введіть:
             "Stop"
             =============================================
@@ -103,7 +111,8 @@ public class MainService {
             "debug" -> виводяться всі логи.
             "info"  -> тільки "INFO" i всі знизу.
             "warn"  -> тільки "WARNING" i "ERROR".
-            "error" -> тільки "ERROR".""";
+            "error" -> тільки "ERROR".
+            ======================================""";
     public final String AUTO_COURSE = "Створено автоматичний курс з іменем \"Auto course\"\n з ID \"%d\" і з трьома лекціями \"No name\".\n";
     public final String ALL_INFO = "Для виводу всієї інфрмації про курс, введіть: \n\"" + COURSE_DATA + "\"";
     public final String START = "START";
@@ -128,6 +137,7 @@ public class MainService {
     public static final String OBJECT_IS_DELETE = "Об'єкт %s ВИДАЛЕНО!!!\n";
     public static final String OBJECT_IS_DELETE1 = "Об'єкт ВИДАЛЕНО!!!";
     public static final String ID_IS_NOT_FOUND = "ID is not found !!!";
+    public static final String OBJECT_IS_NOT_FOUND = "Object is not found";
     public static final String ID_LECTURE_IS_NOT_FOUND = "Id of the lecture is not found!!!";
     public static final String SYMBOL_IS_INCORRECT = "Symbol is incorrect !!!";
     public static final String YOU_CREATING_AN_OBJECT = "Ви створюєте об'єкт: ";
@@ -240,7 +250,14 @@ public class MainService {
     public static final String PATTERN_OF_EMAIL = "Формат електронної пошти: «nick@mail.com»";
     public static final String START_ENTER = "Для початку введіть: \"%s\"\n";
     public static final String SOMETHING_WRONG = "Something wrong, try again!!!";
-    public static final String NOW_CREAT_COURSE = "Тепер створіть об'єкт курсу, ввівши: \"Курс\"";
+    public static final String NOW_CREAT_COURSE = "Спочатку створіть курс, ввівши: \"Курс\"";
+    public static final String GO = "Можете продовжувати користуватися додатком.";
+    public static final String ADDRESS_OF_SAVE_COURSE = "C:\\main-project\\Online_School\\save_directory\\course.txt";
+    public static final String ADDRESS_OF_SAVE_LECTURES = "C:\\main-project\\Online_School\\save_directory\\lecture.txt";
+    public static final String ADDRESS_OF_SAVE_STUDENTS = "C:\\main-project\\Online_School\\save_directory\\students.txt";
+    public static final String ADDRESS_OF_SAVE_TEACHERS = "C:\\main-project\\Online_School\\save_directory\\teachers.txt";
+    public static final String ADDRESS_OF_SAVE_HOMEWORKS = "C:\\main-project\\Online_School\\save_directory\\homeworks.txt";
+    public static final String ADDRESS_OF_SAVE_ADD_MATERIALS = "C:\\main-project\\Online_School\\save_directory\\added_material.txt";
     public static final String BORDER_SHORT = "=================================";
     public static final String BORDER_LONG = "==================================================";
     public static final String BORDER_VERY_LONG = "==========================================================================";
@@ -281,23 +298,16 @@ public class MainService {
         System.out.print(CASE_NOT_IMPORTANT);
         Log.info(MAIN_SERVICE, CASE_NOT_IMPORTANT);
         autoCourse(courseRepository, courseService, lectureRepository, lectureService);
-        System.out.printf(START_INFO, BORDER_SHORT, BORDER_LONG, INFORM_FOR_LECTURE, BORDER_SHORT);
+        System.out.printf(START_INFO, BORDER_SHORT, BORDER_LONG, INFORM_FOR_LECTURE, BORDER_LONG, BORDER_LONG, BORDER_LONG);
         Log.info(MAIN_SERVICE, START_INFO);
         System.out.println(INFO_ABOUT_LOGS);
         Log.info(MAIN_SERVICE, INFO_ABOUT_LOGS);
+        System.out.println(ALL_INFORM);
+        Log.info(MAIN_SERVICE, ALL_INFORM);
         putBorder();
-        System.out.println(CONTROL_WORK_MASSAGE);
-        Log.info(MAIN_SERVICE, CONTROL_WORK_MASSAGE);
-        takeRandomTask();
-        putBorder();
-        System.out.printf(START_ENTER, START);
-        Log.info(MAIN_SERVICE, START_ENTER + START);
+        System.out.println(NOW_CREAT_COURSE);
+        Log.info(MAIN_SERVICE, NOW_CREAT_COURSE);
         scannerNameModelAndPerson();
-        while (!nameModelAndPerson.equalsIgnoreCase(START)) {
-            System.out.println(SOMETHING_WRONG);
-            Log.info(MAIN_SERVICE, SOMETHING_WRONG);
-            scannerNameModelAndPerson();
-        }
         Log.debug(MAIN_SERVICE, "method -> \"showFrontInform\"");
     }
 
@@ -1508,6 +1518,21 @@ public class MainService {
         Log.debug(MAIN_SERVICE, "method-> \"showInformAboutCreation\"");
     }
 
+    public void creatControlWork() {
+        System.out.println(CONTROL_WORK_MASSAGE);
+        Log.info(MAIN_SERVICE, CONTROL_WORK_MASSAGE);
+        takeRandomTask();
+        putBorder();
+        System.out.printf(START_ENTER, START);
+        Log.info(MAIN_SERVICE, START_ENTER + START);
+        scannerNameModelAndPerson();
+        while (!nameModelAndPerson.equalsIgnoreCase(START)) {
+            System.out.println(SOMETHING_WRONG);
+            Log.info(MAIN_SERVICE, SOMETHING_WRONG);
+            scannerNameModelAndPerson();
+        }
+    }
+
     public void takeRandomTask() {
         studentsArray = controlWork.createStudentsArray();
         controlWork.creatTaskForStudent(studentsArray);
@@ -1528,8 +1553,8 @@ public class MainService {
         }
         studentRepository.getStudentList().addAll(listOfStudentsForThread);
         putBorder();
-        System.out.println(NOW_CREAT_COURSE);
-        Log.info(MAIN_SERVICE, NOW_CREAT_COURSE);
+        System.out.println(GO);
+        Log.info(MAIN_SERVICE, GO);
         scannerNameModelAndPerson();
         Log.debug(MAIN_SERVICE, "method-> \"startControlWork\"");
     }
@@ -1572,8 +1597,87 @@ public class MainService {
         startWatcher();
         Log.debug(MAIN_SERVICE, "method-> \"creatFile\"");
     }
-}
 
+    public void creatSaveObjects() {
+        checkNumber(OF_COURSE);
+        Long idOfCourse = number;
+        Course course = courseRepository.objectOfCourse(idOfCourse);
+        List<Lecture> lectureList = lectureRepository.creatLectureList(idOfCourse);
+        List<Person> studentsList = studentRepository.creatStudentList(lectureList);
+        List<Person> teachersList = teacherRepository.creatTeacherList(lectureList);
+        List<Homework> homework = homeworkRepository.creatHomeworkList(lectureList);
+        List<AdditionalMaterial> additionalMaterials = additionalMaterialRepository.creatAdditionalMaterialList(lectureList);
+        try (ObjectOutputStream saveCourse = new ObjectOutputStream(new FileOutputStream(ADDRESS_OF_SAVE_COURSE));
+             ObjectOutputStream saveLecture = new ObjectOutputStream(new FileOutputStream(ADDRESS_OF_SAVE_LECTURES));
+             ObjectOutputStream saveStudents = new ObjectOutputStream(new FileOutputStream(ADDRESS_OF_SAVE_STUDENTS));
+             ObjectOutputStream saveTeachers = new ObjectOutputStream(new FileOutputStream(ADDRESS_OF_SAVE_TEACHERS));
+             ObjectOutputStream saveHomeworks = new ObjectOutputStream(new FileOutputStream(ADDRESS_OF_SAVE_HOMEWORKS));
+             ObjectOutputStream saveAdditionalMaterials = new ObjectOutputStream(new FileOutputStream(ADDRESS_OF_SAVE_ADD_MATERIALS))) {
+            if (course != null) {
+                saveCourse.writeObject(course);
+                saveLecture.writeObject(lectureList);
+                saveStudents.writeObject(studentsList);
+                saveTeachers.writeObject(teachersList);
+                saveHomeworks.writeObject(homework);
+                saveAdditionalMaterials.writeObject(additionalMaterials);
+                System.out.println("Збережено!");
+                Log.info(MAIN_SERVICE, "Збережено!");
+            } else {
+                System.out.println(OBJECT_IS_NOT_FOUND);
+                Log.info(MAIN_SERVICE, OBJECT_IS_NOT_FOUND);
+            }
+            putBorder();
+            System.out.println(GO);
+            Log.info(MAIN_SERVICE, GO);
+            scannerNameModelAndPerson();
+        } catch (IOException e) {
+            Log.warning(MAIN_SERVICE, "IOException", e.getMessage());
+            System.err.println(e.getMessage());
+        }
+        Log.debug(MAIN_SERVICE, "method-> \"creatSaveObjects\"");
+    }
+
+    public void creatPrintSavedObjects() {
+        try (ObjectInputStream courseIn = new ObjectInputStream(new FileInputStream(ADDRESS_OF_SAVE_COURSE));
+             ObjectInputStream lectureIn = new ObjectInputStream(new FileInputStream(ADDRESS_OF_SAVE_LECTURES));
+             ObjectInputStream studentsIn = new ObjectInputStream(new FileInputStream(ADDRESS_OF_SAVE_STUDENTS));
+             ObjectInputStream teachersIn = new ObjectInputStream(new FileInputStream(ADDRESS_OF_SAVE_TEACHERS));
+             ObjectInputStream homeworkIn = new ObjectInputStream(new FileInputStream(ADDRESS_OF_SAVE_HOMEWORKS));
+             ObjectInputStream additionalMaterialIn = new ObjectInputStream(new FileInputStream(ADDRESS_OF_SAVE_ADD_MATERIALS))) {
+            Course course = (Course) courseIn.readObject();
+            System.out.println(course);
+            Log.info(MAIN_SERVICE, String.valueOf(course));
+            for (Lecture lecture : (List<Lecture>) lectureIn.readObject()) {
+                System.out.println(lecture);
+                Log.info(MAIN_SERVICE, String.valueOf(lecture));
+            }
+            for (Person student : (List<Person>) studentsIn.readObject()) {
+                System.out.println(student);
+                Log.info(MAIN_SERVICE, String.valueOf(student));
+            }
+            for (Person teacher : (List<Person>) teachersIn.readObject()) {
+                System.out.println(teacher);
+                Log.info(MAIN_SERVICE, String.valueOf(teacher));
+            }
+            for (Homework homework : (List<Homework>) homeworkIn.readObject()) {
+                System.out.println(homework);
+                Log.info(MAIN_SERVICE, String.valueOf(homework));
+            }
+            for (AdditionalMaterial additionalMaterial : (List<AdditionalMaterial>) additionalMaterialIn.readObject()) {
+                System.out.println(additionalMaterial);
+                Log.info(MAIN_SERVICE, String.valueOf(additionalMaterial));
+            }
+        } catch (IOException | ClassNotFoundException i) {
+            i.printStackTrace();
+            Log.warning(MAIN_SERVICE, "IOException | ClassNotFoundException", i.getMessage());
+        }
+        putBorder();
+        System.out.println(GO);
+        Log.info(MAIN_SERVICE, GO);
+        scannerNameModelAndPerson();
+        Log.debug(MAIN_SERVICE, "method-> \"creatPrintSavedObjects\"");
+    }
+}
 
 
 

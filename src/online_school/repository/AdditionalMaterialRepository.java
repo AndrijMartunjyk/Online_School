@@ -1,5 +1,6 @@
 package online_school.repository;
 
+import online_school.domain.model.Lecture;
 import online_school.domain.task_for_lecture.AdditionalMaterial;
 import online_school.service.MainService;
 import online_school.util.Log;
@@ -36,5 +37,21 @@ public class AdditionalMaterialRepository {
         }
         Log.debug(AdditionalMaterialRepository.class.getName(), "method-> \"addAdditionalMaterialToCollection\"");
         return isPresent;
+    }
+
+    public List<AdditionalMaterial> creatAdditionalMaterialList(List<Lecture> lectureList) {
+        List<AdditionalMaterial> additionalMaterials = new ArrayList<>();
+        for (Lecture lecture : lectureList) {
+            if (lecture != null) {
+                for (int j = 0; j < listAdditionalMaterialMap.size(); j++) {
+                    if (listAdditionalMaterialMap.get(lecture.getLectureId()) != null && lecture.getLectureId().equals(listAdditionalMaterialMap.get(lecture.getLectureId()).get(j).getLectureId())) {
+                        additionalMaterials.add(listAdditionalMaterialMap.get(lecture.getLectureId()).get(j));
+                    }
+                }
+            }
+
+        }
+        Log.debug(AdditionalMaterialRepository.class.getName(), "method-> \"creatAdditionalMaterialList\"");
+        return additionalMaterials;
     }
 }

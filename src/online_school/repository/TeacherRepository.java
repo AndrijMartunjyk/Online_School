@@ -45,4 +45,19 @@ public class TeacherRepository implements InterfaceRepository {
         Log.debug(TeacherRepository.class.getName(), "method-> \"getTeacherId\"");
         return 0;
     }
+
+    public List<Person> creatTeacherList(List<Lecture> lectureList) {
+        List<Person> teachers = new ArrayList<>();
+        for (Lecture lecture : lectureList) {
+            if (lecture != null) {
+                for (Person teacher : teacherList) {
+                    if (teacher != null && lecture.getLectureId().equals(teacher.getLectureId())) {
+                        teachers.add(teacher);
+                    }
+                }
+            }
+        }
+        Log.debug(TeacherRepository.class.getName(), "method-> \"creatTeacherList\"");
+        return teachers;
+    }
 }
