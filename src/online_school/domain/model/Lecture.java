@@ -4,6 +4,9 @@ import online_school.util.Log;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Random;
 
 public class Lecture extends Model implements Comparable<Lecture>, Serializable {
@@ -16,6 +19,9 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
     private Long personId;
     private final Long courseId;
     private final String nameCourse;
+    private String lectureDateFormat;
+    private final LocalDateTime creationDate = LocalDateTime.now();
+    private LocalDateTime lectureDate;
 
     public Lecture(Long lectureId, String lectureName, String description, Long courseId, String nameCourse) {
         this.lectureId = lectureId + new Random().nextLong(Long.MAX_VALUE);
@@ -64,6 +70,34 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
     public Long getLectureId() {
         Log.debug(Lecture.class.getName(), "method->\"getLectureId\"");
         return lectureId;
+    }
+
+    public LocalDateTime getCreationDate() {
+        Log.debug(Lecture.class.getName(), "method->\"getCreationDate\"");
+        return creationDate;
+    }
+
+    public LocalDateTime getLectureDate() {
+        Log.debug(Lecture.class.getName(), "method->\"getLectureDate\"");
+        return lectureDate;
+    }
+
+    public void setLectureDate(LocalDateTime lectureDate) {
+        Log.debug(Lecture.class.getName(), "method->\"setLectureDate\"");
+        this.lectureDate = lectureDate;
+    }
+
+    public String getCreationDateFormat() {
+        Log.debug(Lecture.class.getName(), "method->\"getCreationDateFormat\"");
+        return creationDate.format(DateTimeFormatter.ofPattern("MMM dd,E HH:mm:ss", Locale.US));
+    }
+
+    public String getLectureDateFormat() {
+        if (lectureDate != null) {
+            lectureDateFormat = lectureDate.format(DateTimeFormatter.ofPattern("MMM dd,E HH:mm:ss", Locale.US));
+        }
+        Log.debug(Lecture.class.getName(), "method->\"getLectureDateFormat\"");
+        return lectureDateFormat;
     }
 
     @Override
@@ -137,6 +171,8 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
                 ", teacherLastName='" + super.getLastPersonName() + '\'' +
                 ", courseID=" + courseId +
                 ", nameCourse='" + nameCourse + '\'' +
+                ", creationDate='" + getCreationDateFormat() + '\'' +
+                ", lectureDate='" + getLectureDateFormat() + '\'' +
                 '}';
     }
 }

@@ -12,6 +12,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -91,9 +94,6 @@ public class MainService {
             Щоб додати студента або вчителя до лекції введіть:
             "Add someone"
             %s
-            Створіть об'єкт курсу, ввівши:
-            "Курс"
-            %s
             Щоб запустити контрольну роботу, введіть:
             "Control"
             %s
@@ -146,7 +146,11 @@ public class MainService {
     public static final String IS_EMPTY = "Is empty.";
     public static final String YOU_CREAT_COURSE = "Чудово, ви створили курс з назвою: \"%s\", і номером ID: \"%d\".\n";
     public static final String CREAT_OBJECT_OF_COURSE = "Створіть об'єкт курсу, ввівши: " + COURSE;
-    public static final String YOU_CREAT_LECTURE = "Чудово, ви створили лекцію з назвою: \"%s\", і номером ID: \"%d\" і присвоїли її курсу з ID: \"%d\".\n";
+    public static final String YOU_CREAT_LECTURE = """
+            Чудово, ви створили лекцію з назвою: "%s", і номером ID: "%d" і присвоїли її курсу з ID: "%d".
+            Час створення: %s.
+            Дата проведення: %s.
+            """;
     public static final String YOU_CREAT_STUDENT = "Чудово, ви створили об'єкт студента з іменем: \"%s\", прізвищем: \"%s\" і номером ID: \"%d\".\n";
     public static final String YOU_CREAT_TEACHER = "Чудово, ви створили об'єкт вчителя з іменем: \"%s\", прізвищем: \"%s\" і номером ID: \"%d\".\n";
     public static final String NOW_CREAT_OBJECT = "Тепер створіть об'єкти ввівши:\n" + LECTURE + ".\n" + STUDENT + ".\n" + TEACHER + ".";
@@ -210,6 +214,7 @@ public class MainService {
     public static final String SELECT_OF_A_TEACHER = "Виберіть вчителя.";
     public static final String SELECT_OF_A_STUDENT = "Виберіть студента.";
     public static final String SAVED = "Збережено!!!";
+    public static final String TRY_AGAIN = "try again !!!";
     public static final String ENTER_NAME = "Введіть ім'я:";
     public static final String ENTER_LAST_NAME = "Введіть прізвище:";
     public static final String ENTER_PHONE = "Введіть номер телефону:";
@@ -227,6 +232,13 @@ public class MainService {
     public static final String STUDENT_FOR_DELETE = "Виберіть учня якого хочете видалити:";
     public static final String HOMEWORK_FOR_DELETE = "Виберіть homework який хочете видалити:";
     public static final String RESOURCE_FOR_DELETE = "Виберіть ресурс який хочете видалити:";
+    public static final String DATE_LECTURE = "Ведіть дату проведення лекції:";
+    public static final String NO_DATE = "Немає дати початку лекції !!!";
+    public static final String DATE_PASSED = "Вказана вами дата пройшла!!!";
+    public static final String ENTER_MONTH_NUMBER = "Ведіть місяць числом:";
+    public static final String ENTER_DAY_NUMBER = "Ведіть день числом:";
+    public static final String ENTER_HOUR_NUMBER = "Ведіть годину числом, в форматі 24H:";
+    public static final String ENTER_MINUTES_NUMBER = "Ведіть хвилини числом:";
     public static final String REPAID_AGAIN = "Спробуйте ще раз.";
     public static final String NULL_POINTER_EXCEPTION = " NullPointerException.";
     public static final String NAME_FOR_ADDITIONAL_MATERIALS = "Введіть назву для об'єкта додаткові матеріали:";
@@ -298,7 +310,7 @@ public class MainService {
         System.out.print(CASE_NOT_IMPORTANT);
         Log.info(MAIN_SERVICE, CASE_NOT_IMPORTANT);
         autoCourse(courseRepository, courseService, lectureRepository, lectureService);
-        System.out.printf(START_INFO, BORDER_SHORT, BORDER_LONG, INFORM_FOR_LECTURE, BORDER_LONG, BORDER_LONG, BORDER_LONG);
+        System.out.printf(START_INFO, BORDER_SHORT, BORDER_LONG, INFORM_FOR_LECTURE, BORDER_LONG, BORDER_LONG);
         Log.info(MAIN_SERVICE, START_INFO);
         System.out.println(INFO_ABOUT_LOGS);
         Log.info(MAIN_SERVICE, INFO_ABOUT_LOGS);
@@ -315,7 +327,7 @@ public class MainService {
         Course course;
         System.out.println(YOU_CREATING_AN_OBJECT + COURSE);
         Log.info(MAIN_SERVICE, YOU_CREATING_AN_OBJECT + COURSE);
-        checkNumber(OF_COURSE);
+        checkId(OF_COURSE);
         System.out.println(ENTER_NAME_OF_COURSE);
         Log.info(MAIN_SERVICE, ENTER_NAME_OF_COURSE);
         scannerName();
@@ -332,10 +344,11 @@ public class MainService {
     }
 
     public void creatLecture() {
+        boolean isPresent = true;
         Lecture lecture;
         System.out.println(YOU_CREATING_AN_OBJECT + LECTURE);
         Log.info(MAIN_SERVICE, YOU_CREATING_AN_OBJECT + LECTURE);
-        checkNumber(OF_LECTURE);
+        checkId(OF_LECTURE);
         lectureId = getCheckNumber();
         System.out.println(ENTER_NAME_OF_LECTURE);
         Log.info(MAIN_SERVICE, ENTER_NAME_OF_LECTURE);
@@ -346,9 +359,19 @@ public class MainService {
         putBorder();
         foundCourse();
         lecture = lectureService.createLecture(lectureId, getName(), getDescription(), courseId, courseName);
+        LocalDateTime lectureDate;
+        do {
+            if ((lectureDate = creatLectureDate(lecture)) != null) {
+                lecture.setLectureDate(lectureDate);
+                isPresent = false;
+            } else {
+                System.out.println(TRY_AGAIN);
+                Log.info(MAIN_SERVICE, TRY_AGAIN);
+            }
+        } while (isPresent);
         lectureRepository.getLectureList().add(lecture);
         System.out.printf(YOU_CREAT_LECTURE,
-                getName(), lectureRepository.getLectureId(lecture), courseId);
+                getName(), lectureRepository.getLectureId(lecture), courseId, lecture.getCreationDateFormat(), lecture.getLectureDateFormat());
         Log.info(MAIN_SERVICE, YOU_CREAT_LECTURE);
         putBorder();
         showInformCourseAndLecture();
@@ -361,7 +384,7 @@ public class MainService {
         Person student;
         System.out.println(YOU_CREATING_AN_OBJECT + STUDENT);
         Log.info(MAIN_SERVICE, YOU_CREATING_AN_OBJECT + STUDENT);
-        checkNumber(OF_STUDENT);
+        checkId(OF_STUDENT);
         System.out.println(ENTER_NAME);
         Log.info(MAIN_SERVICE, ENTER_NAME);
         scannerFirstName();
@@ -391,7 +414,7 @@ public class MainService {
         Person teacher;
         System.out.println(YOU_CREATING_AN_OBJECT + TEACHER);
         Log.info(MAIN_SERVICE, YOU_CREATING_AN_OBJECT + TEACHER);
-        checkNumber(OF_TEACHER);
+        checkId(OF_TEACHER);
         System.out.println(ENTER_NAME);
         Log.info(MAIN_SERVICE, ENTER_NAME);
         scannerFirstName();
@@ -420,7 +443,7 @@ public class MainService {
     public void creatHomework() {
         System.out.println(YOU_CREATING_AN_OBJECT + HOMEWORK_FOR_LECTURE);
         Log.info(MAIN_SERVICE, YOU_CREATING_AN_OBJECT + HOMEWORK_FOR_LECTURE);
-        checkNumber(HOMEWORK);
+        checkId(HOMEWORK);
         homeworkId = getCheckNumber();
         System.out.println(SELECT_A_LECTURE);
         Log.info(MAIN_SERVICE, SELECT_A_LECTURE);
@@ -446,7 +469,7 @@ public class MainService {
         try {
             System.out.println(YOU_CREATING_AN_OBJECT + ADDITIONAL_MATERIAL_FOR_LECTURE);
             Log.info(MAIN_SERVICE, ADDITIONAL_MATERIAL_FOR_LECTURE);
-            checkNumber("Додаткових матеріалів");
+            checkId("Додаткових матеріалів");
             additionalMaterialId = getCheckNumber();
             System.out.println(NAME_FOR_ADDITIONAL_MATERIALS);
             Log.info(MAIN_SERVICE, NAME_FOR_ADDITIONAL_MATERIALS);
@@ -687,7 +710,7 @@ public class MainService {
         System.out.println(COURSE_FOR_DELETE);
         Log.info(MAIN_SERVICE, COURSE_FOR_DELETE);
         printAllCourse();
-        checkNumber(OF_COURSE);
+        checkId(OF_COURSE);
         long courseId = getCheckNumber();
         isPresent = true;
         for (int i = 0; i < courseRepository.getCourseList().size(); i++) {
@@ -710,7 +733,7 @@ public class MainService {
         System.out.println(LECTURE_FOR_DELETE);
         Log.info(MAIN_SERVICE, LECTURE_FOR_DELETE);
         printAllLecture();
-        checkNumber(OF_LECTURE);
+        checkId(OF_LECTURE);
         long lectureId = getCheckNumber();
         isPresent = true;
         for (int i = 0; i < lectureRepository.getLectureList().size(); i++) {
@@ -733,7 +756,7 @@ public class MainService {
         System.out.println(TEACHER_FOR_DELETE);
         Log.info(MAIN_SERVICE, TEACHER_FOR_DELETE);
         printAllTeacher();
-        checkNumber(OF_TEACHER);
+        checkId(OF_TEACHER);
         long teacherId = getCheckNumber();
         isPresent = true;
         for (int i = 0; i < teacherRepository.getTeacherList().size(); i++) {
@@ -756,7 +779,7 @@ public class MainService {
         System.out.println(STUDENT_FOR_DELETE);
         Log.info(MAIN_SERVICE, STUDENT_FOR_DELETE);
         printAllStudent();
-        checkNumber(OF_STUDENT);
+        checkId(OF_STUDENT);
         long studentId = getCheckNumber();
         isPresent = true;
         for (int i = 0; i < studentRepository.getStudentList().size(); i++) {
@@ -779,7 +802,7 @@ public class MainService {
         System.out.println(HOMEWORK_FOR_DELETE);
         Log.info(MAIN_SERVICE, HOMEWORK_FOR_DELETE);
         printAllHomework();
-        checkNumber(HOMEWORK);
+        checkId(HOMEWORK);
         long homeworkId = getCheckNumber();
         try {
             isPresent = true;
@@ -807,7 +830,7 @@ public class MainService {
         System.out.println(RESOURCE_FOR_DELETE);
         Log.info(MAIN_SERVICE, RESOURCE_FOR_DELETE);
         printAllAdditionalMaterial();
-        checkNumber(ADDITIONAL_MATERIAL);
+        checkId(ADDITIONAL_MATERIAL);
         long additionalMaterialId = getCheckNumber();
         try {
             isPresent = true;
@@ -836,12 +859,12 @@ public class MainService {
         System.out.println(LECTURE_FOR_TEACHER);
         Log.info(MAIN_SERVICE, LECTURE_FOR_TEACHER);
         printAllLecture();
-        checkNumber(OF_LECTURE);
+        checkId(OF_LECTURE);
         long lectureId = getCheckNumber();
         System.out.println(SELECT_OF_A_TEACHER);
         Log.info(MAIN_SERVICE, SELECT_OF_A_TEACHER);
         printAllTeacher();
-        checkNumber(OF_TEACHER);
+        checkId(OF_TEACHER);
         long teacherId = getCheckNumber();
         try {
             teacherService.addPersonToLecture(OF_TEACHER, lectureId, teacherId, lectureRepository.getLectureList(), teacherRepository.getTeacherList());
@@ -862,12 +885,12 @@ public class MainService {
         System.out.println(LECTURE_FOR_STUDENT);
         Log.info(MAIN_SERVICE, LECTURE_FOR_STUDENT);
         printAllLecture();
-        checkNumber(OF_LECTURE);
+        checkId(OF_LECTURE);
         long lectureId = getCheckNumber();
         System.out.println(SELECT_OF_A_STUDENT);
         Log.info(MAIN_SERVICE, SELECT_OF_A_STUDENT);
         printAllStudent();
-        checkNumber(OF_STUDENT);
+        checkId(OF_STUDENT);
         long studentId = getCheckNumber();
         try {
             studentService.addPersonToLecture(OF_STUDENT, lectureId, studentId, lectureRepository.getLectureList(), studentRepository.getStudentList());
@@ -914,7 +937,7 @@ public class MainService {
         Log.debug(MAIN_SERVICE, METHOD_CREAT_DEFAULT);
     }
 
-    public void checkNumber(String outName) {
+    public void checkId(String outName) {
         long test;
         isPresent = true;
         while (isPresent) {
@@ -966,10 +989,12 @@ public class MainService {
     }
 
     public void scannerDescription() {
+        int from = 3;
+        int to = 20;
         isPresent = true;
         String testDescription;
         while (isPresent) {
-            System.out.printf(ENTER_DESCRIPTION_OF_LECTURE, 3, 20);
+            System.out.printf(ENTER_DESCRIPTION_OF_LECTURE, from, to);
             Log.info(MAIN_SERVICE, ENTER_DESCRIPTION_OF_LECTURE);
             testDescription = scanner.nextLine();
             try {
@@ -982,23 +1007,20 @@ public class MainService {
                     isPresent = false;
                 }
             } catch (IllegalArgumentException i) {
+                System.err.println(STRING_IS_INCORRECT);
                 Log.warning(MAIN_SERVICE, METHOD_SCANNER_DESCRIPTION + ILLEGAL_ARGUMENT_EXCEPTION, i.getMessage());
-                try {
-                    throw new EntityNotFoundException(STRING_IS_INCORRECT, i);
-                } catch (EntityNotFoundException e) {
-                    e.printStackTrace();
-                    Log.error(MAIN_SERVICE, METHOD_SCANNER_DESCRIPTION + ENTITY_NOT_FOUND_EXCEPTION, Arrays.toString(e.getStackTrace()));
-                }
             }
         }
         Log.debug(MAIN_SERVICE, METHOD_SCANNER_DESCRIPTION);
     }
 
     public void scannerHomeTask() {
+        byte from = 3;
+        byte to = 20;
         isPresent = true;
         String task;
         while (isPresent) {
-            System.out.printf(WRITE_HOMEWORK, 3, 20);
+            System.out.printf(WRITE_HOMEWORK, from, to);
             Log.info(MAIN_SERVICE, WRITE_HOMEWORK);
             task = scanner.nextLine();
             try {
@@ -1139,7 +1161,7 @@ public class MainService {
         putBorder();
         isPresent = true;
         while (isPresent) {
-            checkNumber(OF_COURSE);
+            checkId(OF_COURSE);
             for (Course c : courseRepository.getCourseList()) {
                 if (c.getCourseId().equals(getCheckNumber())) {
                     courseId = getCheckNumber();
@@ -1263,7 +1285,7 @@ public class MainService {
     }
 
     public void creatLectureDataLogic() {
-        checkNumber(OF_LECTURE);
+        checkId(OF_LECTURE);
         lectureId = getCheckNumber();
         lectureService.showLectures(lectureId, lectureRepository.getLectureList());
         putBorder();
@@ -1296,7 +1318,7 @@ public class MainService {
     }
 
     public void creatCourseDataLogic() {
-        checkNumber(OF_COURSE);
+        checkId(OF_COURSE);
         courseId = getCheckNumber();
         courseService.showInformCourse(courseId, courseRepository.getCourseList());
         lectureService.showLecturesInCourse(courseId, lectureRepository.getLectureList());
@@ -1367,9 +1389,11 @@ public class MainService {
     }
 
     public void creatHomeworkLogic() {
+        Homework homework;
+        String deadLineFormat;
         isPresent = false;
         while (!isPresent) {
-            checkNumber(OF_LECTURE);
+            checkId(OF_LECTURE);
             lectureId = getCheckNumber();
             if ((!(homeworkRepository.getListHomeworkMap().containsKey(lectureId))) && foundLecture(lectureId)) {
                 homeworkRepository.creatNewCollectionHomeworks(lectureId);
@@ -1378,7 +1402,12 @@ public class MainService {
                 scannerHomeTask();
                 homeTask = getTask();
             }
-            isPresent = homeworkRepository.addHomeworkToCollection(lectureId, homeworkService.createHomework(homeworkId, lectureId, homeTask));
+            homework = homeworkService.createHomework(homeworkId, lectureId, homeTask);
+            deadLineFormat = creatDeadLineForHomework(lectureId);
+            if (deadLineFormat != null) {
+                homework.setDeadLine(deadLineFormat);
+            }
+            isPresent = homeworkRepository.addHomeworkToCollection(lectureId, homework, deadLineFormat);
         }
         Log.debug(MAIN_SERVICE, METHOD_CREAT_HOME_LOGIC);
     }
@@ -1386,7 +1415,7 @@ public class MainService {
     public void createResourceTypeLogic() {
         isPresent = false;
         while (!isPresent) {
-            checkNumber(OF_LECTURE);
+            checkId(OF_LECTURE);
             lectureId = getCheckNumber();
             if ((!(additionalMaterialRepository.getListAdditionalMaterialMap().containsKey(lectureId))) && foundLecture(lectureId)) {
                 additionalMaterialRepository.creatNewCollectionAdditionalMaterials(lectureId);
@@ -1599,7 +1628,7 @@ public class MainService {
     }
 
     public void creatSaveObjects() {
-        checkNumber(OF_COURSE);
+        checkId(OF_COURSE);
         Long idOfCourse = number;
         Course course = courseRepository.objectOfCourse(idOfCourse);
         List<Lecture> lectureList = lectureRepository.creatLectureList(idOfCourse);
@@ -1620,8 +1649,8 @@ public class MainService {
                 saveTeachers.writeObject(teachersList);
                 saveHomeworks.writeObject(homework);
                 saveAdditionalMaterials.writeObject(additionalMaterials);
-                System.out.println("Збережено!");
-                Log.info(MAIN_SERVICE, "Збережено!");
+                System.out.println(SAVED);
+                Log.info(MAIN_SERVICE, SAVED);
             } else {
                 System.out.println(OBJECT_IS_NOT_FOUND);
                 Log.info(MAIN_SERVICE, OBJECT_IS_NOT_FOUND);
@@ -1676,6 +1705,142 @@ public class MainService {
         Log.info(MAIN_SERVICE, GO);
         scannerNameModelAndPerson();
         Log.debug(MAIN_SERVICE, "method-> \"creatPrintSavedObjects\"");
+    }
+
+    private LocalDateTime creatLectureDate(Lecture lecture) {
+        LocalDateTime lectureDate = null;
+        System.out.println(DATE_LECTURE);
+        Log.info(MAIN_SERVICE, DATE_LECTURE);
+        byte month = checkNumberMonth();
+        byte day = checkNumberDay();
+        byte hour = checkNumberHour();
+        byte minute = checkNumberMinute();
+        try {
+            lectureDate = LocalDateTime.of(2023, month, day, hour, minute, 0);
+        } catch (DateTimeException d) {
+            System.err.println(NO_DATE);
+            Log.warning(MAIN_SERVICE, "DateTimeException", NO_DATE);
+        }
+        if (lectureDate != null && lectureDate.isBefore(lecture.getCreationDate())) {
+            System.out.println(DATE_PASSED);
+            Log.info(MAIN_SERVICE, DATE_PASSED);
+            lectureDate = null;
+        }
+        Log.debug(MAIN_SERVICE, "method-> \"creatLectureDate\"");
+        return lectureDate;
+    }
+
+    private byte checkNumberMonth() {
+        byte month = 0;
+        byte test;
+        isPresent = true;
+        while (isPresent) {
+            System.out.println(ENTER_MONTH_NUMBER);
+            Log.info(MAIN_SERVICE, ENTER_MONTH_NUMBER);
+            if (scanner.hasNextByte()) {
+                test = scanner.nextByte();
+                scanner.nextLine();
+                if (test > 0 && test <= 12) {
+                    month = test;
+                    isPresent = false;
+                }
+            } else {
+                System.out.println(WRONG_ENTER1);
+                Log.info(MAIN_SERVICE, WRONG_ENTER1);
+                scannerNameModelAndPerson();
+            }
+        }
+        Log.debug(MAIN_SERVICE, "method-> \"checkNumberMonth\"");
+        return month;
+    }
+
+    private byte checkNumberDay() {
+        byte day = 0;
+        byte test;
+        isPresent = true;
+        while (isPresent) {
+            System.out.println(ENTER_DAY_NUMBER);
+            Log.info(MAIN_SERVICE, ENTER_DAY_NUMBER);
+            if (scanner.hasNextByte()) {
+                test = scanner.nextByte();
+                scanner.nextLine();
+                if (test > 0 && test <= 31) {
+                    day = test;
+                    isPresent = false;
+                }
+            } else {
+                System.out.println(WRONG_ENTER1);
+                Log.info(MAIN_SERVICE, WRONG_ENTER1);
+                scannerNameModelAndPerson();
+            }
+        }
+        Log.debug(MAIN_SERVICE, "method-> \"checkNumberDay\"");
+        return day;
+    }
+
+    private byte checkNumberHour() {
+        byte hour = 0;
+        byte test;
+        isPresent = true;
+        while (isPresent) {
+            System.out.println(ENTER_HOUR_NUMBER);
+            Log.info(MAIN_SERVICE, ENTER_HOUR_NUMBER);
+            if (scanner.hasNextByte()) {
+                test = scanner.nextByte();
+                scanner.nextLine();
+                if (test >= 0 && test <= 23) {
+                    hour = test;
+                    isPresent = false;
+                }
+            } else {
+                System.out.println(WRONG_ENTER1);
+                Log.info(MAIN_SERVICE, WRONG_ENTER1);
+                scannerNameModelAndPerson();
+            }
+        }
+        Log.debug(MAIN_SERVICE, "method-> \"checkNumberHour\"");
+        return hour;
+    }
+
+    private byte checkNumberMinute() {
+        byte minute = 0;
+        byte test;
+        isPresent = true;
+        while (isPresent) {
+            System.out.println(ENTER_MINUTES_NUMBER);
+            Log.info(MAIN_SERVICE, ENTER_MINUTES_NUMBER);
+            if (scanner.hasNextByte()) {
+                test = scanner.nextByte();
+                scanner.nextLine();
+                if (test >= 0 && test <= 59) {
+                    minute = test;
+                    isPresent = false;
+                }
+            } else {
+                System.out.println(WRONG_ENTER1);
+                Log.info(MAIN_SERVICE, WRONG_ENTER1);
+                scannerNameModelAndPerson();
+            }
+        }
+        Log.debug(MAIN_SERVICE, "method-> \"checkNumberMinute\"");
+        return minute;
+    }
+
+    private String creatDeadLineForHomework(Long lectureId) {
+        LocalDateTime lectureDate = null;
+        String deadLineFormat = null;
+        for (Lecture l : lectureRepository.getLectureList()) {
+            if (l.getLectureId().equals(lectureId)) {
+                lectureDate = l.getLectureDate();
+                break;
+            }
+        }
+        if (lectureDate != null) {
+            LocalDateTime deadLine = lectureDate.plusDays(1).withHour(12).withMinute(0);
+            deadLineFormat = deadLine.format(DateTimeFormatter.ofPattern("MMM dd, HH:mm", Locale.US));
+        }
+        Log.debug(MAIN_SERVICE, "method-> \"creatDeadLineForHomework(\"");
+        return deadLineFormat;
     }
 }
 
