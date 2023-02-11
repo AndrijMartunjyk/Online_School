@@ -12,6 +12,7 @@ public class Homework implements Comparable<Homework>, Serializable {
     private final Long homeworkId;
     private final Long lectureId;
     private final String task;
+    private String deadLine;
 
     public Homework(Long homeworkId, Long lectureId, String task) {
         this.homeworkId = homeworkId + new Random().nextLong(Long.MAX_VALUE);
@@ -32,6 +33,11 @@ public class Homework implements Comparable<Homework>, Serializable {
     public String getTask() {
         Log.debug(Homework.class.getName(), "method->\"getTask\"");
         return task;
+    }
+
+    public void setDeadLine(String deadLine) {
+        this.deadLine = deadLine;
+        Log.debug(Homework.class.getName(), "method->\"setDeadLine\"");
     }
 
     @Override
@@ -87,6 +93,7 @@ public class Homework implements Comparable<Homework>, Serializable {
                 "HomeworkId=" + homeworkId +
                 ", lectureId=" + lectureId +
                 ", task='" + task + '\'' +
+                ", deadLine='" + deadLine + '\'' +
                 '}';
     }
 }

@@ -1,10 +1,11 @@
 package online_school.util;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Log {
     private static final LogStorage logStorage = new LogStorage();
-    private final LocalDateTime date = LocalDateTime.now();
+    private final String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss:ms"));
     private final Level level;
     private final String name;
     private final String message;

@@ -23,12 +23,15 @@ public class HomeworkRepository {
         Log.debug(HomeworkRepository.class.getName(), "method->\"creatNewCollectionHomeworks\"");
     }
 
-    public boolean addHomeworkToCollection(Long lectureIdKey, Homework homework) {
+    public boolean addHomeworkToCollection(Long lectureIdKey, Homework homework, String deadLineFormat) {
         boolean isPresent = true;
         if (listHomeworkMap.get(lectureIdKey) != null) {
             listHomeworkMap.get(lectureIdKey).add(homework);
-            String INFO_ABOUT_HOMEWORK = "Homework з ID: \"%s\" присвоєно лекції з ID: \"%s\"\n";
-            System.out.printf(INFO_ABOUT_HOMEWORK, homework.getHomeworkId(), lectureIdKey);
+            String INFO_ABOUT_HOMEWORK = """
+                    Homework з ID: "%s" присвоєно лекції з ID: "%s"
+                    DeadLine to: %s.
+                    """;
+            System.out.printf(INFO_ABOUT_HOMEWORK, homework.getHomeworkId(), lectureIdKey, deadLineFormat);
             Log.info(HomeworkRepository.class.getName(), INFO_ABOUT_HOMEWORK);
         } else {
             System.out.println(MainService.ID_IS_NOT_FOUND);
