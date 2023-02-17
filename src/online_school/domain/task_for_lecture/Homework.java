@@ -1,6 +1,6 @@
 package online_school.domain.task_for_lecture;
 
-import online_school.util.Log;
+import online_school.log.Log;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class Homework implements Comparable<Homework>, Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 7L;
     private final Long homeworkId;
     private final Long lectureId;
     private final String task;

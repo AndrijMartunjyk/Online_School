@@ -1,6 +1,6 @@
 package online_school.domain.model;
 
-import online_school.util.Log;
+import online_school.log.Log;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class Lecture extends Model implements Comparable<Lecture>, Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     private final Long lectureId;
     private final String lectureName;
     private final String description;
@@ -173,6 +173,6 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
                 ", nameCourse='" + nameCourse + '\'' +
                 ", creationDate='" + getCreationDateFormat() + '\'' +
                 ", lectureDate='" + getLectureDateFormat() + '\'' +
-                '}';
+                "}\n";
     }
 }

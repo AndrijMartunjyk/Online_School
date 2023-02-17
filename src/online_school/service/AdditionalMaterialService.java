@@ -2,8 +2,7 @@ package online_school.service;
 
 import online_school.domain.model.Resource;
 import online_school.domain.task_for_lecture.AdditionalMaterial;
-import online_school.exception.EntityNotFoundException;
-import online_school.util.Log;
+import online_school.log.Log;
 
 import java.util.List;
 import java.util.Map;
@@ -28,8 +27,8 @@ public class AdditionalMaterialService {
         }
         Log.debug(AdditionalMaterialService.class.getName(), "method->\"showInformAdditionalMaterial\"");
         if (isPresent) {
+            System.out.println(stacktrace);
             Log.warning(AdditionalMaterialService.class.getName(), "EntityNotFoundException", stacktrace);
-            throw new EntityNotFoundException(stacktrace);
         }
     }
 }

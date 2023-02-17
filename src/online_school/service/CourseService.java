@@ -1,8 +1,7 @@
 package online_school.service;
 
 import online_school.domain.model.Course;
-import online_school.exception.EntityNotFoundException;
-import online_school.util.Log;
+import online_school.log.Log;
 
 import java.util.List;
 
@@ -32,8 +31,9 @@ public class CourseService {
                 return;
             }
         }
-        Log.warning(CourseService.class.getName(), "EntityNotFoundException", stacktrace);
-        throw new EntityNotFoundException(stacktrace);
+        System.out.println(stacktrace);
+        Log.warning(LectureService.class.getName(), "EntityNotFoundException", stacktrace);
+
     }
 }
 

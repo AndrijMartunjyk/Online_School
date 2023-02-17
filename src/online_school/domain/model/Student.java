@@ -1,13 +1,13 @@
 package online_school.domain.model;
 
-import online_school.util.Log;
+import online_school.log.Log;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 public class Student extends Person implements Runnable, Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 5L;
     private int studentNumber;
     private byte time;
     private byte taskNumber;

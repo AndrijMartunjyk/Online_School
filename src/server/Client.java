@@ -1,5 +1,7 @@
 package server;
 
+import online_school.log.Log;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -26,6 +28,7 @@ public class Client implements Runnable {
             }
         } catch (IOException e) {
             System.err.println("Client was closed...");
+            Log.error(Client.class.getName(), "IOException", e.getMessage());
         } finally {
             clientSocket.close();
             in.close();
@@ -38,7 +41,7 @@ public class Client implements Runnable {
         try {
             client();
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            Log.error(Client.class.getName(), "IOException | InterruptedException", e.getMessage());
         }
     }
 }

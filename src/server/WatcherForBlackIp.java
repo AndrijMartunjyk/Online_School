@@ -1,5 +1,7 @@
 package server;
 
+import online_school.log.Log;
+
 import java.io.IOException;
 import java.nio.file.*;
 
@@ -9,7 +11,7 @@ public class WatcherForBlackIp implements Runnable {
     private final Server server = new Server();
 
     public void creatWatcher() throws IOException {
-        Path path = Paths.get("C:\\main-project\\Online_School\\directory_with_Black_IP");
+        Path path = Paths.get("directory_with_Black_IP");
         WatchService watchService = FileSystems.getDefault().newWatchService();
         path.register(watchService, ENTRY_MODIFY);
         while (true) {
@@ -40,7 +42,7 @@ public class WatcherForBlackIp implements Runnable {
         try {
             creatWatcher();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Log.error(WatcherForBlackIp.class.getName(), "IO Exception", e.getMessage());
         }
     }
 

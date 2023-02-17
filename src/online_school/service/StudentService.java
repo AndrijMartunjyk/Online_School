@@ -4,7 +4,7 @@ import online_school.domain.model.Model;
 import online_school.domain.model.Lecture;
 import online_school.domain.model.Role;
 import online_school.domain.model.Person;
-import online_school.util.Log;
+import online_school.log.Log;
 
 import java.util.List;
 

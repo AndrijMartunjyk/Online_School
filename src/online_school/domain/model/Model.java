@@ -2,7 +2,7 @@ package online_school.domain.model;
 
 import online_school.exception.EntityNotFoundException;
 import online_school.service.MainService;
-import online_school.util.Log;
+import online_school.log.Log;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public abstract class Model implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 3L;
     private String firstPersonName;
     private String lastPersonName;
 

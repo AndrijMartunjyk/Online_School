@@ -1,4 +1,4 @@
-package online_school.util;
+package online_school.log;
 
 public enum Level implements CharSequence {
     ERROR, WARNING, INFO, DEBUG;

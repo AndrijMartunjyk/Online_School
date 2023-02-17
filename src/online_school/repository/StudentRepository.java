@@ -3,7 +3,7 @@ package online_school.repository;
 import online_school.domain.model.Lecture;
 import online_school.domain.model.Person;
 import online_school.service.StudentService;
-import online_school.util.Log;
+import online_school.log.Log;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,7 @@
 package online_school.service;
 
-import online_school.exception.EntityNotFoundException;
 import online_school.domain.task_for_lecture.Homework;
-import online_school.util.Log;
+import online_school.log.Log;
 
 import java.util.List;
 import java.util.Map;
@@ -24,8 +23,8 @@ public class HomeworkService {
             isPresent = false;
         }
         if (isPresent) {
+            System.out.println(stacktrace);
             Log.warning(HomeworkService.class.getName(), "EntityNotFoundException", stacktrace);
-            throw new EntityNotFoundException(stacktrace);
         }
         Log.debug(HomeworkService.class.getName(), "method-> \"showInformHomework\"");
     }
