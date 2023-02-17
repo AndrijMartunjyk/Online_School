@@ -1,0 +1,47 @@
+Log {date=02-17-2023 13:06:15:615, level=INFO, class name='online_school.service.MainService', message='========================
+"РЕГІСТР НЕ ВАЖЛИВИЙ !!!"
+'}
+Log {date=02-17-2023 13:06:15:615, level=INFO, class name='online_school.service.MainService', message='=========================================================================='}
+Log {date=02-17-2023 13:06:15:615, level=INFO, class name='online_school.service.MainService', message='Створено автоматичний курс з іменем "Auto course"
+ з ID "%d" і з трьома лекціями "No name".
+'}
+Log {date=02-17-2023 13:06:15:615, level=INFO, class name='online_school.service.MainService', message='=========================================================================='}
+Log {date=02-17-2023 13:06:15:615, level=INFO, class name='online_school.service.MainService', message='Для виводу всієї інфрмації про курс, введіть: 
+"Course data"'}
+Log {date=02-17-2023 13:06:15:615, level=INFO, class name='online_school.service.MainService', message='=========================================================================='}
+Log {date=02-17-2023 13:06:15:615, level=INFO, class name='online_school.service.MainService', message='Для виводу інфрмації про всі об'єкти одного типу, введіть:
+"Course info"
+"Lecture info"
+"Teacher info"
+"Student info"
+"Homework info"
+"Additional material info"
+%s
+ Щоб видалити об'єкт введіть:
+"Delete course"
+"Delete lecture"
+"Delete teacher"
+"Delete student"
+%s
+Щоб додати студента або вчителя до лекції введіть:
+"Add someone"
+%s
+Для сереалізації курсу, введіть:
+"Save"
+Для десереалізації курсу, введіть:
+"out"
+%s
+Для виведення логів, введіть:
+"debug" -> виводяться всі логи.
+"info"  -> тільки "INFO" i всі знизу.
+"warn"  -> тільки "WARNING" i "ERROR".
+"error" -> тільки "ERROR".
+=============================================
+Щоб вивести лекції з якоїсь дати введіть: "before"
+Щоб вивести лекції до якоїсь дати введіть: "after"
+Щоб вивести лекції між датами введіть: "between"
+Щоб згрупувати додаткові матеріали за лекціями введіть: "group"
+==================================================================
+Для завершення рограми введіть "stop"
+'}
+Log {date=02-17-2023 13:06:15:615, level=INFO, class name='online_school.service.MainService', message='================================================================================================================================================================'}

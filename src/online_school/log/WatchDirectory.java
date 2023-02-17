@@ -1,4 +1,4 @@
-package online_school.util;
+package online_school.log;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -6,7 +6,7 @@ import java.nio.file.*;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 public class WatchDirectory implements Runnable {
-    private final ReadAndWrite readAndWrite = new ReadAndWrite();
+    private final WriterLogs writerLogs = new WriterLogs();
     private final Path path;
 
     public WatchDirectory(Path path) {
@@ -23,7 +23,7 @@ public class WatchDirectory implements Runnable {
                 key = watchService.take();
                 for (WatchEvent<?> event : key.pollEvents()) {
                     if (event.kind() == ENTRY_MODIFY) {
-                        readAndWrite.write(Log.getLogArray());
+                        writerLogs.write(Log.getLogArray());
                     } else {
                         String massage = "Unsupported event kind";
                         System.out.println(massage);
@@ -42,9 +42,9 @@ public class WatchDirectory implements Runnable {
         Log.debug(WatchDirectory.class.getName(), "method-> \"creatWatcher\"");
     }
 
-    public ReadAndWrite getReadAndWrite() {
+    public WriterLogs getWriterLogs() {
         Log.debug(WatchDirectory.class.getName(), "method-> \"getReadAndWrite\"");
-        return readAndWrite;
+        return writerLogs;
 
     }
 

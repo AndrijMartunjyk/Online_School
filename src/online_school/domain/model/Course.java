@@ -1,6 +1,6 @@
 package online_school.domain.model;
 
-import online_school.util.Log;
+import online_school.log.Log;
 
 import java.io.Serial;
 import java.io.Serializable;

@@ -2,11 +2,17 @@ package online_school.service;
 
 import online_school.domain.model.Student;
 import online_school.domain.model.*;
+import online_school.log.Level;
+import online_school.log.Log;
+import online_school.log.WatchDirectory;
+import online_school.log.WriterLogs;
 import online_school.util.*;
 import online_school.repository.*;
 import online_school.domain.task_for_lecture.AdditionalMaterial;
 import online_school.domain.task_for_lecture.Homework;
 import online_school.exception.EntityNotFoundException;
+import server.Client;
+import server.WatcherForBlackIp;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -16,11 +22,15 @@ import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Predicate;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static online_school.util.RegularExpression.*;
 
 public class MainService {
+    private static final Client client = new Client();
+    private static final WatcherForBlackIp watcherForBlackIp = new WatcherForBlackIp();
+
 
     private static final CourseRepository courseRepository = new CourseRepository();
     private static final CourseService courseService = new CourseService();
@@ -42,7 +52,7 @@ public class MainService {
     private static final TreeSet<AdditionalMaterial> additionalMaterialTreeSet = new TreeSet<>();
     private static final HomeworkRepository homeworkRepository = new HomeworkRepository();
     private static final AdditionalMaterialRepository additionalMaterialRepository = new AdditionalMaterialRepository();
-    private static final ReadAndWrite readAndWrite = new ReadAndWrite();
+    private static final WriterLogs WRITER_LOGS = new WriterLogs();
     private static final ControlWorkService controlWork = new ControlWorkService();
     private static final List<Student> listOfStudentsForThread = new ArrayList<>();
 
@@ -68,7 +78,8 @@ public class MainService {
     private String resourceName;
     private Student[] studentsArray;
     private WatchDirectory watchDirectory;
-    private Path fullPathToFile;
+    private Path fullPathToFileWithLevel;
+    private Path pathToFileWithListFull;
 
 
     private final String MAIN_SERVICE = MainService.class.getName();
@@ -94,25 +105,25 @@ public class MainService {
             Щоб додати студента або вчителя до лекції введіть:
             "Add someone"
             %s
-            Щоб запустити контрольну роботу, введіть:
-            "Control"
-            %s
             Для сереалізації курсу, введіть:
             "Save"
             Для десереалізації курсу, введіть:
             "out"
             %s
-            Для завершення програми, введіть:
-            "Stop"
-            =============================================
-            """;
-    private static final String INFO_ABOUT_LOGS = """
             Для виведення логів, введіть:
             "debug" -> виводяться всі логи.
             "info"  -> тільки "INFO" i всі знизу.
             "warn"  -> тільки "WARNING" i "ERROR".
             "error" -> тільки "ERROR".
-            ======================================""";
+            =============================================
+            Щоб вивести лекції з якоїсь дати введіть: "before"
+            Щоб вивести лекції до якоїсь дати введіть: "after"
+            Щоб вивести лекції між датами введіть: "between"
+            Щоб згрупувати додаткові матеріали за лекціями введіть: "group"
+            ==================================================================
+            Для завершення рограми введіть "stop"
+            """;
+
     public final String AUTO_COURSE = "Створено автоматичний курс з іменем \"Auto course\"\n з ID \"%d\" і з трьома лекціями \"No name\".\n";
     public final String ALL_INFO = "Для виводу всієї інфрмації про курс, введіть: \n\"" + COURSE_DATA + "\"";
     public final String START = "START";
@@ -262,14 +273,13 @@ public class MainService {
     public static final String PATTERN_OF_EMAIL = "Формат електронної пошти: «nick@mail.com»";
     public static final String START_ENTER = "Для початку введіть: \"%s\"\n";
     public static final String SOMETHING_WRONG = "Something wrong, try again!!!";
-    public static final String NOW_CREAT_COURSE = "Спочатку створіть курс, ввівши: \"Курс\"";
     public static final String GO = "Можете продовжувати користуватися додатком.";
-    public static final String ADDRESS_OF_SAVE_COURSE = "C:\\main-project\\Online_School\\save_directory\\course.txt";
-    public static final String ADDRESS_OF_SAVE_LECTURES = "C:\\main-project\\Online_School\\save_directory\\lecture.txt";
-    public static final String ADDRESS_OF_SAVE_STUDENTS = "C:\\main-project\\Online_School\\save_directory\\students.txt";
-    public static final String ADDRESS_OF_SAVE_TEACHERS = "C:\\main-project\\Online_School\\save_directory\\teachers.txt";
-    public static final String ADDRESS_OF_SAVE_HOMEWORKS = "C:\\main-project\\Online_School\\save_directory\\homeworks.txt";
-    public static final String ADDRESS_OF_SAVE_ADD_MATERIALS = "C:\\main-project\\Online_School\\save_directory\\added_material.txt";
+    public static final String ADDRESS_OF_SAVE_COURSE = "directory_for_save_course/course.txt";
+    public static final String ADDRESS_OF_SAVE_LECTURES = "directory_for_save_course/lecture.txt";
+    public static final String ADDRESS_OF_SAVE_STUDENTS = "directory_for_save_course/students.txt";
+    public static final String ADDRESS_OF_SAVE_TEACHERS = "directory_for_save_course/teachers.txt";
+    public static final String ADDRESS_OF_SAVE_HOMEWORKS = "directory_for_save_course/homeworks.txt";
+    public static final String ADDRESS_OF_SAVE_ADD_MATERIALS = "directory_for_save_course/added_material.txt";
     public static final String BORDER_SHORT = "=================================";
     public static final String BORDER_LONG = "==================================================";
     public static final String BORDER_VERY_LONG = "==========================================================================";
@@ -288,8 +298,7 @@ public class MainService {
             Ввівши відповідно:
             "Url"
             "Video"
-            "Book"
-            """;
+            "Book"\040""";
     public static final String INFORM_FOR_LECTURE = """
             =======================================================================
             Щоб створити домашнє завдання або додаткові матеріали для лекції введіть:
@@ -301,24 +310,14 @@ public class MainService {
             "Delete additional material"
             =======================================================================""";
 
-    public static final String CONTROL_WORK_MASSAGE = """
-            Контрольна робота.
-            ===================""";
-
 
     public void showFrontInform() {
         System.out.print(CASE_NOT_IMPORTANT);
         Log.info(MAIN_SERVICE, CASE_NOT_IMPORTANT);
         autoCourse(courseRepository, courseService, lectureRepository, lectureService);
-        System.out.printf(START_INFO, BORDER_SHORT, BORDER_LONG, INFORM_FOR_LECTURE, BORDER_LONG, BORDER_LONG);
+        System.out.printf(START_INFO, BORDER_SHORT, BORDER_LONG, INFORM_FOR_LECTURE, BORDER_LONG);
         Log.info(MAIN_SERVICE, START_INFO);
-        System.out.println(INFO_ABOUT_LOGS);
-        Log.info(MAIN_SERVICE, INFO_ABOUT_LOGS);
-        System.out.println(ALL_INFORM);
-        Log.info(MAIN_SERVICE, ALL_INFORM);
         putBorder();
-        System.out.println(NOW_CREAT_COURSE);
-        Log.info(MAIN_SERVICE, NOW_CREAT_COURSE);
         scannerNameModelAndPerson();
         Log.debug(MAIN_SERVICE, "method -> \"showFrontInform\"");
     }
@@ -542,16 +541,13 @@ public class MainService {
     }
 
     public void creatCourseInfo() {
+        courseTreeSet.clear();
         try {
             if (!(courseRepository.getCourseList().isEmpty())) {
                 System.out.println(INFORM_ABOUT_COURSE_SORTED);
                 Log.info(MAIN_SERVICE, INFORM_ABOUT_COURSE_SORTED);
                 putBorder();
-                if (courseTreeSet.isEmpty()) {
-                    courseTreeSet.addAll(courseRepository.getCourseList());
-                } else {
-                    courseTreeSet.retainAll(courseRepository.getCourseList());
-                }
+                courseTreeSet.addAll(courseRepository.getCourseList());
                 for (Course course : courseTreeSet) {
                     System.out.println(course);
                     Log.info(MAIN_SERVICE, String.valueOf(course));
@@ -571,18 +567,15 @@ public class MainService {
     }
 
     public void createLectureInfo() {
+        lectureTreeSet.clear();
         try {
             if (!(lectureRepository.getLectureList().isEmpty())) {
                 System.out.println(INFORM_ABOUT_LECTURE_SORTED);
                 Log.info(MAIN_SERVICE, INFORM_ABOUT_LECTURE_SORTED);
                 putBorder();
-                if (lectureTreeSet.isEmpty()) {
-                    lectureTreeSet.addAll(lectureRepository.getLectureList());
-                } else {
-                    lectureTreeSet.retainAll(lectureRepository.getLectureList());
-                }
+                lectureTreeSet.addAll(lectureRepository.getLectureList());
                 for (Lecture lecture : lectureTreeSet) {
-                    System.out.println(lecture);
+                    System.out.print(lecture);
                     Log.info(MAIN_SERVICE, String.valueOf(lecture));
                 }
             } else {
@@ -600,16 +593,13 @@ public class MainService {
     }
 
     public void creatTeacherInfo() {
+        teacherTreeSet.clear();
         try {
             if (!(teacherRepository.getTeacherList().isEmpty())) {
                 System.out.println(INFORM_ABOUT_TEACHER_SORTED);
                 Log.info(MAIN_SERVICE, INFORM_ABOUT_TEACHER_SORTED);
                 putBorder();
-                if (teacherTreeSet.isEmpty()) {
-                    teacherTreeSet.addAll(teacherRepository.getTeacherList());
-                } else {
-                    teacherTreeSet.retainAll(teacherRepository.getTeacherList());
-                }
+                teacherTreeSet.addAll(teacherRepository.getTeacherList());
                 for (Person teacher : teacherTreeSet) {
                     System.out.println(teacher);
                     Log.info(MAIN_SERVICE, String.valueOf(teacher));
@@ -629,16 +619,13 @@ public class MainService {
     }
 
     public void creatStudentInfo() {
+        studentTreeSet.clear();
         try {
             if (!(studentRepository.getStudentList().isEmpty())) {
                 System.out.println(INFORM_ABOUT_STUDENT_SORTED);
                 Log.info(MAIN_SERVICE, INFORM_ABOUT_STUDENT_SORTED);
                 putBorder();
-                if (studentTreeSet.isEmpty()) {
-                    studentTreeSet.addAll(studentRepository.getStudentList());
-                } else {
-                    studentTreeSet.retainAll(studentRepository.getStudentList());
-                }
+                studentTreeSet.addAll(studentRepository.getStudentList());
                 for (Person student : studentTreeSet) {
                     System.out.println(student);
                     Log.info(MAIN_SERVICE, String.valueOf(student));
@@ -933,6 +920,7 @@ public class MainService {
             System.out.println(REPAID_AGAIN);
             Log.info(MAIN_SERVICE, REPAID_AGAIN);
             scannerNameModelAndPerson();
+
         }
         Log.debug(MAIN_SERVICE, METHOD_CREAT_DEFAULT);
     }
@@ -1223,7 +1211,7 @@ public class MainService {
     public void printAllLecture() {
         putBorder();
         for (Lecture l : lectureRepository.getLectureList()) {
-            System.out.println(l);
+            System.out.print(l);
             Log.info(MAIN_SERVICE, String.valueOf(l));
         }
         putBorder();
@@ -1369,6 +1357,7 @@ public class MainService {
     }
 
     public void sortedHomework() {
+        homeworkTreeSet.clear();
         System.out.println(INFORM_ABOUT_HOMEWORK_SORTED);
         Log.info(MAIN_SERVICE, INFORM_ABOUT_HOMEWORK_SORTED);
         putBorder();
@@ -1376,11 +1365,7 @@ public class MainService {
         for (List<Homework> homeworkList : homeworkRepository.getListHomeworkMap().values()) {
             allHomework.addAll(homeworkList);
         }
-        if (homeworkTreeSet.isEmpty()) {
-            homeworkTreeSet.addAll(allHomework);
-        } else {
-            homeworkTreeSet.retainAll(allHomework);
-        }
+        homeworkTreeSet.addAll(allHomework);
         for (Homework homework : homeworkTreeSet) {
             System.out.println(homework);
             Log.info(MAIN_SERVICE, String.valueOf(homework));
@@ -1427,6 +1412,7 @@ public class MainService {
     }
 
     public void additionalMaterialSortDefault() {
+        additionalMaterialTreeSet.clear();
         System.out.println(INFORM_ABOUT_ADDITIONAL_MATERIAL);
         Log.info(MAIN_SERVICE, INFORM_ABOUT_ADDITIONAL_MATERIAL);
         putBorder();
@@ -1434,11 +1420,7 @@ public class MainService {
         for (List<AdditionalMaterial> listMaterials : additionalMaterialRepository.getListAdditionalMaterialMap().values()) {
             allAdditionalMaterials.addAll(listMaterials);
         }
-        if (additionalMaterialTreeSet.isEmpty()) {
-            additionalMaterialTreeSet.addAll(allAdditionalMaterials);
-        } else {
-            additionalMaterialTreeSet.retainAll(allAdditionalMaterials);
-        }
+        additionalMaterialTreeSet.addAll(allAdditionalMaterials);
         for (AdditionalMaterial additionalMaterial : additionalMaterialTreeSet) {
             System.out.println(additionalMaterial);
             Log.info(MAIN_SERVICE, String.valueOf(additionalMaterial));
@@ -1447,7 +1429,7 @@ public class MainService {
     }
 
     public void logInfo(Level logName) {
-        readAndWrite.showLogsOnConsole(logName, Log.getLogArray());
+        WRITER_LOGS.showLogsOnConsole(logName, Log.getLogArray());
         putBorder();
         showInformAboutCreation();
         Log.debug(MAIN_SERVICE, METHOD_LOGIC);
@@ -1468,10 +1450,6 @@ public class MainService {
         Log.debug(MAIN_SERVICE, "method-> \"scannerLastName\"");
     }
 
-    public CourseRepository getCourseRepository() {
-        Log.debug(MAIN_SERVICE, "method-> \"getCourseRepository\"");
-        return courseRepository;
-    }
 
     public Long getCheckNumber() {
         Log.debug(MAIN_SERVICE, "method-> \"getCheckNumber\"");
@@ -1548,6 +1526,9 @@ public class MainService {
     }
 
     public void creatControlWork() {
+        String CONTROL_WORK_MASSAGE = """
+                Контрольна робота.
+                ===================""";
         System.out.println(CONTROL_WORK_MASSAGE);
         Log.info(MAIN_SERVICE, CONTROL_WORK_MASSAGE);
         takeRandomTask();
@@ -1562,7 +1543,7 @@ public class MainService {
         }
     }
 
-    public void takeRandomTask() {
+    private void takeRandomTask() {
         studentsArray = controlWork.createStudentsArray();
         controlWork.creatTaskForStudent(studentsArray);
         for (int i = 0; i < studentsArray.length; i++) {
@@ -1578,13 +1559,11 @@ public class MainService {
         try {
             controlWork.startControlWork(listOfStudentsForThread, studentsArray);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
+            Log.error(MAIN_SERVICE, "InterruptedException", e.getMessage());
         }
         studentRepository.getStudentList().addAll(listOfStudentsForThread);
         putBorder();
-        System.out.println(GO);
-        Log.info(MAIN_SERVICE, GO);
-        scannerNameModelAndPerson();
         Log.debug(MAIN_SERVICE, "method-> \"startControlWork\"");
     }
 
@@ -1598,31 +1577,40 @@ public class MainService {
     public void creatFile() {
         Path pathToDirectory;
         Path pathToFileWithList;
+        Path pathToFileWithLevels;
         try {
-            Path pathToFileWithLevels = Paths.get("Level of logs.txt");
-            if (!Files.exists(pathToFileWithLevels)) {
-                Files.createFile(pathToFileWithLevels);
-            }
-            pathToFileWithList = Paths.get("list_of_logs.txt");
-            if (!Files.exists(pathToFileWithList)) {
-                Files.createFile(pathToFileWithList);
-            }
             pathToDirectory = Paths.get("directory_with_log_levels");
             if (!Files.exists(pathToDirectory)) {
                 Files.createDirectories(pathToDirectory);
-            }
-            if (fullPathToFile == null) {
-                Files.move(pathToFileWithLevels, fullPathToFile =
-                        Paths.get(pathToDirectory.resolve(pathToFileWithLevels).toUri()), REPLACE_EXISTING);
-            }
 
+                pathToFileWithLevels = Paths.get("Level of logs.txt");
+                if (!Files.exists(pathToFileWithLevels)) {
+                    Files.createFile(pathToFileWithLevels);
+                }
+                pathToFileWithList = Paths.get("list_of_logs.txt");
+                if (!Files.exists(pathToFileWithList)) {
+                    Files.createFile(pathToFileWithList);
+                }
+
+                if (fullPathToFileWithLevel == null) {
+                    Files.move(pathToFileWithLevels, fullPathToFileWithLevel =
+                            Paths.get(pathToDirectory.resolve(pathToFileWithLevels).toUri()), REPLACE_EXISTING);
+                }
+                if (pathToFileWithListFull == null) {
+                    Files.move(pathToFileWithList, pathToFileWithListFull =
+                            Paths.get(pathToDirectory.resolve(pathToFileWithList).toUri()), REPLACE_EXISTING);
+                }
+            } else {
+                fullPathToFileWithLevel = Paths.get("directory_with_log_levels/Level of logs.txt");
+                pathToFileWithListFull = Paths.get("directory_with_log_levels/list_of_logs.txt");
+            }
         } catch (IOException e) {
             Log.error(MAIN_SERVICE, "RuntimeException", e.fillInStackTrace().getMessage());
             throw new RuntimeException(e);
         }
         watchDirectory = new WatchDirectory(pathToDirectory);
-        watchDirectory.getReadAndWrite().setPathToFileWithLevels(fullPathToFile);
-        watchDirectory.getReadAndWrite().setPathToFileWithList(pathToFileWithList);
+        watchDirectory.getWriterLogs().setPathToFileWithLevels(fullPathToFileWithLevel);
+        watchDirectory.getWriterLogs().setPathToFileWithList(pathToFileWithListFull);
         startWatcher();
         Log.debug(MAIN_SERVICE, "method-> \"creatFile\"");
     }
@@ -1839,8 +1827,88 @@ public class MainService {
             LocalDateTime deadLine = lectureDate.plusDays(1).withHour(12).withMinute(0);
             deadLineFormat = deadLine.format(DateTimeFormatter.ofPattern("MMM dd, HH:mm", Locale.US));
         }
-        Log.debug(MAIN_SERVICE, "method-> \"creatDeadLineForHomework(\"");
+        Log.debug(MAIN_SERVICE, "method-> \"creatDeadLineForHomework\"");
         return deadLineFormat;
+    }
+
+    public void creatAddMaterialListWithLecture() {
+        if (additionalMaterialRepository.listAddMaterialWithLambda(lectureRepository.getLectureList())) {
+            System.out.println(IS_EMPTY);
+        }
+        scannerNameModelAndPerson();
+        Log.debug(MAIN_SERVICE, "method-> \"creatAddMaterialListWithLecture\"");
+    }
+
+    public void beforeDate() {
+        System.out.println("Введіть до якої дати вивести лекції");
+        byte month = checkNumberMonth();
+        byte day = checkNumberDay();
+        byte hour = checkNumberHour();
+        byte minute = checkNumberMinute();
+        LocalDateTime localDateTime = LocalDateTime.of(2023, month, day, hour, minute, 0);
+        Predicate<Lecture> predicate = lec -> lec.getCreationDate().isBefore(localDateTime);
+        List<Lecture> list = lectureRepository.getLectureList().stream().filter(predicate).toList();
+        System.out.println(list);
+        scannerNameModelAndPerson();
+        Log.debug(MAIN_SERVICE, "method-> \"beforeDate\"");
+    }
+
+    public void afterDate() {
+        System.out.println("Введіть з якої дати вивести лекції");
+        byte month = checkNumberMonth();
+        byte day = checkNumberDay();
+        byte hour = checkNumberHour();
+        byte minute = checkNumberMinute();
+        LocalDateTime localDateTime = LocalDateTime.of(2023, month, day, hour, minute, 0);
+        Predicate<Lecture> predicate = lec -> lec.getCreationDate().isAfter(localDateTime);
+        List<Lecture> list = lectureRepository.getLectureList().stream().filter(predicate).toList();
+        System.out.println(list);
+        scannerNameModelAndPerson();
+        Log.debug(MAIN_SERVICE, "method-> \"afterDate\"");
+    }
+
+    public void betweenDates() {
+        LocalDateTime localDateTimeBefore = localDateTimeBefore();
+        LocalDateTime localDateTimeAfter = localDateTimeAfter();
+        Predicate<Lecture> predicate = lec -> {
+            boolean before = lec.getCreationDate().isAfter(localDateTimeBefore);
+            boolean after = lec.getCreationDate().isBefore(localDateTimeAfter);
+            return after && before;
+        };
+        List<Lecture> list = lectureRepository.getLectureList().stream().filter(predicate).toList();
+        System.out.println(list);
+        scannerNameModelAndPerson();
+        Log.debug(MAIN_SERVICE, "method-> \"betweenDates\"");
+    }
+
+    private LocalDateTime localDateTimeAfter() {
+        Log.debug(MAIN_SERVICE, "method-> \"localDateTimeAfter\"");
+        System.out.println("Введіть до якої дати вивести лекції.");
+        byte month = checkNumberMonth();
+        byte day = checkNumberDay();
+        byte hour = checkNumberHour();
+        byte minute = checkNumberMinute();
+        return LocalDateTime.of(2023, month, day, hour, minute, 0);
+    }
+
+    private LocalDateTime localDateTimeBefore() {
+        Log.debug(MAIN_SERVICE, "method-> \"localDateTimeBefore\"");
+        System.out.println("Введіть з якої дати вивести лекції.");
+        byte month = checkNumberMonth();
+        byte day = checkNumberDay();
+        byte hour = checkNumberHour();
+        byte minute = checkNumberMinute();
+        return LocalDateTime.of(2023, month, day, hour, minute, 0);
+    }
+
+    public void startServer() {
+        Thread watch = new Thread(watcherForBlackIp);
+        Thread server = new Thread(watcherForBlackIp.getServer());
+        Thread myClient = new Thread(client);
+        watch.start();
+        server.start();
+        myClient.start();
+        Log.debug(MAIN_SERVICE, "method-> \"startServer\"");
     }
 }
 

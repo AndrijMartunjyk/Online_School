@@ -1,5 +1,7 @@
 package online_school.util;
 
+import online_school.log.Log;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

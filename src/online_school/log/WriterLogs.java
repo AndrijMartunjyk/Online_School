@@ -1,9 +1,9 @@
-package online_school.util;
+package online_school.log;
 
 import java.io.*;
 import java.nio.file.Path;
 
-public class ReadAndWrite {
+public class WriterLogs {
     private String pathToFileWithLevels;
     private String pathToFileWithList;
     private String result;
@@ -16,37 +16,35 @@ public class ReadAndWrite {
             while ((result = bufferedReader.readLine()) != null) {
                 this.result = result;
             }
-            if (this.result.contains(Level.DEBUG)) {
+            if (this.result.contains(Level.DEBUG) || this.result.contains("debug")) {
                 for (String s : logArray) {
                     if (s != null) {
                         fileWriter.write(s);
                     }
                 }
             }
-            if (this.result.contains(Level.INFO)) {
+            if (this.result.contains(Level.INFO) || this.result.contains("info")) {
                 for (int i = 1; i < logArray.length; i++) {
                     if (logArray[i] != null) {
                         fileWriter.write(logArray[i]);
                     }
                 }
             }
-            if (this.result.contains(Level.WARNING)) {
+            if (this.result.contains(Level.WARNING) || this.result.contains("warning")) {
                 for (int i = 2; i < logArray.length; i++) {
                     if (logArray[i] != null) {
                         fileWriter.write(logArray[i]);
                     }
                 }
             }
-            if (this.result.contains(Level.ERROR)) {
-                if (logArray[3] != null) {
-                    fileWriter.write(logArray[3]);
-                }
+            if ((this.result.contains(Level.ERROR) || this.result.contains("error")) && logArray[3] != null) {
+                fileWriter.write(logArray[3]);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.error(ReadAndWrite.class.getName(), massage, e.fillInStackTrace().getMessage());
+            Log.error(WriterLogs.class.getName(), massage, e.fillInStackTrace().getMessage());
         }
-        Log.debug(ReadAndWrite.class.getName(), massage);
+        Log.debug(WriterLogs.class.getName(), massage);
     }
 
     public void showLogsOnConsole(Level logName, String[] logArray) {
@@ -55,7 +53,7 @@ public class ReadAndWrite {
                 for (String log : logArray) {
                     if (log != null) {
                         System.out.println(log);
-                        Log.info(ReadAndWrite.class.getName(), log);
+                        Log.info(WriterLogs.class.getName(), log);
                     }
                 }
             }
@@ -63,7 +61,7 @@ public class ReadAndWrite {
                 for (int i = 1; i < logArray.length; i++) {
                     if (logArray[i] != null) {
                         System.out.println(logArray[i]);
-                        Log.info(ReadAndWrite.class.getName(), logArray[i]);
+                        Log.info(WriterLogs.class.getName(), logArray[i]);
                     }
                 }
             }
@@ -71,28 +69,28 @@ public class ReadAndWrite {
                 for (int i = 2; i < logArray.length; i++) {
                     if (logArray[i] != null) {
                         System.err.println(logArray[i]);
-                        Log.info(ReadAndWrite.class.getName(), logArray[i]);
+                        Log.info(WriterLogs.class.getName(), logArray[i]);
                     }
                 }
             }
             case ERROR -> {
                 if (logArray[3] != null) {
                     System.err.println(logArray[3]);
-                    Log.info(ReadAndWrite.class.getName(), logArray[3]);
+                    Log.info(WriterLogs.class.getName(), logArray[3]);
                 }
             }
         }
-        Log.debug(ReadAndWrite.class.getName(), "method-> \"showLogs\"");
+        Log.debug(WriterLogs.class.getName(), "method-> \"showLogs\"");
     }
 
     public void setPathToFileWithLevels(Path pathToFileWithLevels) {
         this.pathToFileWithLevels = String.valueOf(pathToFileWithLevels);
-        Log.debug(ReadAndWrite.class.getName(), "method-> \"setPathToFileWithLevels\"");
+        Log.debug(WriterLogs.class.getName(), "method-> \"setPathToFileWithLevels\"");
     }
 
     public void setPathToFileWithList(Path pathToFileWithList) {
         this.pathToFileWithList = String.valueOf(pathToFileWithList);
-        Log.debug(ReadAndWrite.class.getName(), "method-> \"setPathToFileWithList\"");
+        Log.debug(WriterLogs.class.getName(), "method-> \"setPathToFileWithList\"");
     }
 }
 

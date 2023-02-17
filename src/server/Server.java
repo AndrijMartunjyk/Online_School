@@ -1,11 +1,13 @@
 package server;
 
+import online_school.log.Log;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server implements Runnable {
-    public static int PORT = 4004;
+    public static final int PORT = 4004;
     private ServerSocket server;
     private BufferedReader in;
     private BufferedWriter out;
@@ -35,7 +37,7 @@ public class Server implements Runnable {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Log.error(Server.class.getName(), "IOException", e.getMessage());
         } finally {
             System.out.println("Сервер закритий!");
             server.close();
@@ -46,19 +48,18 @@ public class Server implements Runnable {
 
     private boolean reader(Socket clientSocket) {
         boolean isPresentReader = false;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("C:\\main-project\\Online_School\\directory_with_Black_IP\\List of black IP.txt"))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("directory_with_Black_IP/List of black IP.txt"))) {
             String ipAddressOfClient = String.valueOf(clientSocket.getLocalAddress());
             String blackIp;
 
             while ((blackIp = bufferedReader.readLine()) != null) {
-
                 if (blackIp.contains(ipAddressOfClient)) {
                     isPresentReader = true;
                     break;
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Server.class.getName(), "Exception", e.getMessage());
         }
         return isPresentReader;
     }
@@ -72,7 +73,7 @@ public class Server implements Runnable {
         try {
             server();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Log.error(Server.class.getName(), "method \"run\"", e.getMessage());
         }
     }
 }

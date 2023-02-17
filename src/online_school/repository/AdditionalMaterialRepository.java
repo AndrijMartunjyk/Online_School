@@ -3,12 +3,10 @@ package online_school.repository;
 import online_school.domain.model.Lecture;
 import online_school.domain.task_for_lecture.AdditionalMaterial;
 import online_school.service.MainService;
-import online_school.util.Log;
+import online_school.log.Log;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class AdditionalMaterialRepository {
     private final Map<Long, List<AdditionalMaterial>> listAdditionalMaterialMap = new HashMap<>();
@@ -54,4 +52,30 @@ public class AdditionalMaterialRepository {
         Log.debug(AdditionalMaterialRepository.class.getName(), "method-> \"creatAdditionalMaterialList\"");
         return additionalMaterials;
     }
+
+    public boolean listAddMaterialWithLambda(List<Lecture> lectureList) {
+        boolean isPresent = true;
+        Consumer<List<Lecture>> consumerLectures;
+        Consumer<Map<Long, List<AdditionalMaterial>>> consumerAdditionalMaterials;
+        Set<Long> keys = listAdditionalMaterialMap.keySet();
+        for (Long key : keys) {
+            for (int i = 0; i < lectureList.size(); i++) {
+                if (key != null && key.equals(lectureList.get(i).getLectureId())) {
+                    int index = i;
+                    consumerLectures = list -> System.out.print(list.get(index));
+                    consumerAdditionalMaterials = addMat -> System.out.println(addMat.get(key));
+                    System.out.println();
+                    consumerLectures.accept(lectureList);
+                    consumerAdditionalMaterials.accept(listAdditionalMaterialMap);
+                    isPresent = false;
+                    break;
+                }
+            }
+        }
+        return isPresent;
+    }
 }
+
+
+
+
