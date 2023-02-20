@@ -41,20 +41,20 @@ public class Log {
 
     @Override
     public String toString() {
-        return "Log {" +
+        return "Log: " +
                 "date=" + date +
                 ", level=" + level +
                 ", class name='" + name + '\'' +
-                ", message='" + message + '\'' +
+                "; message='" + message + ';' +
                 creatStacktrace() +
-                "}\n";
+                "\n";
     }
 
 
     public String creatStacktrace() {
         String result = "";
         if (level.equals(Level.ERROR) || level.equals(Level.WARNING)) {
-            result = ", stacktrace='" + stacktrace;
+            result = "' stacktrace='" + stacktrace;
         }
         return result;
     }

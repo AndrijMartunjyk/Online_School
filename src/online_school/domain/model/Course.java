@@ -1,9 +1,11 @@
 package online_school.domain.model;
 
 import online_school.log.Log;
+import online_school.service.MainService;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Optional;
 import java.util.Random;
 
 public class Course extends Model implements Comparable<Course>, Serializable {
@@ -20,8 +22,9 @@ public class Course extends Model implements Comparable<Course>, Serializable {
     }
 
     public String getCourseName() {
+        Optional<String> courseNameOptional = Optional.ofNullable(courseName);
         Log.debug(Course.class.getName(), "method->\"getCourseName\"");
-        return courseName;
+        return courseNameOptional.orElse(MainService.IS_EMPTY);
     }
 
     public int getCounter() {
@@ -30,8 +33,9 @@ public class Course extends Model implements Comparable<Course>, Serializable {
     }
 
     public Long getCourseId() {
+        Optional<Long> courseIdOptional = Optional.ofNullable(courseId);
         Log.debug(Course.class.getName(), "method->\"getCourseId\"");
-        return courseId;
+        return courseIdOptional.orElse(0L);
     }
 
     @Override
@@ -80,8 +84,8 @@ public class Course extends Model implements Comparable<Course>, Serializable {
     public String toString() {
         Log.debug(Course.class.getName(), "method->\"toString\"");
         return "Course{" +
-                "ID=" + courseId +
-                ", name='" + courseName + '\'' +
+                "ID=" + getCourseId() +
+                ", name='" + getCourseName() + '\'' +
                 '}';
     }
 }

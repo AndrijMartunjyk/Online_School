@@ -1,12 +1,14 @@
 package online_school.domain.model;
 
 import online_school.log.Log;
+import online_school.service.MainService;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Random;
 
 public class Lecture extends Model implements Comparable<Lecture>, Serializable {
@@ -19,7 +21,6 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
     private Long personId;
     private final Long courseId;
     private final String nameCourse;
-    private String lectureDateFormat;
     private final LocalDateTime creationDate = LocalDateTime.now();
     private LocalDateTime lectureDate;
 
@@ -33,8 +34,9 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
     }
 
     public String getLectureName() {
+        Optional<String> lectureNameOptional = Optional.ofNullable(lectureName);
         Log.debug(Lecture.class.getName(), "method->\"getLectureName\"");
-        return lectureName;
+        return lectureNameOptional.orElse(MainService.IS_EMPTY);
     }
 
     public void setPersonId(Long personId) {
@@ -43,23 +45,27 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
     }
 
     public Long getCourseId() {
+        Optional<Long> courseIdOptional = Optional.ofNullable(courseId);
         Log.debug(Lecture.class.getName(), "method->\"getCourseId\"");
-        return courseId;
+        return courseIdOptional.orElse(0L);
     }
 
     public String getDescription() {
+        Optional<String> descriptionOptional = Optional.ofNullable(description);
         Log.debug(Lecture.class.getName(), "method->\"getDescription\"");
-        return description;
+        return descriptionOptional.orElse(MainService.IS_EMPTY);
     }
 
     public Long getPersonId() {
+        Optional<Long> personIdOptional = Optional.ofNullable(personId);
         Log.debug(Lecture.class.getName(), "method->\"getPersonId\"");
-        return personId;
+        return personIdOptional.orElse(0L);
     }
 
     public String getNameCourse() {
+        Optional<String> nameCourseOptional = Optional.ofNullable(nameCourse);
         Log.debug(Lecture.class.getName(), "method->\"getNameCourse\"");
-        return nameCourse;
+        return nameCourseOptional.orElse(MainService.IS_EMPTY);
     }
 
     public int getCounter() {
@@ -68,8 +74,9 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
     }
 
     public Long getLectureId() {
+        Optional<Long> lectureIdOptional = Optional.ofNullable(lectureId);
         Log.debug(Lecture.class.getName(), "method->\"getLectureId\"");
-        return lectureId;
+        return lectureIdOptional.orElse(0L);
     }
 
     public LocalDateTime getCreationDate() {
@@ -78,8 +85,9 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
     }
 
     public LocalDateTime getLectureDate() {
+        Optional<LocalDateTime> lectureDateOptional = Optional.ofNullable(lectureDate);
         Log.debug(Lecture.class.getName(), "method->\"getLectureDate\"");
-        return lectureDate;
+        return lectureDateOptional.orElse(LocalDateTime.of(0, 1, 1, 0, 0));
     }
 
     public void setLectureDate(LocalDateTime lectureDate) {
@@ -93,11 +101,12 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
     }
 
     public String getLectureDateFormat() {
+        Optional<String> lectureDateFormatOptional = Optional.empty();
         if (lectureDate != null) {
-            lectureDateFormat = lectureDate.format(DateTimeFormatter.ofPattern("MMM dd,E HH:mm:ss", Locale.US));
+            lectureDateFormatOptional = Optional.of(lectureDate.format(DateTimeFormatter.ofPattern("MMM dd,E HH:mm:ss", Locale.US)));
         }
         Log.debug(Lecture.class.getName(), "method->\"getLectureDateFormat\"");
-        return lectureDateFormat;
+        return lectureDateFormatOptional.orElse(MainService.IS_EMPTY);
     }
 
     @Override
@@ -163,14 +172,14 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
     public String toString() {
         Log.debug(Lecture.class.getName(), "method->\"toString\"");
         return "LECTURE {" +
-                "ID=" + lectureId +
-                ", nameLecture='" + lectureName + '\'' +
-                ", description='" + description + '\'' +
-                ", teacherId=" + personId +
+                "ID=" + getLectureId() +
+                ", nameLecture='" + getLectureName() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", teacherId=" + getPersonId() +
                 ", teacherName='" + super.getFirstPersonName() + '\'' +
                 ", teacherLastName='" + super.getLastPersonName() + '\'' +
-                ", courseID=" + courseId +
-                ", nameCourse='" + nameCourse + '\'' +
+                ", courseID=" + getCourseId() +
+                ", nameCourse='" + getNameCourse() + '\'' +
                 ", creationDate='" + getCreationDateFormat() + '\'' +
                 ", lectureDate='" + getLectureDateFormat() + '\'' +
                 "}\n";

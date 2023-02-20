@@ -7,6 +7,7 @@ import online_school.log.Log;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class Model implements Serializable {
     @Serial
@@ -15,8 +16,9 @@ public abstract class Model implements Serializable {
     private String lastPersonName;
 
     public String getFirstPersonName() {
+        Optional<String> firstPersonNameOptional = Optional.ofNullable(firstPersonName);
         Log.debug(Model.class.getName(), "method->\"getFirstPersonName\"");
-        return firstPersonName;
+        return firstPersonNameOptional.orElse(MainService.IS_EMPTY);
     }
 
     public void setFirstPersonName(String firstPersonName) {
@@ -25,8 +27,9 @@ public abstract class Model implements Serializable {
     }
 
     public String getLastPersonName() {
+        Optional<String> lastPersonNameOptional = Optional.ofNullable(lastPersonName);
         Log.debug(Model.class.getName(), "method->\"getLastPersonName\"");
-        return lastPersonName;
+        return lastPersonNameOptional.orElse(MainService.IS_EMPTY);
     }
 
     public void setLastPersonName(String lastPersonName) {

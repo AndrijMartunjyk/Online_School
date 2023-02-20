@@ -86,10 +86,12 @@ public class Main {
                     case "start" -> mainService.startControlWork();
                     case "save" -> mainService.creatSaveObjects();
                     case "out" -> mainService.creatPrintSavedObjects();
-                    case "before"-> mainService.beforeDate();
+                    case "before" -> mainService.beforeDate();
                     case "after" -> mainService.afterDate();
                     case "between" -> mainService.betweenDates();
                     case "group" -> mainService.creatAddMaterialListWithLecture();
+                    case "letter" -> mainService.showListOfTeacherToLetter();
+                    case "filter" -> mainService.filterFile();
                     case "stop" -> isPresent = false;
                     default -> mainService.creatDefault();
                 }
