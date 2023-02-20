@@ -1,9 +1,11 @@
 package online_school.domain.task_for_lecture;
 
 import online_school.log.Log;
+import online_school.service.MainService;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Optional;
 import java.util.Random;
 
 public class Homework implements Comparable<Homework>, Serializable {
@@ -21,18 +23,21 @@ public class Homework implements Comparable<Homework>, Serializable {
     }
 
     public Long getLectureId() {
+        Optional<Long> lectureIdOptional = Optional.ofNullable(lectureId);
         Log.debug(Homework.class.getName(), "method->\"getLectureId\"");
-        return lectureId;
+        return lectureIdOptional.orElse(0L);
     }
 
     public Long getHomeworkId() {
+        Optional<Long> homeworkIdOptional = Optional.ofNullable(homeworkId);
         Log.debug(Homework.class.getName(), "method->\"getHomeworkId\"");
-        return homeworkId;
+        return homeworkIdOptional.orElse(0L);
     }
 
     public String getTask() {
+        Optional<String> taskOptional = Optional.ofNullable(task);
         Log.debug(Homework.class.getName(), "method->\"getTask\"");
-        return task;
+        return taskOptional.orElse(MainService.IS_EMPTY);
     }
 
     public void setDeadLine(String deadLine) {

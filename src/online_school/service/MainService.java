@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static online_school.util.RegularExpression.*;
@@ -30,8 +31,6 @@ import static online_school.util.RegularExpression.*;
 public class MainService {
     private static final Client client = new Client();
     private static final WatcherForBlackIp watcherForBlackIp = new WatcherForBlackIp();
-
-
     private static final CourseRepository courseRepository = new CourseRepository();
     private static final CourseService courseService = new CourseService();
     private static final LectureRepository lectureRepository = new LectureRepository();
@@ -60,6 +59,7 @@ public class MainService {
     private Scanner scanner;
     private Long number;
     private String name;
+    private String letter;
     private String nameModelAndPerson;
     private String description;
     private String firstname;
@@ -84,7 +84,7 @@ public class MainService {
 
     private final String MAIN_SERVICE = MainService.class.getName();
     private static final String CASE_NOT_IMPORTANT = """
-            ========================
+            ============================
             "РЕГІСТР НЕ ВАЖЛИВИЙ !!!"
             """;
     private static final String START_INFO = """
@@ -121,6 +121,12 @@ public class MainService {
             Щоб вивести лекції між датами введіть: "between"
             Щоб згрупувати додаткові матеріали за лекціями введіть: "group"
             ==================================================================
+            Щоб вивести список вчителів з прізвищем до конкретної літери введіть:
+            "letter"
+            ========================================================================
+            Щоб вивести відфільтровані логи, введіть:
+            "filter"
+            ============================================
             Для завершення рограми введіть "stop"
             """;
 
@@ -233,7 +239,7 @@ public class MainService {
     public static final String ENTER_ADD_FOR_LECTURE = "Введіть кого хочете додати до лекції: \n" + TEACHER + "\n" + STUDENT;
     public static final String ENTER_NUMBER = "Введіть ID %s, число більше \"0\":\n";
     public static final String ENTER_WORDS = "Введіть від одного до чотирьох слів !!!";
-    public static final String ENTER_ONE_WORD = "Ведіть одне слово, без цифр пробілів і розділових знаків!!!";
+    public static final String ENTER_ONE_WORD = "Ведіть одне слово англійською, без цифр пробілів і розділових знаків!!!";
     public static final String ENTER_LETTER = "Введіть буквений символ!!!";
     public static final String COURSE_FOR_DELETE = "Виберіть курс який хочете видалити:";
     public static final String LECTURE_FOR_DELETE = "Виберіть лекцію яку хочете видалити:";
@@ -358,10 +364,10 @@ public class MainService {
         putBorder();
         foundCourse();
         lecture = lectureService.createLecture(lectureId, getName(), getDescription(), courseId, courseName);
-        LocalDateTime lectureDate;
         do {
-            if ((lectureDate = creatLectureDate(lecture)) != null) {
-                lecture.setLectureDate(lectureDate);
+            Optional<LocalDateTime> lectureDateOptional = Optional.ofNullable(creatLectureDate(lecture));
+            if (lectureDateOptional.isPresent()) {
+                lecture.setLectureDate(lectureDateOptional.get());
                 isPresent = false;
             } else {
                 System.out.println(TRY_AGAIN);
@@ -956,7 +962,8 @@ public class MainService {
             result = scanner.nextLine();
             try {
                 if (!(makeValidate(result, namePattern))) {
-                    throw new IllegalArgumentException(result);
+                    System.err.println(SOMETHING_WRONG);
+                    Log.warning(MAIN_SERVICE, "method \"scannerName\"", "IllegalArgumentException");
                 } else {
                     name = result;
                     System.out.println(NAME_SAVED);
@@ -965,12 +972,6 @@ public class MainService {
                 }
             } catch (IllegalArgumentException i) {
                 Log.warning(MAIN_SERVICE, METHOD_SCANNER_NAME + ILLEGAL_ARGUMENT_EXCEPTION, i.getMessage());
-                try {
-                    throw new EntityNotFoundException(STRING_IS_INCORRECT, i);
-                } catch (EntityNotFoundException e) {
-                    e.printStackTrace();
-                    Log.error(MAIN_SERVICE, METHOD_SCANNER_NAME + ENTITY_NOT_FOUND_EXCEPTION, Arrays.toString(e.getStackTrace()));
-                }
             }
         }
         Log.debug(MAIN_SERVICE, METHOD_SCANNER_NAME);
@@ -987,7 +988,8 @@ public class MainService {
             testDescription = scanner.nextLine();
             try {
                 if (!(makeValidate(testDescription, descriptionPattern))) {
-                    throw new IllegalArgumentException(testDescription);
+                    System.err.println(SOMETHING_WRONG);
+                    Log.warning(MAIN_SERVICE, "method \"scannerDescription\"", "IllegalArgumentException");
                 } else {
                     description = testDescription;
                     System.out.println(DESCRIPTION_OF_LECTURE_SAVED);
@@ -1013,7 +1015,8 @@ public class MainService {
             task = scanner.nextLine();
             try {
                 if (!(makeValidate(task, descriptionPattern))) {
-                    throw new IllegalArgumentException(task);
+                    System.err.println(SOMETHING_WRONG);
+                    Log.warning(MAIN_SERVICE, "method \"scannerHomeTask\"", "IllegalArgumentException");
                 } else {
                     this.task = task;
                     System.out.println(HOMEWORK_IS_SAVED);
@@ -1022,12 +1025,6 @@ public class MainService {
                 }
             } catch (IllegalArgumentException i) {
                 Log.warning(MAIN_SERVICE, METHOD_SCANNER_HOME_TASK + ILLEGAL_ARGUMENT_EXCEPTION, i.getMessage());
-                try {
-                    throw new EntityNotFoundException(STRING_IS_INCORRECT, i);
-                } catch (EntityNotFoundException e) {
-                    Log.error(MAIN_SERVICE, METHOD_SCANNER_HOME_TASK + ENTITY_NOT_FOUND_EXCEPTION, Arrays.toString(e.getStackTrace()));
-                    e.printStackTrace();
-                }
             }
         }
         Log.debug(MAIN_SERVICE, METHOD_SCANNER_HOME_TASK);
@@ -1042,7 +1039,8 @@ public class MainService {
             testPhoneNumber = scanner.nextLine();
             try {
                 if (!(makeValidate(testPhoneNumber, phoneNumberPattern))) {
-                    throw new IllegalArgumentException(testPhoneNumber);
+                    System.err.println(SOMETHING_WRONG);
+                    Log.warning(MAIN_SERVICE, "method \"scannerPhone\"", "IllegalArgumentException");
                 } else {
                     phone = testPhoneNumber;
                     System.out.println(NUMBER_SAVED);
@@ -1051,12 +1049,6 @@ public class MainService {
                 }
             } catch (IllegalArgumentException i) {
                 Log.warning(MAIN_SERVICE, METHOD_SCANNER_PHONE + ILLEGAL_ARGUMENT_EXCEPTION, i.getMessage());
-                try {
-                    throw new EntityNotFoundException("Number is incorrect!!!", i);
-                } catch (EntityNotFoundException e) {
-                    Log.error(MAIN_SERVICE, METHOD_SCANNER_PHONE + ENTITY_NOT_FOUND_EXCEPTION, Arrays.toString(e.getStackTrace()));
-                    e.printStackTrace();
-                }
             }
         }
         Log.debug(MAIN_SERVICE, METHOD_SCANNER_PHONE);
@@ -1072,7 +1064,8 @@ public class MainService {
             testEmail = scanner.nextLine();
             try {
                 if (!(makeValidate(testEmail, emailPattern))) {
-                    throw new IllegalArgumentException(testEmail);
+                    System.err.println(SOMETHING_WRONG);
+                    Log.warning(MAIN_SERVICE, "method \"scannerEmail\"", "IllegalArgumentException");
                 } else {
                     email = testEmail;
                     System.out.println(EMAIL_SAVED);
@@ -1081,17 +1074,31 @@ public class MainService {
                 }
             } catch (IllegalArgumentException i) {
                 Log.warning(MAIN_SERVICE, METHOD_SCANNER_EMAIL + ILLEGAL_ARGUMENT_EXCEPTION, i.getMessage());
-                try {
-                    throw new EntityNotFoundException("Email is incorrect!!!", i);
-                } catch (EntityNotFoundException e) {
-                    Log.error(MAIN_SERVICE, METHOD_SCANNER_EMAIL + ENTITY_NOT_FOUND_EXCEPTION, Arrays.toString(e.getStackTrace()));
-                    e.printStackTrace();
-                }
             }
         }
         Log.debug(MAIN_SERVICE, METHOD_SCANNER_EMAIL);
     }
 
+    private void scannerEnglishLetter() {
+        isPresent = true;
+        String result;
+        while (isPresent) {
+            System.out.println("Введіть одну англ. літеру до якої вивести список вчителів.");
+            result = scanner.nextLine();
+            try {
+                if (!(makeValidate(result, letterPattern))) {
+                    System.err.println(SOMETHING_WRONG);
+                    Log.warning(MAIN_SERVICE, "method \"scannerEnglishLetter\"", "IllegalArgumentException");
+                } else {
+                    letter = result;
+                    isPresent = false;
+                }
+            } catch (IllegalArgumentException i) {
+                Log.warning(MAIN_SERVICE, METHOD_SCANNER_NAME + ILLEGAL_ARGUMENT_EXCEPTION, i.getMessage());
+            }
+        }
+        Log.debug(MAIN_SERVICE, "method \"scannerEnglishLetter\"");
+    }
 
     public String checkFirstAndLastName() {
         isPresent = true;
@@ -1103,7 +1110,8 @@ public class MainService {
             testFirstOrLastName = scanner.nextLine();
             try {
                 if (!(makeValidate(testFirstOrLastName, firstOrLastNamePattern))) {
-                    throw new IllegalArgumentException(testFirstOrLastName);
+                    System.out.println(SOMETHING_WRONG + " ви ввели: " + testFirstOrLastName);
+                    Log.warning(MAIN_SERVICE, SOMETHING_WRONG + " " + testFirstOrLastName, "IllegalArgumentException");
                 } else {
                     result = testFirstOrLastName;
                     System.out.println(SAVED);
@@ -1112,12 +1120,6 @@ public class MainService {
                 }
             } catch (IllegalArgumentException i) {
                 Log.warning(MAIN_SERVICE, METHOD_CHECK_NAME + ILLEGAL_ARGUMENT_EXCEPTION, i.getMessage());
-                try {
-                    throw new EntityNotFoundException(STRING_IS_INCORRECT, i);
-                } catch (EntityNotFoundException e) {
-                    Log.error(MAIN_SERVICE, METHOD_CHECK_NAME + ENTITY_NOT_FOUND_EXCEPTION, Arrays.toString(e.getStackTrace()));
-                    e.printStackTrace();
-                }
             }
         }
         Log.info(MAIN_SERVICE, METHOD_CHECK_NAME);
@@ -1452,18 +1454,21 @@ public class MainService {
 
 
     public Long getCheckNumber() {
+        Optional<Long> numberOption = Optional.ofNullable(number);
         Log.debug(MAIN_SERVICE, "method-> \"getCheckNumber\"");
-        return number;
+        return numberOption.orElse(0L);
     }
 
     public String getName() {
+        Optional<String> nameOption = Optional.ofNullable(name);
         Log.debug(MAIN_SERVICE, "method-> \"getName\"");
-        return name;
+        return nameOption.orElse(IS_EMPTY);
     }
 
     public String getNameModelAndPerson() {
+        Optional<String> nameModelAndPersonOption = Optional.ofNullable(nameModelAndPerson);
         Log.debug(MAIN_SERVICE, "method-> \"getNameModelAndPerson\"");
-        return nameModelAndPerson;
+        return nameModelAndPersonOption.orElse(IS_EMPTY);
     }
 
     public void setNameModelAndPerson(String nameModelAndPerson) {
@@ -1472,28 +1477,33 @@ public class MainService {
     }
 
     public String getFirstname() {
+        Optional<String> firstnameOption = Optional.ofNullable(firstname);
         Log.debug(MAIN_SERVICE, "method-> \"getFirstname\"");
-        return firstname;
+        return firstnameOption.orElse(IS_EMPTY);
     }
 
     public String getLastName() {
+        Optional<String> lastNameOption = Optional.ofNullable(lastName);
         Log.debug(MAIN_SERVICE, "method-> \"getLastName\"");
-        return lastName;
+        return lastNameOption.orElse(IS_EMPTY);
     }
 
     public String getDescription() {
+        Optional<String> descriptionOption = Optional.ofNullable(description);
         Log.debug(MAIN_SERVICE, "method-> \"getDescription\"");
-        return description;
+        return descriptionOption.orElse(IS_EMPTY);
     }
 
     public String getPhone() {
+        Optional<String> phoneOption = Optional.ofNullable(phone);
         Log.debug(MAIN_SERVICE, "method-> \"getPhone\"");
-        return phone;
+        return phoneOption.orElse(IS_EMPTY);
     }
 
     public String getEmail() {
+        Optional<String> emailOption = Optional.ofNullable(email);
         Log.debug(MAIN_SERVICE, "method-> \"getEmail\"");
-        return email;
+        return emailOption.orElse(IS_EMPTY);
     }
 
     public void setScanner(Scanner scanner) {
@@ -1502,8 +1512,9 @@ public class MainService {
     }
 
     public String getTask() {
+        Optional<String> taskOption = Optional.ofNullable(task);
         Log.debug(MAIN_SERVICE, "method-> \"getTask\"");
-        return task;
+        return taskOption.orElse(IS_EMPTY);
     }
 
     public void putBorder() {
@@ -1909,6 +1920,27 @@ public class MainService {
         server.start();
         myClient.start();
         Log.debug(MAIN_SERVICE, "method-> \"startServer\"");
+    }
+
+    public void showListOfTeacherToLetter() {
+        scannerEnglishLetter();
+        teacherRepository.getTeacherList()
+                .stream().filter(t -> String.valueOf(t.getLastPersonName().toLowerCase().charAt(0)).hashCode() < letter.toLowerCase().hashCode())
+                .forEach(System.out::println);
+        scannerNameModelAndPerson();
+        Log.debug(MAIN_SERVICE, "method-> \"showListOfTeacherToLetter\"");
+    }
+
+    public void filterFile() {
+        try (Stream<String> stringStream = Files.lines(Paths.get(pathToFileWithListFull.toUri()))) {
+            stringStream.flatMap(s -> Stream.of(s.split(";")))
+                    .filter(s -> !s.contains("Log"))
+                    .forEach(System.out::println);
+        } catch (IOException e) {
+            Log.error(MAIN_SERVICE, "method \"filterFile\"" + e.getMessage(), e.getMessage());
+        }
+        scannerNameModelAndPerson();
+        Log.debug(MAIN_SERVICE, "method-> \"filterFile\"");
     }
 }
 

@@ -2,9 +2,11 @@ package online_school.domain.task_for_lecture;
 
 import online_school.domain.model.Resource;
 import online_school.log.Log;
+import online_school.service.MainService;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Optional;
 import java.util.Random;
 
 public class AdditionalMaterial implements Comparable<AdditionalMaterial>, Serializable {
@@ -23,18 +25,21 @@ public class AdditionalMaterial implements Comparable<AdditionalMaterial>, Seria
     }
 
     public Long getResourceId() {
+        Optional<Long> resourceIdOptional = Optional.ofNullable(resourceId);
         Log.debug(AdditionalMaterial.class.getName(), "method->\"getResourceId\"");
-        return resourceId;
+        return resourceIdOptional.orElse(0L);
     }
 
     public String getName() {
+        Optional<String> nameOptional = Optional.ofNullable(name);
         Log.debug(AdditionalMaterial.class.getName(), "method->\"getName\"");
-        return name;
+        return nameOptional.orElse(MainService.IS_EMPTY);
     }
 
     public Long getLectureId() {
+        Optional<Long> lectureIdOptional = Optional.ofNullable(lectureId);
         Log.debug(AdditionalMaterial.class.getName(), "method->\"getLectureId\"");
-        return lectureId;
+        return lectureIdOptional.orElse(0L);
     }
 
     public Resource getResourceType() {

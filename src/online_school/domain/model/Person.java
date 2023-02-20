@@ -1,9 +1,11 @@
 package online_school.domain.model;
 
 import online_school.log.Log;
+import online_school.service.MainService;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Optional;
 import java.util.Random;
 
 public class Person extends Model implements Comparable<Person>, Serializable {
@@ -26,13 +28,15 @@ public class Person extends Model implements Comparable<Person>, Serializable {
     }
 
     public Long getPersonId() {
+        Optional<Long> personIdOptional = Optional.ofNullable(personId);
         Log.debug(Person.class.getName(), "method->\"getPersonId\"");
-        return personId;
+        return personIdOptional.orElse(0L);
     }
 
     public Long getLectureId() {
+        Optional<Long> lectureIdOptional = Optional.ofNullable(lectureId);
         Log.debug(Person.class.getName(), "method->\"getLectureId\"");
-        return lectureId;
+        return lectureIdOptional.orElse(0L);
     }
 
     public void setLectureId(Long lectureId) {
@@ -41,8 +45,9 @@ public class Person extends Model implements Comparable<Person>, Serializable {
     }
 
     public String getLectureName() {
+        Optional<String> lectureNameOptional = Optional.ofNullable(lectureName);
         Log.debug(Person.class.getName(), "method->\"getLectureName\"");
-        return lectureName;
+        return lectureNameOptional.orElse(MainService.IS_EMPTY);
     }
 
     public void setLectureName(String lectureName) {
@@ -56,13 +61,15 @@ public class Person extends Model implements Comparable<Person>, Serializable {
     }
 
     public String getPhone() {
+        Optional<String> phoneOptional = Optional.ofNullable(phone);
         Log.debug(Person.class.getName(), "method->\"getPhone\"");
-        return phone;
+        return phoneOptional.orElse(MainService.IS_EMPTY);
     }
 
     public String getEmail() {
+        Optional<String> emailOptional = Optional.ofNullable(email);
         Log.debug(Person.class.getName(), "method->\"getEmail\"");
-        return email;
+        return emailOptional.orElse(MainService.IS_EMPTY);
     }
 
     @Override
@@ -138,10 +145,10 @@ public class Person extends Model implements Comparable<Person>, Serializable {
                 "ID: " + personId +
                 ", First name: " + super.getFirstPersonName() +
                 ", Last name: " + super.getLastPersonName() +
-                ", phone number: " + phone +
-                ", email address: " + email + ", //" +
-                ", lectureId: " + lectureId +
-                ", lectureName:'" + lectureName + '\'' +
+                ", phone number: " + getPhone() +
+                ", email address: " + getEmail() + ", //" +
+                ", lectureId: " + getLectureId() +
+                ", lectureName:'" + getLectureName() + '\'' +
                 '}';
     }
 }

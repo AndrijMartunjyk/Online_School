@@ -24,6 +24,7 @@ public class WatchDirectory implements Runnable {
                 for (WatchEvent<?> event : key.pollEvents()) {
                     if (event.kind() == ENTRY_MODIFY) {
                         writerLogs.write(Log.getLogArray());
+                        return;
                     } else {
                         String massage = "Unsupported event kind";
                         System.out.println(massage);

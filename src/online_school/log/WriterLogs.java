@@ -6,7 +6,6 @@ import java.nio.file.Path;
 public class WriterLogs {
     private String pathToFileWithLevels;
     private String pathToFileWithList;
-    private String result;
 
     public void write(String[] logArray) {
         String massage = "method-> \"write\"";
@@ -14,31 +13,34 @@ public class WriterLogs {
              FileWriter fileWriter = new FileWriter(pathToFileWithList)) {
             String result;
             while ((result = bufferedReader.readLine()) != null) {
-                this.result = result;
-            }
-            if (this.result.contains(Level.DEBUG) || this.result.contains("debug")) {
-                for (String s : logArray) {
-                    if (s != null) {
-                        fileWriter.write(s);
+                if ((result.contains(Level.DEBUG) || result.contains("debug"))) {
+                    for (String s : logArray) {
+                        if (s != null) {
+                            fileWriter.write(s);
+                        }
                     }
+                    return;
                 }
-            }
-            if (this.result.contains(Level.INFO) || this.result.contains("info")) {
-                for (int i = 1; i < logArray.length; i++) {
-                    if (logArray[i] != null) {
-                        fileWriter.write(logArray[i]);
+                if (result.contains(Level.INFO) || result.contains("info")) {
+                    for (int i = 1; i < logArray.length; i++) {
+                        if (logArray[i] != null) {
+                            fileWriter.write(logArray[i]);
+                        }
                     }
+                    return;
                 }
-            }
-            if (this.result.contains(Level.WARNING) || this.result.contains("warning")) {
-                for (int i = 2; i < logArray.length; i++) {
-                    if (logArray[i] != null) {
-                        fileWriter.write(logArray[i]);
+                if (result.contains(Level.WARNING) || result.contains("warning")) {
+                    for (int i = 2; i < logArray.length; i++) {
+                        if (logArray[i] != null) {
+                            fileWriter.write(logArray[i]);
+                        }
                     }
+                    return;
                 }
-            }
-            if ((this.result.contains(Level.ERROR) || this.result.contains("error")) && logArray[3] != null) {
-                fileWriter.write(logArray[3]);
+                if ((result.contains(Level.ERROR) || result.contains("error")) && logArray[3] != null) {
+                    fileWriter.write(logArray[3]);
+                    return;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
