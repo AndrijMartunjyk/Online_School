@@ -1,99 +1,65 @@
-Log: date=02-20-2023 20:41:13:4113, level=INFO, class name='online_school.service.MainService'; message='============================
+Log: date=02-22-2023 14:18:47:1847, level=INFO, class name='online_school.service.MainService'; message='============================
 "РЕГІСТР НЕ ВАЖЛИВИЙ !!!"
 ;
-Log: date=02-20-2023 20:41:13:4113, level=INFO, class name='online_school.service.MainService'; message='==========================================================================;
-Log: date=02-20-2023 20:41:13:4113, level=INFO, class name='online_school.service.MainService'; message='Створено автоматичний курс з іменем "Auto course"
+Log: date=02-22-2023 14:18:47:1847, level=INFO, class name='online_school.service.MainService'; message='==========================================================================;
+Log: date=02-22-2023 14:18:47:1847, level=INFO, class name='online_school.service.MainService'; message='Створено автоматичний курс з іменем "Auto course"
  з ID "%d" і з трьома лекціями "No name".
 ;
-Log: date=02-20-2023 20:41:13:4113, level=INFO, class name='online_school.service.MainService'; message='==========================================================================;
-Log: date=02-20-2023 20:41:13:4113, level=INFO, class name='online_school.service.MainService'; message='Для виводу всієї інфрмації про курс, введіть: 
-"Course data";
-Log: date=02-20-2023 20:41:13:4113, level=INFO, class name='online_school.service.MainService'; message='==========================================================================;
-Log: date=02-20-2023 20:41:13:4113, level=INFO, class name='online_school.service.MainService'; message='Для виводу інфрмації про всі об'єкти одного типу, введіть:
+Log: date=02-22-2023 14:18:47:1847, level=INFO, class name='online_school.service.MainService'; message='==========================================================================;
+Log: date=02-22-2023 14:18:47:1847, level=INFO, class name='online_school.service.MainService'; message='Для виводу всієї інфрмації про курс, або про лекцію, введіть: 
+"Course data"
+"Lecture data";
+Log: date=02-22-2023 14:18:47:1847, level=INFO, class name='online_school.service.MainService'; message='==========================================================================;
+Log: date=02-22-2023 14:18:47:1847, level=INFO, class name='online_school.service.MainService'; message='Для виводу інфрмації про всі об'єкти одного типу, введіть:
 "Course info"
 "Lecture info"
 "Teacher info"
 "Student info"
 "Homework info"
 "Additional material info"
-%s
+==============================
  Щоб видалити об'єкт введіть:
 "Delete course"
 "Delete lecture"
 "Delete teacher"
 "Delete student"
-%s
+"Delete homework"
+"Delete additional material"
+==================================================
 Щоб додати студента або вчителя до лекції введіть:
 "Add someone"
-%s
+=======================================================================
+Щоб створити домашнє завдання або додаткові матеріали для лекції введіть:
+"Add homework"
+"Add additional material"
+=================================
 Для сереалізації курсу, введіть:
 "Save"
 Для десереалізації курсу, введіть:
 "out"
-%s
+====================================
 Для виведення логів, введіть:
 "debug" -> виводяться всі логи.
 "info"  -> тільки "INFO" i всі знизу.
 "warn"  -> тільки "WARNING" i "ERROR".
 "error" -> тільки "ERROR".
-=============================================
+===================================================
 Щоб вивести лекції з якоїсь дати введіть: "before"
 Щоб вивести лекції до якоїсь дати введіть: "after"
 Щоб вивести лекції між датами введіть: "between"
 Щоб згрупувати додаткові матеріали за лекціями введіть: "group"
-==================================================================
+=====================================================================
+Щоб вивести список вчителів з прізвищем до конкретної літери введіть:
+"letter"
+========================================================================
+Щоб вивести відфільтровані логи, введіть:
+"filter"
+============================================
+Для виводу лекції яка створена раніше за всіх, введіть:
+"first lecture"
+Для виводу клькості логів, введіть:
+"show info"
+============================================
 Для завершення рограми введіть "stop"
 ;
-Log: date=02-20-2023 20:41:13:4113, level=INFO, class name='online_school.service.MainService'; message='================================================================================================================================================================;
-Log: date=02-20-2023 20:41:26:4126, level=INFO, class name='online_school.service.MainService'; message='Ви створюєте об'єкт: Вчитель;
-Log: date=02-20-2023 20:41:26:4126, level=INFO, class name='online_school.service.MainService'; message='Введіть ID %s, число більше "0":
-;
-Log: date=02-20-2023 20:41:28:4128, level=INFO, class name='online_school.service.MainService'; message='Введіть ім'я:;
-Log: date=02-20-2023 20:41:28:4128, level=INFO, class name='online_school.service.MainService'; message='Ведіть одне слово англійською, без цифр пробілів і розділових знаків!!!;
-Log: date=02-20-2023 20:41:30:4130, level=INFO, class name='online_school.service.MainService'; message='Збережено!!!;
-Log: date=02-20-2023 20:41:30:4130, level=INFO, class name='online_school.service.MainService'; message='method-> "checkFirstAndLastName";
-Log: date=02-20-2023 20:41:30:4130, level=INFO, class name='online_school.service.MainService'; message='Введіть прізвище:;
-Log: date=02-20-2023 20:41:30:4130, level=INFO, class name='online_school.service.MainService'; message='Ведіть одне слово англійською, без цифр пробілів і розділових знаків!!!;
-Log: date=02-20-2023 20:41:37:4137, level=INFO, class name='online_school.service.MainService'; message='Збережено!!!;
-Log: date=02-20-2023 20:41:37:4137, level=INFO, class name='online_school.service.MainService'; message='method-> "checkFirstAndLastName";
-Log: date=02-20-2023 20:41:37:4137, level=INFO, class name='online_school.service.MainService'; message='Введіть номер телефону:;
-Log: date=02-20-2023 20:41:37:4137, level=INFO, class name='online_school.service.MainService'; message='Формат номера: «+38(044)555-55-55»;
-Log: date=02-20-2023 20:41:44:4144, level=INFO, class name='online_school.service.MainService'; message='Номер телефону збережено!!!;
-Log: date=02-20-2023 20:41:44:4144, level=INFO, class name='online_school.service.MainService'; message='Введіть Email:;
-Log: date=02-20-2023 20:41:44:4144, level=INFO, class name='online_school.service.MainService'; message='Формат електронної пошти: «nick@mail.com»;
-Log: date=02-20-2023 20:41:49:4149, level=INFO, class name='online_school.service.MainService'; message='Пошту збережено збережено!!!;
-Log: date=02-20-2023 20:41:49:4149, level=INFO, class name='online_school.service.MainService'; message='Чудово, ви створили об'єкт вчителя з іменем: "%s", прізвищем: "%s" і номером ID: "%d".
-;
-Log: date=02-20-2023 20:41:49:4149, level=INFO, class name='online_school.service.MainService'; message='================================================================================================================================================================;
-Log: date=02-20-2023 20:41:49:4149, level=INFO, class name='online_school.service.MainService'; message='Для виводу всієї інфрмації про курс, або про лекцію, введіть: 
-"Course data"
-"Lecture data";
-Log: date=02-20-2023 20:41:49:4149, level=INFO, class name='online_school.service.MainService'; message='================================================================================================================================================================;
-Log: date=02-20-2023 20:41:49:4149, level=INFO, class name='online_school.service.MainService'; message='Можете продовжувати створювати студентів, вчителів, лекції.;
-Log: date=02-20-2023 20:41:56:4156, level=INFO, class name='online_school.service.MainService'; message='Ви створюєте об'єкт: Вчитель;
-Log: date=02-20-2023 20:41:56:4156, level=INFO, class name='online_school.service.MainService'; message='Введіть ID %s, число більше "0":
-;
-Log: date=02-20-2023 20:41:57:4157, level=INFO, class name='online_school.service.MainService'; message='Введіть ім'я:;
-Log: date=02-20-2023 20:41:57:4157, level=INFO, class name='online_school.service.MainService'; message='Ведіть одне слово англійською, без цифр пробілів і розділових знаків!!!;
-Log: date=02-20-2023 20:42:04:424, level=INFO, class name='online_school.service.MainService'; message='Збережено!!!;
-Log: date=02-20-2023 20:42:04:424, level=INFO, class name='online_school.service.MainService'; message='method-> "checkFirstAndLastName";
-Log: date=02-20-2023 20:42:04:424, level=INFO, class name='online_school.service.MainService'; message='Введіть прізвище:;
-Log: date=02-20-2023 20:42:04:424, level=INFO, class name='online_school.service.MainService'; message='Ведіть одне слово англійською, без цифр пробілів і розділових знаків!!!;
-Log: date=02-20-2023 20:42:06:426, level=INFO, class name='online_school.service.MainService'; message='Збережено!!!;
-Log: date=02-20-2023 20:42:06:426, level=INFO, class name='online_school.service.MainService'; message='method-> "checkFirstAndLastName";
-Log: date=02-20-2023 20:42:06:426, level=INFO, class name='online_school.service.MainService'; message='Введіть номер телефону:;
-Log: date=02-20-2023 20:42:06:426, level=INFO, class name='online_school.service.MainService'; message='Формат номера: «+38(044)555-55-55»;
-Log: date=02-20-2023 20:42:11:4211, level=INFO, class name='online_school.service.MainService'; message='Номер телефону збережено!!!;
-Log: date=02-20-2023 20:42:11:4211, level=INFO, class name='online_school.service.MainService'; message='Введіть Email:;
-Log: date=02-20-2023 20:42:11:4211, level=INFO, class name='online_school.service.MainService'; message='Формат електронної пошти: «nick@mail.com»;
-Log: date=02-20-2023 20:42:16:4216, level=INFO, class name='online_school.service.MainService'; message='Пошту збережено збережено!!!;
-Log: date=02-20-2023 20:42:16:4216, level=INFO, class name='online_school.service.MainService'; message='Чудово, ви створили об'єкт вчителя з іменем: "%s", прізвищем: "%s" і номером ID: "%d".
-;
-Log: date=02-20-2023 20:42:16:4216, level=INFO, class name='online_school.service.MainService'; message='================================================================================================================================================================;
-Log: date=02-20-2023 20:42:16:4216, level=INFO, class name='online_school.service.MainService'; message='Для виводу всієї інфрмації про курс, або про лекцію, введіть: 
-"Course data"
-"Lecture data";
-Log: date=02-20-2023 20:42:16:4216, level=INFO, class name='online_school.service.MainService'; message='================================================================================================================================================================;
-Log: date=02-20-2023 20:42:16:4216, level=INFO, class name='online_school.service.MainService'; message='Можете продовжувати створювати студентів, вчителів, лекції.;
-Log: date=02-20-2023 20:43:11:4311, level=INFO, class name='online_school.service.MainService'; message='Спробуйте ще раз.;
-Log: date=02-20-2023 20:43:11:4311, level=WARNING, class name='online_school.service.MainService'; message='method-> "creatDefault" IllegalArgumentException.;' stacktrace='Symbol is incorrect !!!
+Log: date=02-22-2023 14:18:47:1847, level=INFO, class name='online_school.service.MainService'; message='================================================================================================================================================================;
