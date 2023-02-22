@@ -92,6 +92,8 @@ public class Main {
                     case "group" -> mainService.creatAddMaterialListWithLecture();
                     case "letter" -> mainService.showListOfTeacherToLetter();
                     case "filter" -> mainService.filterFile();
+                    case "first lecture" -> mainService.showSortedLectures();
+                    case "show info" -> mainService.showNumberLogInfo();
                     case "stop" -> isPresent = false;
                     default -> mainService.creatDefault();
                 }

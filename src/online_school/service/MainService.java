@@ -95,43 +95,53 @@ public class MainService {
             "Student info"
             "Homework info"
             "Additional material info"
-            %s
+            ==============================
              Щоб видалити об'єкт введіть:
             "Delete course"
             "Delete lecture"
             "Delete teacher"
             "Delete student"
-            %s
+            "Delete homework"
+            "Delete additional material"
+            ==================================================
             Щоб додати студента або вчителя до лекції введіть:
             "Add someone"
-            %s
+            =======================================================================
+            Щоб створити домашнє завдання або додаткові матеріали для лекції введіть:
+            "Add homework"
+            "Add additional material"
+            =================================
             Для сереалізації курсу, введіть:
             "Save"
             Для десереалізації курсу, введіть:
             "out"
-            %s
+            ====================================
             Для виведення логів, введіть:
             "debug" -> виводяться всі логи.
             "info"  -> тільки "INFO" i всі знизу.
             "warn"  -> тільки "WARNING" i "ERROR".
             "error" -> тільки "ERROR".
-            =============================================
+            ===================================================
             Щоб вивести лекції з якоїсь дати введіть: "before"
             Щоб вивести лекції до якоїсь дати введіть: "after"
             Щоб вивести лекції між датами введіть: "between"
             Щоб згрупувати додаткові матеріали за лекціями введіть: "group"
-            ==================================================================
+            =====================================================================
             Щоб вивести список вчителів з прізвищем до конкретної літери введіть:
             "letter"
             ========================================================================
             Щоб вивести відфільтровані логи, введіть:
             "filter"
+            ========================================================
+            Для виводу лекції яка створена раніше за всіх, введіть:
+            "first lecture"
+            Для виводу клькості логів з середини файлу, введіть:
+            "show info"
             ============================================
             Для завершення рограми введіть "stop"
             """;
 
     public final String AUTO_COURSE = "Створено автоматичний курс з іменем \"Auto course\"\n з ID \"%d\" і з трьома лекціями \"No name\".\n";
-    public final String ALL_INFO = "Для виводу всієї інфрмації про курс, введіть: \n\"" + COURSE_DATA + "\"";
     public final String START = "START";
     public static final String OF_COURSE = "курсу";
     public static final String OF_LECTURE = "лекції";
@@ -217,6 +227,7 @@ public class MainService {
     public static final String METHOD_CREAT_HOME_LOGIC = "method-> \"creatHomeworkLogic\"";
     public static final String METHOD_CREATE_RESOURCE_TYPE_LOGIC = "method-> \"createResourceTypeLogic\"";
     public static final String METHOD_LOGIC = "method-> \"logInfo\"";
+    public static final String METHOD_SHOW_NUMBER_LOG_INFO = "method-> \"showNumberLogInfo\"";
     public static final String CONTINUE_INFO = "Можете продовжувати створювати студентів, вчителів, лекції.";
     public static final String ALL_INFORM = "Для виводу всієї інфрмації про курс, або про лекцію, введіть: \n\"" + COURSE_DATA + "\"\n\"" + LECTURE_DATA + "\"";
     public static final String SO_LONG_BORDER = "================================================================================================================================================================";
@@ -286,8 +297,6 @@ public class MainService {
     public static final String ADDRESS_OF_SAVE_TEACHERS = "directory_for_save_course/teachers.txt";
     public static final String ADDRESS_OF_SAVE_HOMEWORKS = "directory_for_save_course/homeworks.txt";
     public static final String ADDRESS_OF_SAVE_ADD_MATERIALS = "directory_for_save_course/added_material.txt";
-    public static final String BORDER_SHORT = "=================================";
-    public static final String BORDER_LONG = "==================================================";
     public static final String BORDER_VERY_LONG = "==========================================================================";
     public static final String ENTER_SORTING_OPTION = """
             Виберіть варіант сортування і введіть ключове слово:
@@ -305,23 +314,13 @@ public class MainService {
             "Url"
             "Video"
             "Book"\040""";
-    public static final String INFORM_FOR_LECTURE = """
-            =======================================================================
-            Щоб створити домашнє завдання або додаткові матеріали для лекції введіть:
-            "Add homework"
-            "Add additional material"
-            =======================================================================
-            Щоб видалити, введіть:
-            "Delete homework"
-            "Delete additional material"
-            =======================================================================""";
 
 
     public void showFrontInform() {
         System.out.print(CASE_NOT_IMPORTANT);
         Log.info(MAIN_SERVICE, CASE_NOT_IMPORTANT);
         autoCourse(courseRepository, courseService, lectureRepository, lectureService);
-        System.out.printf(START_INFO, BORDER_SHORT, BORDER_LONG, INFORM_FOR_LECTURE, BORDER_LONG);
+        System.out.print(START_INFO);
         Log.info(MAIN_SERVICE, START_INFO);
         putBorder();
         scannerNameModelAndPerson();
@@ -401,7 +400,7 @@ public class MainService {
         scannerPhone();
         System.out.println(ENTER_EMAIL);
         Log.info(MAIN_SERVICE, ENTER_EMAIL);
-        scannerEmail();
+        scannerEmail(teacherRepository.getTeacherList(), studentRepository.getStudentList());
         student = studentService.createStudent(Role.STUDENT, getCheckNumber(), getFirstname(),
                 getLastName(), getPhone(), getEmail());
         studentRepository.getStudentList().add(student);
@@ -431,7 +430,7 @@ public class MainService {
         scannerPhone();
         System.out.println(ENTER_EMAIL);
         Log.info(MAIN_SERVICE, ENTER_EMAIL);
-        scannerEmail();
+        scannerEmail(teacherRepository.getTeacherList(), studentRepository.getStudentList());
         teacher = teacherService.createTeacher(Role.TEACHER, getCheckNumber(), getFirstname(), getLastName(),
                 getPhone(), getEmail());
         teacherRepository.getTeacherList().add(teacher);
@@ -539,8 +538,6 @@ public class MainService {
             System.err.println(e.getMessage());
             Log.warning(MAIN_SERVICE, METHOD_CREAT_LECTURE_DATA + ENTITY_NOT_FOUND_EXCEPTION, e.getMessage());
         } finally {
-            System.out.println(INFORM_FOR_LECTURE);
-            Log.info(MAIN_SERVICE, INFORM_FOR_LECTURE);
             showInformAboutCreation();
             Log.debug(MAIN_SERVICE, METHOD_CREAT_LECTURE_DATA);
         }
@@ -1055,7 +1052,7 @@ public class MainService {
     }
 
 
-    public void scannerEmail() {
+    public void scannerEmail(List<Person> teacherList, List<Person> studentList) {
         isPresent = true;
         String testEmail;
         while (isPresent) {
@@ -1067,10 +1064,16 @@ public class MainService {
                     System.err.println(SOMETHING_WRONG);
                     Log.warning(MAIN_SERVICE, "method \"scannerEmail\"", "IllegalArgumentException");
                 } else {
-                    email = testEmail;
-                    System.out.println(EMAIL_SAVED);
-                    Log.info(MAIN_SERVICE, EMAIL_SAVED);
-                    isPresent = false;
+                    String finalTestEmail = testEmail;
+                    if (teacherList.stream().noneMatch(t -> t.getEmail().equals(finalTestEmail))
+                            && studentList.stream().noneMatch(t -> t.getEmail().equals(finalTestEmail))) {
+                        email = finalTestEmail;
+                        System.out.println(EMAIL_SAVED);
+                        Log.info(MAIN_SERVICE, EMAIL_SAVED);
+                        isPresent = false;
+                    } else {
+                        System.out.println("Duplicate EMAIL address!!! " + TRY_AGAIN);
+                    }
                 }
             } catch (IllegalArgumentException i) {
                 Log.warning(MAIN_SERVICE, METHOD_SCANNER_EMAIL + ILLEGAL_ARGUMENT_EXCEPTION, i.getMessage());
@@ -1341,8 +1344,8 @@ public class MainService {
         Log.info(MAIN_SERVICE, AUTO_COURSE);
         System.out.println(BORDER_VERY_LONG);
         Log.info(MAIN_SERVICE, BORDER_VERY_LONG);
-        System.out.println(ALL_INFO);
-        Log.info(MAIN_SERVICE, ALL_INFO);
+        System.out.println(ALL_INFORM);
+        Log.info(MAIN_SERVICE, ALL_INFORM);
         System.out.println(BORDER_VERY_LONG);
         Log.info(MAIN_SERVICE, BORDER_VERY_LONG);
         Log.debug(MAIN_SERVICE, METHOD_AUTO_OBJECT);
@@ -1941,6 +1944,41 @@ public class MainService {
         }
         scannerNameModelAndPerson();
         Log.debug(MAIN_SERVICE, "method-> \"filterFile\"");
+    }
+
+    public void showSortedLectures() {
+        Lecture firstLecture = lectureRepository.getLectureList().stream()
+                .min(Comparator.comparing(Lecture::getCreationDateFormat)).get();
+        System.out.println("Першою була лекція:\n" + firstLecture);
+        if (additionalMaterialRepository.getListAdditionalMaterialMap().size() != 0) {
+            System.out.println("Лекція з найбільшою кількістю додаткових матеріалів:");
+            lectureRepository.getLectureList().stream()
+                    .filter(l -> l.getLectureId().equals(additionalMaterialRepository.getListAdditionalMaterialMap()
+                            .entrySet().stream()
+                            .max(Comparator.comparing(k -> k.getValue().size()))
+                            .map(Map.Entry::getKey).get())).forEach(System.out::println);
+
+        } else {
+            System.out.println(IS_EMPTY);
+        }
+        scannerNameModelAndPerson();
+        Log.debug(MAIN_SERVICE, "method-> \"showSortedLectures\"");
+    }
+
+    public void showNumberLogInfo() {
+        try (Stream<String> stringStream = Files.lines(Paths.get(pathToFileWithListFull.toUri()))) {
+            List<String> listLogs = stringStream.toList();
+            long numberLogs = listLogs.stream()
+                    .skip(listLogs.size() / 2)
+                    .toList().stream()
+                    .filter(m -> m.contains("level=INFO"))
+                    .count();
+            System.out.printf("Кількість логів \"INFO\" починаючи з середини файлу: \"%d\"\n", numberLogs);
+        } catch (IOException e) {
+            Log.error(MAIN_SERVICE, METHOD_SHOW_NUMBER_LOG_INFO, e.getMessage());
+        }
+        scannerNameModelAndPerson();
+        Log.debug(MAIN_SERVICE, METHOD_SHOW_NUMBER_LOG_INFO);
     }
 }
 
