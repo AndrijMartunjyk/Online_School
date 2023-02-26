@@ -91,7 +91,7 @@ public class AdditionalMaterial implements Comparable<AdditionalMaterial>, Seria
                 ", name='" + name + '\'' +
                 ", lectureId=" + lectureId +
                 ", resource type=" + resourceType +
-                '}';
+                "}\n";
     }
 
     @Override

@@ -15,6 +15,7 @@ import server.Client;
 import server.WatcherForBlackIp;
 
 import java.io.*;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -88,6 +90,16 @@ public class MainService {
             "РЕГІСТР НЕ ВАЖЛИВИЙ !!!"
             """;
     private static final String START_INFO = """
+            Щоб створити об'єкти, введіть:
+            "курс"
+            "лекція"
+            "вчитель"
+            "студент"
+            ===========================================================================
+            Щоб створити домашнє завдання або додаткові матеріали для лекції введіть:
+            "Add homework"
+            "Add additional material"
+            ===============================================================
             Для виводу інфрмації про всі об'єкти одного типу, введіть:
             "Course info"
             "Lecture info"
@@ -106,11 +118,7 @@ public class MainService {
             ==================================================
             Щоб додати студента або вчителя до лекції введіть:
             "Add someone"
-            =======================================================================
-            Щоб створити домашнє завдання або додаткові матеріали для лекції введіть:
-            "Add homework"
-            "Add additional material"
-            =================================
+            ==================================================
             Для сереалізації курсу, введіть:
             "Save"
             Для десереалізації курсу, введіть:
@@ -137,8 +145,17 @@ public class MainService {
             "first lecture"
             Для виводу клькості логів з середини файлу, введіть:
             "show info"
-            ============================================
-            Для завершення рограми введіть "stop"
+            ====================================================
+            Для виводу лекцій згрупованих за вчителем, введіть:
+            "group lectures"
+            Для виводу додаткових матеріалів згрупованих за лекціями, введіть:
+            "group additional materials"
+            Для виводу на екран Map emails, введіть:
+            "show map emails"
+            Для запису у файл відсортовані email студентів, введіть:
+            "show email in file"
+            ===================================================================
+            Для завершення програми введіть "stop"
             """;
 
     public final String AUTO_COURSE = "Створено автоматичний курс з іменем \"Auto course\"\n з ID \"%d\" і з трьома лекціями \"No name\".\n";
@@ -297,6 +314,8 @@ public class MainService {
     public static final String ADDRESS_OF_SAVE_TEACHERS = "directory_for_save_course/teachers.txt";
     public static final String ADDRESS_OF_SAVE_HOMEWORKS = "directory_for_save_course/homeworks.txt";
     public static final String ADDRESS_OF_SAVE_ADD_MATERIALS = "directory_for_save_course/added_material.txt";
+    public static final URI ADDRESS_FILE_EMAILS = Paths.get("directory_with_emails/sorted_emails_of_students.txt").toUri();
+    public static final String GO_TO_FILE = "Перейдіть у файл -> %s\n";
     public static final String BORDER_VERY_LONG = "==========================================================================";
     public static final String ENTER_SORTING_OPTION = """
             Виберіть варіант сортування і введіть ключове слово:
@@ -1979,6 +1998,52 @@ public class MainService {
         }
         scannerNameModelAndPerson();
         Log.debug(MAIN_SERVICE, METHOD_SHOW_NUMBER_LOG_INFO);
+    }
+
+    public void groupLectures() {
+        for (Person t : teacherRepository.getTeacherList()) {
+            lectureRepository.getLectureList().stream().filter(l -> l.getPersonId().equals(t.getPersonId()))
+                    .forEach(System.out::println);
+        }
+        scannerNameModelAndPerson();
+        Log.debug(MAIN_SERVICE, "method-> \"groupLectures\"");
+    }
+
+    public void groupAdditionalMaterials() {
+        additionalMaterialRepository.getListAdditionalMaterialMap().entrySet().forEach(System.out::println);
+        scannerNameModelAndPerson();
+        Log.debug(MAIN_SERVICE, "method-> \" groupAdditionalMaterials\"");
+    }
+
+    public void showMapEmails() {
+        mapEmails(teacherRepository.getTeacherList());
+        mapEmails(studentRepository.getStudentList());
+        scannerNameModelAndPerson();
+        Log.debug(MAIN_SERVICE, "method-> \"showMapEmails\"");
+    }
+
+    private void mapEmails(List<Person> personList) {
+        Map<String, String> emails = personList.stream()
+                .collect(Collectors.toMap(Person::getEmail, (n -> n.getFirstPersonName() + " " + n.getLastPersonName())));
+        emails.entrySet().forEach(System.out::println);
+        Log.debug(MAIN_SERVICE, "method-> \"mapEmails\"");
+    }
+
+    public void showEmailInFile() {
+        try (FileWriter fileWriter = new FileWriter("directory_with_emails/sorted_emails_of_students.txt")) {
+            List<String> emails = studentRepository.getStudentList().stream()
+//                    sorting by alphabet by first letter email address
+                    .sorted(Comparator.comparing(e -> e.getEmail().charAt(0)))
+                    .map(Person::getEmail).toList();
+            fileWriter.write(emails.toString());
+            System.out.printf(GO_TO_FILE, ADDRESS_FILE_EMAILS);
+            Log.info(MAIN_SERVICE, GO_TO_FILE + ADDRESS_FILE_EMAILS);
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+            Log.error(MAIN_SERVICE, "IOException", ex.getMessage());
+        }
+        scannerNameModelAndPerson();
+        Log.debug(MAIN_SERVICE, "method-> \"showEmailInFile\"");
     }
 }
 
