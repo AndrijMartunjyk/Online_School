@@ -94,6 +94,10 @@ public class Main {
                     case "filter" -> mainService.filterFile();
                     case "first lecture" -> mainService.showSortedLectures();
                     case "show info" -> mainService.showNumberLogInfo();
+                    case "group lectures" -> mainService.groupLectures();
+                    case "group additional materials" -> mainService.groupAdditionalMaterials();
+                    case "show map emails" -> mainService.showMapEmails();
+                    case "show email in file" -> mainService.showEmailInFile();
                     case "stop" -> isPresent = false;
                     default -> mainService.creatDefault();
                 }
