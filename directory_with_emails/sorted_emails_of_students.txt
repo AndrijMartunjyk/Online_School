@@ -1,1 +1,1 @@
-[anick@mail.com, cnick@mail.com, gnick@mail.com, lnick@mail.com, nnick@mail.com]
+[]

@@ -47,7 +47,6 @@ public class AdditionalMaterialRepository {
                     }
                 }
             }
-
         }
         Log.debug(AdditionalMaterialRepository.class.getName(), "method-> \"creatAdditionalMaterialList\"");
         return additionalMaterials;
