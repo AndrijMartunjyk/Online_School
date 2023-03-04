@@ -14,7 +14,7 @@ public class WatchDirectory implements Runnable {
         Log.debug(WatchDirectory.class.getName(), "method-> \"WatchDirectory\"");
     }
 
-    private void creatWatcher() throws IOException {
+    public void creatWatcher() throws IOException {
         WatchService watchService = FileSystems.getDefault().newWatchService();
         path.register(watchService, ENTRY_MODIFY);
         while (true) {
@@ -26,9 +26,7 @@ public class WatchDirectory implements Runnable {
                         writerLogs.write(Log.getLogArray());
                         return;
                     } else {
-                        String massage = "Unsupported event kind";
-                        System.out.println(massage);
-                        Log.info(WatchDirectory.class.getName(), massage);
+                        Log.info(WatchDirectory.class.getName(), "Unsupported event kind");
                     }
                 }
             } catch (Throwable c) {
@@ -54,7 +52,6 @@ public class WatchDirectory implements Runnable {
         try {
             creatWatcher();
         } catch (IOException e) {
-            System.err.println(e.getMessage());
             Log.error(WatchDirectory.class.getName(), "method->\"getReadAndWrite\"", e.fillInStackTrace().getMessage());
         }
         Log.debug(WatchDirectory.class.getName(), "method-> \"run\"");
