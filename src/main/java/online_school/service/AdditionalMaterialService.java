@@ -16,7 +16,7 @@ public class AdditionalMaterialService {
     public void showInformAdditionalMaterial(Long lectureId, Map<Long, List<AdditionalMaterial>> resourceListMap) {
         String stacktrace = "List of the additional material is empty!!!";
         boolean isPresent = true;
-        if (resourceListMap.get(lectureId) != null && (!resourceListMap.get(lectureId).isEmpty())) {
+        if (resourceListMap != null && resourceListMap.get(lectureId) != null && (!resourceListMap.get(lectureId).isEmpty())) {
             for (AdditionalMaterial material : resourceListMap.get(lectureId)) {
                 if (material.getLectureId().equals(lectureId)) {
                     System.out.println(material);

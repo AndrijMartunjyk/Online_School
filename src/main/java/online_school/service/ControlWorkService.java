@@ -5,6 +5,7 @@ import online_school.domain.model.Student;
 import online_school.log.Log;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ControlWorkService {
     public Student[] createStudentsArray() {
@@ -21,16 +22,19 @@ public class ControlWorkService {
                 new Student(Role.STUDENT, 1L, "Юлія", "Тимошенко", "«+38(044)555-55-55»", "«qnick@mail.com»")};
     }
 
-    public void creatTaskForStudent(Student[] students) {
-        for (int i = 0; i < students.length; i++) {
-            byte result = (byte) (1 + Math.random() * 10);
-            for (Student student : students) {
-                if (student.getTaskNumber() == 0 && student.getTaskNumber() != result) {
-                    student.setTaskNumber(result);
-                    break;
-                } else if (student.getTaskNumber() == result) {
-                    i--;
-                    break;
+    public void creatNumberTaskForStudent(Student[] students) {
+        Optional<Student[]> studentsOptional = Optional.ofNullable(students);
+        if (studentsOptional.isPresent()) {
+            for (int i = 0; i < studentsOptional.get().length; i++) {
+                byte result = (byte) (1 + Math.random() * 10);
+                for (Student student : studentsOptional.get()) {
+                    if (student.getTaskNumber() == 0 && student.getTaskNumber() != result) {
+                        student.setTaskNumber(result);
+                        break;
+                    } else if (student.getTaskNumber() == result) {
+                        i--;
+                        break;
+                    }
                 }
             }
         }
@@ -38,33 +42,38 @@ public class ControlWorkService {
     }
 
     public void startControlWork(List<Student> listStudents, Student[] studentsArray) throws InterruptedException {
-        Thread thread;
-        for (int i = 0; i < studentsArray.length; i++) {
-            thread = new Thread(listStudents.get(i));
-            thread.start();
-        }
-        Thread.sleep(1000);
-        sortedStudents(listStudents);
-        for (byte i = 12; i > 0; i--) {
+        Optional<Student[]> optionalStudents = Optional.ofNullable(studentsArray);
+        Optional<List<Student>> optionalStudentList = Optional.ofNullable(listStudents);
+        if (optionalStudents.isPresent() && optionalStudentList.isPresent()) {
+            Thread thread;
+            for (int i = 0; i < optionalStudents.get().length; i++) {
+                thread = new Thread(optionalStudentList.get().get(i));
+                thread.start();
+            }
             Thread.sleep(1000);
-            System.out.println(i);
-            Log.info(ControlWorkService.class.getName(), String.valueOf(i));
-        }
-        for (int i = 0; i < listStudents.size(); i++) {
-            if (listStudents.get(i).getTime() <= 12) {
-                listStudents.get(i).setStudentNumber(i + 1);
-                System.out.printf("Студент: %d %s %s // час -> %d сек.\n", listStudents.get(i).getStudentNumber(),
-                        listStudents.get(i).getFirstPersonName(), listStudents.get(i).getLastPersonName(), listStudents.get(i).getTime());
-                Log.info(ControlWorkService.class.getName(), "Студент: " + listStudents.get(i).getStudentNumber() + " "
-                        + listStudents.get(i).getFirstPersonName() + listStudents.get(i).getLastPersonName()
-                        + " // час -> " + listStudents.get(i).getTime() + " сек.\n");
-            } else {
-                System.out.printf("Студент: %s %s // НЕ ВСТИГ(ЛА)!!! час -> %d сек.\n",
-                        listStudents.get(i).getFirstPersonName(), listStudents.get(i).getLastPersonName(), listStudents.get(i).getTime());
-                Log.info(ControlWorkService.class.getName(), "Студент: " + listStudents.get(i).getFirstPersonName()
-                        + listStudents.get(i).getLastPersonName() + " // НЕ ВСТИГ(ЛА)!!! час -> " + listStudents.get(i).getTime() + " сек.\n");
+            sortedStudents(optionalStudentList.get());
+            for (byte i = 12; i > 0; i--) {
+                Thread.sleep(1000);
+                System.out.println(i);
+                Log.info(ControlWorkService.class.getName(), String.valueOf(i));
+            }
+            for (int i = 0; i < optionalStudentList.get().size(); i++) {
+                if (optionalStudentList.get().get(i).getTime() <= 12) {
+                    optionalStudentList.get().get(i).setStudentNumber(i + 1);
+                    System.out.printf("Студент: %d %s %s // час -> %d сек.\n", optionalStudentList.get().get(i).getStudentNumber(),
+                            optionalStudentList.get().get(i).getFirstPersonName(), optionalStudentList.get().get(i).getLastPersonName(), optionalStudentList.get().get(i).getTime());
+                    Log.info(ControlWorkService.class.getName(), "Студент: " + optionalStudentList.get().get(i).getStudentNumber() + " "
+                            + optionalStudentList.get().get(i).getFirstPersonName() + optionalStudentList.get().get(i).getLastPersonName()
+                            + " // час -> " + optionalStudentList.get().get(i).getTime() + " сек.\n");
+                } else {
+                    System.out.printf("Студент: %s %s // НЕ ВСТИГ(ЛА)!!! час -> %d сек.\n",
+                            optionalStudentList.get().get(i).getFirstPersonName(), optionalStudentList.get().get(i).getLastPersonName(), optionalStudentList.get().get(i).getTime());
+                    Log.info(ControlWorkService.class.getName(), "Студент: " + optionalStudentList.get().get(i).getFirstPersonName()
+                            + optionalStudentList.get().get(i).getLastPersonName() + " // НЕ ВСТИГ(ЛА)!!! час -> " + optionalStudentList.get().get(i).getTime() + " сек.\n");
+                }
             }
         }
+
         Log.debug(ControlWorkService.class.getName(), "method-> \"startControlWork\"");
     }
 

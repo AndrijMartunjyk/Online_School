@@ -35,7 +35,7 @@ public class MainService {
     private static final WatcherForBlackIp watcherForBlackIp = new WatcherForBlackIp();
     private static final CourseRepository courseRepository = new CourseRepository();
     private static final CourseService courseService = new CourseService();
-    private static final LectureRepository lectureRepository = new LectureRepository();
+    public LectureRepository lectureRepository = new LectureRepository();
     private static final LectureService lectureService = new LectureService();
     private static final StudentRepository studentRepository = new StudentRepository();
     private static final StudentService studentService = new StudentService();
@@ -58,7 +58,7 @@ public class MainService {
     private static final List<Student> listOfStudentsForThread = new ArrayList<>();
 
 
-    private Scanner scanner;
+    public Scanner scanner;
     private Long number;
     private String name;
     private String letter;
@@ -289,7 +289,7 @@ public class MainService {
     public static final String NAME_FOR_ADDITIONAL_MATERIALS = "Введіть назву для об'єкта додаткові матеріали:";
     public static final String NAME_SAVED = "Назву збережено!!!";
     public static final String NUMBER_SAVED = "Номер телефону збережено!!!";
-    public static final String EMAIL_SAVED = "Пошту збережено збережено!!!";
+    public static final String EMAIL_SAVED = "Пошту збережено !!!";
     public static final String ILLEGAL_ARGUMENT_EXCEPTION = " IllegalArgumentException.";
     public static final String INFORM_ABOUT_COURSE_SORTED = "Інформацію про всі курси відсортовано по назві:";
     public static final String INFORM_ABOUT_TEACHER_SORTED = "Інформацію про всіх вчителів відсортовано по прізвищу:";
@@ -948,22 +948,25 @@ public class MainService {
     }
 
     public void checkId(String outName) {
-        long test;
-        isPresent = true;
-        while (isPresent) {
-            System.out.printf(ENTER_NUMBER, outName);
-            Log.info(MAIN_SERVICE, ENTER_NUMBER);
-            if (scanner.hasNextLong()) {
-                test = scanner.nextLong();
-                scanner.nextLine();
-                if (test > 0 && test < Long.MAX_VALUE) {
-                    number = test;
-                    isPresent = false;
+        Optional<String> outNameOptional = Optional.ofNullable(outName);
+        if (outNameOptional.isPresent()) {
+            long test;
+            isPresent = true;
+            while (isPresent) {
+                System.out.printf(ENTER_NUMBER, outNameOptional.get());
+                Log.info(MAIN_SERVICE, ENTER_NUMBER);
+                if (scanner.hasNextLong()) {
+                    test = scanner.nextLong();
+                    scanner.nextLine();
+                    if (test > 0 && test < Long.MAX_VALUE) {
+                        number = test;
+                        isPresent = false;
+                    }
+                } else {
+                    System.out.println(WRONG_ENTER1);
+                    Log.info(MAIN_SERVICE, WRONG_ENTER1);
+                    scannerNameModelAndPerson();
                 }
-            } else {
-                System.out.println(WRONG_ENTER1);
-                Log.info(MAIN_SERVICE, WRONG_ENTER1);
-                scannerNameModelAndPerson();
             }
         }
         Log.debug(MAIN_SERVICE, METHOD_CHECK_NUMBER);
@@ -1072,33 +1075,37 @@ public class MainService {
 
 
     public void scannerEmail(List<Person> teacherList, List<Person> studentList) {
-        isPresent = true;
-        String testEmail;
-        while (isPresent) {
-            System.out.println(PATTERN_OF_EMAIL);
-            Log.info(MAIN_SERVICE, PATTERN_OF_EMAIL);
-            testEmail = scanner.nextLine();
-            try {
-                if (!(makeValidate(testEmail, emailPattern))) {
-                    System.err.println(SOMETHING_WRONG);
-                    Log.warning(MAIN_SERVICE, "method \"scannerEmail\"", "IllegalArgumentException");
-                } else {
-                    String finalTestEmail = testEmail;
-                    if (teacherList.stream().noneMatch(t -> t.getEmail().equals(finalTestEmail))
-                            && studentList.stream().noneMatch(t -> t.getEmail().equals(finalTestEmail))) {
-                        email = finalTestEmail;
-                        System.out.println(EMAIL_SAVED);
-                        Log.info(MAIN_SERVICE, EMAIL_SAVED);
-                        isPresent = false;
+        Optional<List<Person>> teacherListOptional = Optional.ofNullable(teacherList);
+        Optional<List<Person>> studentListOptional = Optional.ofNullable(studentList);
+        if (teacherListOptional.isPresent() && studentListOptional.isPresent()) {
+            isPresent = true;
+            String testEmail;
+            while (isPresent) {
+                System.out.println(PATTERN_OF_EMAIL);
+                Log.info(MAIN_SERVICE, PATTERN_OF_EMAIL);
+                testEmail = scanner.nextLine();
+                try {
+                    if (!(makeValidate(testEmail, emailPattern))) {
+                        System.err.println(SOMETHING_WRONG);
+                        Log.warning(MAIN_SERVICE, "method \"scannerEmail\"", "IllegalArgumentException");
                     } else {
-                        System.out.println("Duplicate EMAIL address!!! " + TRY_AGAIN);
+                        String finalTestEmail = testEmail;
+                        if (teacherListOptional.get().stream().noneMatch(t -> t.getEmail().equals(finalTestEmail))
+                                && studentListOptional.get().stream().noneMatch(t -> t.getEmail().equals(finalTestEmail))) {
+                            email = finalTestEmail;
+                            System.out.println(EMAIL_SAVED);
+                            Log.info(MAIN_SERVICE, EMAIL_SAVED);
+                            isPresent = false;
+                        } else {
+                            System.out.println("Duplicate EMAIL address!!! " + TRY_AGAIN);
+                        }
                     }
+                } catch (IllegalArgumentException i) {
+                    Log.warning(MAIN_SERVICE, METHOD_SCANNER_EMAIL + ILLEGAL_ARGUMENT_EXCEPTION, i.getMessage());
                 }
-            } catch (IllegalArgumentException i) {
-                Log.warning(MAIN_SERVICE, METHOD_SCANNER_EMAIL + ILLEGAL_ARGUMENT_EXCEPTION, i.getMessage());
             }
+            Log.debug(MAIN_SERVICE, METHOD_SCANNER_EMAIL);
         }
-        Log.debug(MAIN_SERVICE, METHOD_SCANNER_EMAIL);
     }
 
     private void scannerEnglishLetter() {
@@ -1155,7 +1162,10 @@ public class MainService {
                 case "url" -> resourceType = Resource.URL;
                 case "video" -> resourceType = Resource.VIDEO;
                 case "book" -> resourceType = Resource.BOOk;
-                default -> throw new IllegalArgumentException(SYMBOL_IS_INCORRECT);
+                default -> {
+                    Log.warning(MAIN_SERVICE, "method getResource", "IllegalArgumentException");
+                    throw new IllegalArgumentException(SYMBOL_IS_INCORRECT);
+                }
             }
         } else {
             System.out.println(ENTER_LETTER);
@@ -1371,13 +1381,14 @@ public class MainService {
     }
 
     public boolean foundLecture(Long lectureId) {
+        isPresent = false;
         Log.debug(MAIN_SERVICE, METHOD_FOUND_LECTURE);
         for (Lecture lecture : lectureRepository.getLectureList()) {
             if (lecture.getLectureId().equals(lectureId)) {
-                return true;
+                isPresent = true;
             }
         }
-        return false;
+        return isPresent;
     }
 
     public void sortedHomework() {
@@ -1578,7 +1589,7 @@ public class MainService {
 
     private void takeRandomTask() {
         studentsArray = controlWork.createStudentsArray();
-        controlWork.creatTaskForStudent(studentsArray);
+        controlWork.creatNumberTaskForStudent(studentsArray);
         for (int i = 0; i < studentsArray.length; i++) {
             studentsArray[i].setStudentNumber(i + 1);
             listOfStudentsForThread.add(studentsArray[i]);
@@ -1728,30 +1739,33 @@ public class MainService {
         Log.debug(MAIN_SERVICE, "method-> \"creatPrintSavedObjects\"");
     }
 
-    private LocalDateTime creatLectureDate(Lecture lecture) {
+    public LocalDateTime creatLectureDate(Lecture lecture) {
+        Optional<Lecture> lectureOptional = Optional.ofNullable(lecture);
         LocalDateTime lectureDate = null;
-        System.out.println(DATE_LECTURE);
-        Log.info(MAIN_SERVICE, DATE_LECTURE);
-        byte month = checkNumberMonth();
-        byte day = checkNumberDay();
-        byte hour = checkNumberHour();
-        byte minute = checkNumberMinute();
-        try {
-            lectureDate = LocalDateTime.of(2023, month, day, hour, minute, 0);
-        } catch (DateTimeException d) {
-            System.err.println(NO_DATE);
-            Log.warning(MAIN_SERVICE, "DateTimeException", NO_DATE);
-        }
-        if (lectureDate != null && lectureDate.isBefore(lecture.getCreationDate())) {
-            System.out.println(DATE_PASSED);
-            Log.info(MAIN_SERVICE, DATE_PASSED);
-            lectureDate = null;
+        if (lectureOptional.isPresent()) {
+            System.out.println(DATE_LECTURE);
+            Log.info(MAIN_SERVICE, DATE_LECTURE);
+            byte month = checkNumberMonth();
+            byte day = checkNumberDay();
+            byte hour = checkNumberHour();
+            byte minute = checkNumberMinute();
+            try {
+                lectureDate = LocalDateTime.of(2023, month, day, hour, minute, 0);
+            } catch (DateTimeException d) {
+                System.err.println(NO_DATE);
+                Log.warning(MAIN_SERVICE, "DateTimeException", NO_DATE);
+            }
+            if (lectureDate != null && lectureDate.isBefore(lectureOptional.get().getCreationDate())) {
+                System.out.println(DATE_PASSED);
+                Log.info(MAIN_SERVICE, DATE_PASSED);
+                lectureDate = null;
+            }
         }
         Log.debug(MAIN_SERVICE, "method-> \"creatLectureDate\"");
         return lectureDate;
     }
 
-    private byte checkNumberMonth() {
+    public byte checkNumberMonth() {
         byte month = 0;
         byte test;
         isPresent = true;
@@ -1775,7 +1789,7 @@ public class MainService {
         return month;
     }
 
-    private byte checkNumberDay() {
+    public byte checkNumberDay() {
         byte day = 0;
         byte test;
         isPresent = true;
@@ -1799,7 +1813,7 @@ public class MainService {
         return day;
     }
 
-    private byte checkNumberHour() {
+    public byte checkNumberHour() {
         byte hour = 0;
         byte test;
         isPresent = true;
@@ -1823,7 +1837,7 @@ public class MainService {
         return hour;
     }
 
-    private byte checkNumberMinute() {
+    public byte checkNumberMinute() {
         byte minute = 0;
         byte test;
         isPresent = true;
@@ -1847,7 +1861,7 @@ public class MainService {
         return minute;
     }
 
-    private String creatDeadLineForHomework(Long lectureId) {
+    public String creatDeadLineForHomework(Long lectureId) {
         LocalDateTime lectureDate = null;
         String deadLineFormat = null;
         for (Lecture l : lectureRepository.getLectureList()) {
@@ -1914,7 +1928,7 @@ public class MainService {
         Log.debug(MAIN_SERVICE, "method-> \"betweenDates\"");
     }
 
-    private LocalDateTime localDateTimeAfter() {
+    public LocalDateTime localDateTimeAfter() {
         Log.debug(MAIN_SERVICE, "method-> \"localDateTimeAfter\"");
         System.out.println("Введіть до якої дати вивести лекції.");
         byte month = checkNumberMonth();
@@ -1924,7 +1938,7 @@ public class MainService {
         return LocalDateTime.of(2023, month, day, hour, minute, 0);
     }
 
-    private LocalDateTime localDateTimeBefore() {
+    public LocalDateTime localDateTimeBefore() {
         Log.debug(MAIN_SERVICE, "method-> \"localDateTimeBefore\"");
         System.out.println("Введіть з якої дати вивести лекції.");
         byte month = checkNumberMonth();

@@ -15,7 +15,7 @@ public class HomeworkService {
     public void showInformHomework(Long lectureId, Map<Long, List<Homework>> homeworkMap) {
         String stacktrace = "List of the homework is empty!!!";
         boolean isPresent = true;
-        if (homeworkMap.get(lectureId) != null && (!homeworkMap.get(lectureId).isEmpty())) {
+        if (homeworkMap != null && homeworkMap.get(lectureId) != null && (!homeworkMap.get(lectureId).isEmpty())) {
             for (Homework homework : homeworkMap.get(lectureId)) {
                 System.out.println(homework);
                 Log.info(HomeworkService.class.getName(), String.valueOf(homework));
