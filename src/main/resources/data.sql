@@ -30,3 +30,8 @@ VALUES ('url address');
 
 INSERT INTO online_school.home_work(task)
 VALUES ('study,study,study and study again !!!');
+
+SELECT *
+FROM student_courses st_co
+         INNER JOIN courses co ON co.courseId = st_co.courseId
+         INNER JOIN students st ON st_co.studentId = st.studentId;
