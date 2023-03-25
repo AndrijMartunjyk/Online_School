@@ -2,60 +2,66 @@ create database online_school;
 USE online_school;
 create table course
 (
-    courseId   INT AUTO_INCREMENT,
-    courseName VARCHAR(20),
-    PRIMARY KEY (`courseId`)
+    course_id   INT AUTO_INCREMENT,
+    course_name VARCHAR(20),
+    PRIMARY KEY (course_id)
 );
 create table student
 (
-    studentId   INT AUTO_INCREMENT,
-    firstName   VARCHAR(20),
-    lastName    VARCHAR(40),
-    email       VARCHAR(40) UNIQUE,
-    phoneNumber VARCHAR(14),
-    PRIMARY KEY (`studentId`)
+    student_id   INT AUTO_INCREMENT,
+    first_name   VARCHAR(20),
+    last_name    VARCHAR(40),
+    email        VARCHAR(40) UNIQUE,
+    phone_number VARCHAR(14),
+    `role`       ENUM ('STUDENT'),
+    lecture_id   LONG,
+    course_id    LONG,
+    PRIMARY KEY (`student_id`)
 );
 
 create table student_courses
 (
-    courseId  INT NOT NULL,
-    studentId INT NOT NULL,
-    FOREIGN KEY (studentId) REFERENCES students (studentId),
-    FOREIGN KEY (courseId) REFERENCES courses (courseId),
-    UNIQUE (courseId, studentId)
+    student_id INT NOT NULL,
+    course_id  INT NOT NULL,
+    FOREIGN KEY (student_id) REFERENCES student (student_id),
+    FOREIGN KEY (course_id) REFERENCES course (course_id),
+    PRIMARY KEY (student_id, course_id)
 );
 create table teacher
 (
-    teacherId   INT AUTO_INCREMENT,
-    firstName   VARCHAR(20),
-    lastName    VARCHAR(40),
-    email       VARCHAR(40) UNIQUE,
-    phoneNumber VARCHAR(14),
-    PRIMARY KEY (`teacherId`)
+    teacher_id   INT AUTO_INCREMENT,
+    first_name   VARCHAR(20),
+    last_name    VARCHAR(40),
+    email        VARCHAR(40) UNIQUE,
+    phone_number VARCHAR(14),
+    `role`       ENUM ('TEACHER'),
+    lecture_id   LONG,
+    PRIMARY KEY (`teacher_id`)
 );
 create table lecture
 (
-    lectureId     INT AUTO_INCREMENT,
-    lectureName   VARCHAR(20),
+    lecture_id    INT AUTO_INCREMENT,
+    lecture_name  VARCHAR(20),
     `description` VARCHAR(40),
-    personId      LONG,
-    courseId      LONG,
-    creationDate  DATETIME,
-    lectureDate   DATETIME,
-    PRIMARY KEY (`lectureId`)
+    teacher_id    LONG,
+    course_id     LONG,
+    creation_date DATETIME,
+    lecture_date  DATETIME,
+    PRIMARY KEY (`lecture_id`)
 );
-create table additionalMaterial
+create table additional_Material
 (
-    resourceId INT AUTO_INCREMENT,
-    `name`     VARCHAR(50),
-    lectureId  LONG,
-    PRIMARY KEY (`resourceId`)
+    resource_id   INT AUTO_INCREMENT,
+    `name`        VARCHAR(50),
+    lecture_id    LONG,
+    resource_type ENUM ('URL','BOOk','VIDEO'),
+    PRIMARY KEY (`resource_id`)
 );
 create table home_work
 (
-    homeworkId INT AUTO_INCREMENT,
-    lectureId  LONG,
-    task       VARCHAR(400),
-    PRIMARY KEY (`homeworkId`)
+    homework_id INT AUTO_INCREMENT,
+    lecture_id  LONG,
+    task        VARCHAR(400),
+    PRIMARY KEY (`homework_id`)
 );
 
