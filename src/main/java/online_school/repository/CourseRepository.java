@@ -3,7 +3,6 @@ package online_school.repository;
 import online_school.domain.model.Course;
 import online_school.log.Log;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,16 +12,6 @@ public class CourseRepository implements InterfaceRepository {
     public List<Course> getCourseList() {
         Log.debug(CourseRepository.class.getName(), "method->\"getCourseList\"");
         return courseList;
-    }
-
-    public long getCourseId(Course c) {
-        for (Course course : courseList) {
-            if (course.equals(c)) {
-                return course.getCourseId();
-            }
-        }
-        Log.debug(CourseRepository.class.getName(), "method->\"getCourseId\"");
-        return 0;
     }
 
     public Course objectOfCourse(Long idOfCourse) {
@@ -50,9 +39,5 @@ public class CourseRepository implements InterfaceRepository {
         return result;
     }
 }
-
-
-
-
 
 
