@@ -43,7 +43,6 @@ public class MainService {
     private static final TeacherService teacherService = new TeacherService();
     private static final HomeworkService homeworkService = new HomeworkService();
     private static final AdditionalMaterialService additionalMaterialService = new AdditionalMaterialService();
-    private static final TreeSet<Course> courseTreeSet = new TreeSet<>();
     private static final TreeSet<Lecture> lectureTreeSet = new TreeSet<>();
     private static final TreeSet<Person> teacherTreeSet = new TreeSet<>();
     private static final TreeSet<Person> studentTreeSet = new TreeSet<>();
@@ -231,7 +230,6 @@ public class MainService {
     public static final String METHOD_ADDITIONAL_MATERIAL_SORT = "method-> \"additionalMaterialSort\"";
     public static final String METHOD_ADDITIONAL_MATERIAL_SORT_DEFAULT = "method-> \"additionalMaterialSortDefault\"";
     public static final String METHOD_PRINT_ALL_LECTURE = "method-> \"printAllLecture\"";
-    public static final String METHOD_PRINT_ALL_COURSE = "method-> \"printAllCourse\"";
     public static final String METHOD_PRINT_ALL_TEACHER = "method-> \"printAllTeacher\"";
     public static final String METHOD_PRINT_ALL_STUDENT = "method-> \"printAllStudent\"";
     public static final String METHOD_PRINT_ALL_HOMEWORK = "method-> \"printAllHomework\"";
@@ -291,7 +289,6 @@ public class MainService {
     public static final String NUMBER_SAVED = "Номер телефону збережено!!!";
     public static final String EMAIL_SAVED = "Пошту збережено !!!";
     public static final String ILLEGAL_ARGUMENT_EXCEPTION = " IllegalArgumentException.";
-    public static final String INFORM_ABOUT_COURSE_SORTED = "Інформацію про всі курси відсортовано по назві:";
     public static final String INFORM_ABOUT_TEACHER_SORTED = "Інформацію про всіх вчителів відсортовано по прізвищу:";
     public static final String INFORM_ABOUT_LECTURE_SORTED = "Інформацію про всі лекції відсортовано по назві:";
     public static final String INFORM_ABOUT_STUDENT_SORTED = "Інформацію про всіх студентів відсортовано по прізвищу:";
@@ -338,7 +335,7 @@ public class MainService {
     public void showFrontInform() {
         System.out.print(CASE_NOT_IMPORTANT);
         Log.info(MAIN_SERVICE, CASE_NOT_IMPORTANT);
-        autoCourse(courseRepository, courseService, lectureRepository, lectureService);
+        autoCourse(courseService, lectureRepository, lectureService);
         System.out.print(START_INFO);
         Log.info(MAIN_SERVICE, START_INFO);
         putBorder();
@@ -347,16 +344,16 @@ public class MainService {
     }
 
     public void creatCourse() {
-        Course course;
+        int courseId;
         System.out.println(YOU_CREATING_AN_OBJECT + COURSE);
         Log.info(MAIN_SERVICE, YOU_CREATING_AN_OBJECT + COURSE);
         checkId(OF_COURSE);
         System.out.println(ENTER_NAME_OF_COURSE);
         Log.info(MAIN_SERVICE, ENTER_NAME_OF_COURSE);
         scannerName();
-        course = courseService.createCourse(getCheckNumber(), getName());
-        courseRepository.getCourseList().add(course);
-        System.out.printf(YOU_CREAT_COURSE, getName(), courseRepository.getCourseId(course));
+        courseService.createCourse(getCheckNumber(), getName());
+        courseId = courseService.getCourseId();
+        System.out.printf(YOU_CREAT_COURSE, getName(), courseId);
         System.out.println(NOW_CREAT_OBJECT);
         Log.info(MAIN_SERVICE, YOU_CREAT_COURSE + NOW_CREAT_OBJECT);
         putBorder();
@@ -522,7 +519,10 @@ public class MainService {
     public void creatCourseData() {
         System.out.println(SELECT_A_COURSE);
         Log.info(MAIN_SERVICE, SELECT_A_COURSE);
-        printAllCourse();
+
+        courseService.showAllCourses();
+
+//        printAllCourse();
         try {
             creatCourseDataLogic();
         } catch (NullPointerException n) {
@@ -563,28 +563,9 @@ public class MainService {
     }
 
     public void creatCourseInfo() {
-        courseTreeSet.clear();
-        try {
-            if (!(courseRepository.getCourseList().isEmpty())) {
-                System.out.println(INFORM_ABOUT_COURSE_SORTED);
-                Log.info(MAIN_SERVICE, INFORM_ABOUT_COURSE_SORTED);
-                putBorder();
-                courseTreeSet.addAll(courseRepository.getCourseList());
-                for (Course course : courseTreeSet) {
-                    System.out.println(course);
-                    Log.info(MAIN_SERVICE, String.valueOf(course));
-                }
-            } else {
-                System.out.println(IS_EMPTY);
-                Log.info(MAIN_SERVICE, IS_EMPTY);
-            }
-        } catch (NullPointerException n) {
-            n.printStackTrace();
-            Log.error(MAIN_SERVICE, METHOD_CREAT_COURSE_INFO + NULL_POINTER_EXCEPTION, Arrays.toString(n.getStackTrace()));
-        } finally {
-            putBorder();
-            showInformAboutCreation();
-        }
+        courseService.showAllCourses();
+        putBorder();
+        showInformAboutCreation();
         Log.debug(MAIN_SERVICE, METHOD_CREAT_COURSE_INFO);
     }
 
@@ -718,22 +699,10 @@ public class MainService {
     public void creatDeleteCourse() {
         System.out.println(COURSE_FOR_DELETE);
         Log.info(MAIN_SERVICE, COURSE_FOR_DELETE);
-        printAllCourse();
+        courseService.showAllCourses();
         checkId(OF_COURSE);
         long courseId = getCheckNumber();
-        isPresent = true;
-        for (int i = 0; i < courseRepository.getCourseList().size(); i++) {
-            if (courseRepository.getCourseList().get(i).getCourseId().equals(courseId)) {
-                System.out.printf(OBJECT_IS_DELETE, courseRepository.getCourseList().remove(i));
-                Log.info(MAIN_SERVICE, OBJECT_IS_DELETE);
-                isPresent = false;
-                break;
-            }
-        }
-        if (isPresent) {
-            System.err.println(ID_IS_NOT_FOUND);
-            Log.info(MAIN_SERVICE, ID_IS_NOT_FOUND);
-        }
+        courseService.crateCourseDelete((int) courseId);
         showInformAboutCreation();
         Log.debug(MAIN_SERVICE, METHOD_CREAT_DELETE_COURSE);
     }
@@ -1252,16 +1221,6 @@ public class MainService {
         Log.debug(MAIN_SERVICE, METHOD_PRINT_ALL_LECTURE);
     }
 
-    public void printAllCourse() {
-        putBorder();
-        for (Course c : courseRepository.getCourseList()) {
-            System.out.println(c);
-            Log.info(MAIN_SERVICE, String.valueOf(c));
-        }
-        putBorder();
-        Log.debug(MAIN_SERVICE, METHOD_PRINT_ALL_COURSE);
-    }
-
     public void printAllTeacher() {
         putBorder();
         for (Person t : teacherRepository.getTeacherList()) {
@@ -1342,7 +1301,7 @@ public class MainService {
     public void creatCourseDataLogic() {
         checkId(OF_COURSE);
         courseId = getCheckNumber();
-        courseService.showInformCourse(courseId, courseRepository.getCourseList());
+        courseService.showOneCourse((int) courseId);
         lectureService.showLecturesInCourse(courseId, lectureRepository.getLectureList());
         putBorder();
         try {
@@ -1357,19 +1316,17 @@ public class MainService {
         Log.debug(MAIN_SERVICE, METHOD_CREAT_COURSE_DATA_LOGIC);
     }
 
-    public void autoCourse(CourseRepository courseRepository, CourseService courseService, LectureRepository lectureRepository,
+    public void autoCourse(CourseService courseService, LectureRepository lectureRepository,
                            LectureService lectureService) {
-        int indexCourse = 0;
-        courseRepository.getCourseList().add(courseService.createCourse(1L, "Auto course"));
-        courseId = courseRepository.getCourseList().get(indexCourse).getCourseId();
-        courseName = courseRepository.getCourseList().get(indexCourse).getCourseName();
+        courseService.createCourse(1L, "Auto course");
+        courseId = courseService.getCourseId();
+        courseName = courseService.getCourseName();
         for (long i = 0; i < 3; i++) {
             lectureRepository.getLectureList().add(lectureService.createLecture(i, "No name", "No description", courseId, courseName));
         }
         System.out.println(BORDER_VERY_LONG);
         Log.info(MAIN_SERVICE, BORDER_VERY_LONG);
-        System.out.printf(AUTO_COURSE,
-                courseRepository.getCourseList().get(indexCourse).getCourseId());
+        System.out.printf(AUTO_COURSE, courseId);
         Log.info(MAIN_SERVICE, AUTO_COURSE);
         System.out.println(BORDER_VERY_LONG);
         Log.info(MAIN_SERVICE, BORDER_VERY_LONG);
@@ -1484,7 +1441,6 @@ public class MainService {
         lastName = checkFirstAndLastName();
         Log.debug(MAIN_SERVICE, "method-> \"scannerLastName\"");
     }
-
 
     public Long getCheckNumber() {
         Optional<Long> numberOption = Optional.ofNullable(number);
