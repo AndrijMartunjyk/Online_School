@@ -519,10 +519,7 @@ public class MainService {
     public void creatCourseData() {
         System.out.println(SELECT_A_COURSE);
         Log.info(MAIN_SERVICE, SELECT_A_COURSE);
-
         courseService.showAllCourses();
-
-//        printAllCourse();
         try {
             creatCourseDataLogic();
         } catch (NullPointerException n) {
