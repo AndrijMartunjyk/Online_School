@@ -7,24 +7,22 @@ public class CourseService {
     private static final String URL = "jdbc:mysql://localhost/online_school";
     private static final String USER = "root";
     private static final String PASSWORD = "1234";
-    private final String query = "SELECT course_id,course_name FROM course";
-    private int courseId;
+    private final String SQL = "{call table_name('course')}";
+    private long courseId;
     private String courseName;
 
     public void createCourse(Long id, String name) {
+        String query = "INSERT INTO course(course_id, course_name) VALUES(?,?)";
         try (
                 Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-                ResultSet resultSet = statement.executeQuery(query)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
 
-            resultSet.moveToInsertRow();
-            resultSet.updateString("course_name", name);
-            resultSet.updateLong("course_id", id + new Random().nextLong(Integer.MAX_VALUE));
-            resultSet.insertRow();
-            resultSet.refreshRow();
+            courseId = id + new Random().nextLong(Integer.MAX_VALUE);
+            courseName = name;
 
-            courseId = resultSet.getInt("course_id");
-            courseName = resultSet.getString("course_name");
+            statement.setLong(1, courseId);
+            statement.setString(2, courseName);
+            statement.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -33,8 +31,8 @@ public class CourseService {
     public void showAllCourses() {
         try (
                 Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                ResultSet resultSet = statement.executeQuery(query)) {
+                CallableStatement callableStatement = connection.prepareCall(SQL);
+                ResultSet resultSet = callableStatement.executeQuery()) {
             while (resultSet.next()) {
                 int id = resultSet.getInt("course_id");
                 String name = resultSet.getString("course_name");
@@ -48,8 +46,8 @@ public class CourseService {
     public void showOneCourse(int courseId) {
         try (
                 Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                ResultSet resultSet = statement.executeQuery(query)) {
+                CallableStatement callableStatement = connection.prepareCall(SQL);
+                ResultSet resultSet = callableStatement.executeQuery()) {
             int id;
             while (resultSet.next()) {
                 id = resultSet.getInt("course_id");
@@ -64,28 +62,22 @@ public class CourseService {
     }
 
 
-    public void crateCourseDelete(int courseId) {
+    public static void crateCourseDelete(int courseId) {
+        String query = "DELETE FROM course WHERE course_id=?";
         try (
                 Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-                ResultSet resultSet = statement.executeQuery(query)) {
-            int id;
-            while (resultSet.next()) {
-                id = resultSet.getInt("course_id");
-                if (id == courseId) {
-                    resultSet.deleteRow();
-                    System.out.println("Course with Id: " + id + " was deleted !!!");
-                    resultSet.refreshRow();
-                    break;
-                }
-            }
+                PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, courseId);
+            statement.executeUpdate();
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
     public int getCourseId() {
-        return courseId;
+        return (int) courseId;
     }
 
     public String getCourseName() {

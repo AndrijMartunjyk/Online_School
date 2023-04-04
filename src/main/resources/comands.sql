@@ -109,3 +109,13 @@ group by MONTHNAME(lecture.lecture_date);
 # 6 name of data and number
 SELECT (SELECT COUNT(*) FROM additional_material) AS numeric_of_additional_material,
        (SELECT COUNT(*) FROM home_work)           AS numeric_of_home_work;
+
+#=================================================================================
+# 44 homework
+CREATE PROCEDURE table_name(IN table_name VARCHAR(50))
+BEGIN
+    SET @query = CONCAT('SELECT * FROM ', table_name);
+    PREPARE statement_name FROM @query;
+    EXECUTE statement_name;
+    DEALLOCATE PREPARE statement_name;
+END;
