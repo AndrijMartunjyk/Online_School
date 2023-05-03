@@ -16,13 +16,13 @@ VALUES ('Андрій', 'Парубій', 'asd@gmail.com', 0921234567, 'STUDENT'
        ('Степан', 'Бандера', 'lddsde@gmail.com', 0921234567, 'STUDENT', 2, 1),
        ('Степан', 'Бандера', 'lsdeddd@gmail.com', 0921234567, 'STUDENT', 2, 4);
 
-INSERT INTO online_school.student_courses(student_id, course_id)
-VALUES (1, 1),
-       (2, 2),
-       (3, 2),
-       (2, 3),
-       (3, 4),
-       (3, 5);
+# INSERT INTO online_school.student_courses(student_id, course_id)
+# VALUES (1, 1),
+#        (2, 2),
+#        (3, 2),
+#        (2, 3),
+#        (3, 4),
+#        (3, 5);
 
 INSERT INTO online_school.teacher(teacher_id, first_name, last_name, email, phone_number, role, lecture_id, course_id)
 VALUES (1, 'Ольга', 'Кличко', 'asd@gmail.com', 123456789, 'TEACHER', 1, 1),

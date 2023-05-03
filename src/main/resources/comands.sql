@@ -1,10 +1,10 @@
 # MySql 1
 
 # students have courses
-SELECT *
-FROM student_courses st_co
-         INNER JOIN course co ON co.course_id = st_co.course_id
-         INNER JOIN student st ON st_co.student_id = st.student_id;
+# SELECT *
+# FROM student_courses st_co
+#          INNER JOIN course co ON co.course_id = st_co.course_id
+#          INNER JOIN student st ON st_co.student_id = st.student_id;
 
 
 # MySql 2
@@ -51,15 +51,15 @@ WHERE t.last_name BETWEEN 'А%' AND 'Н%'
 ORDER BY t.last_name;
 
 
-# 6 first name and last name of student
-SELECT first_name, last_name, COUNT(*) AS course_count
-FROM student
-         JOIN student_courses ON student.student_id = student_courses.student_id
-GROUP BY last_name, first_name
-HAVING course_count = 1
-    OR course_count = 2
-    OR course_count >= 3
-ORDER BY last_name;
+# # 6 first name and last name of student
+# SELECT first_name, last_name, COUNT(*) AS course_count
+# FROM student
+#          JOIN student_courses ON student.student_id = student_courses.student_id
+# GROUP BY last_name, first_name
+# HAVING course_count = 1
+#     OR course_count = 2
+#     OR course_count >= 3
+# ORDER BY last_name;
 
 
 

@@ -1,12 +1,12 @@
 package online_school.service;
 
+import web.utils.DatabaseConnection;
+
 import java.sql.*;
 import java.util.Random;
 
 public class CourseService {
-    private static final String URL = "jdbc:mysql://localhost/online_school";
-    private static final String USER = "root";
-    private static final String PASSWORD = "1234";
+
     private final String SQL = "{call table_name('course')}";
     private long courseId;
     private String courseName;
@@ -14,7 +14,7 @@ public class CourseService {
     public void createCourse(Long id, String name) {
         String query = "INSERT INTO course(course_id, course_name) VALUES(?,?)";
         try (
-                Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+                Connection connection = DatabaseConnection.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
 
             courseId = id + new Random().nextLong(Integer.MAX_VALUE);
@@ -30,7 +30,7 @@ public class CourseService {
 
     public void showAllCourses() {
         try (
-                Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+                Connection connection = DatabaseConnection.getConnection();
                 CallableStatement callableStatement = connection.prepareCall(SQL);
                 ResultSet resultSet = callableStatement.executeQuery()) {
             while (resultSet.next()) {
@@ -45,7 +45,7 @@ public class CourseService {
 
     public void showOneCourse(int courseId) {
         try (
-                Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+                Connection connection = DatabaseConnection.getConnection();
                 CallableStatement callableStatement = connection.prepareCall(SQL);
                 ResultSet resultSet = callableStatement.executeQuery()) {
             int id;
@@ -65,7 +65,7 @@ public class CourseService {
     public static void crateCourseDelete(int courseId) {
         String query = "DELETE FROM course WHERE course_id=?";
         try (
-                Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+                Connection connection = DatabaseConnection.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, courseId);

@@ -11,12 +11,13 @@ import java.util.Random;
 public class Person extends Model implements Comparable<Person>, Serializable {
     @Serial
     private static final long serialVersionUID = 4L;
-    private final Long personId;
+    private Long personId;
     private Long lectureId;
+    private Long courseId;
     private String lectureName;
-    private final Role role;
-    private final String phone;
-    private final String email;
+    private Role role;
+    private String phone;
+    private String email;
 
     public Person(Role role, Long personId, String firstPersonName, String lastPersonName, String phone, String email) {
         this.personId = personId + new Random().nextLong(Long.MAX_VALUE);
@@ -25,6 +26,21 @@ public class Person extends Model implements Comparable<Person>, Serializable {
         super.setLastPersonName(lastPersonName);
         this.phone = phone;
         this.email = email;
+    }
+
+    public Person(Role role, Long personId, String firstPersonName, String lastPersonName, String phone, String email, Long courseId, Long lectureId) {
+        this.personId = personId;
+        this.role = role;
+        super.setFirstPersonName(firstPersonName);
+        super.setLastPersonName(lastPersonName);
+        this.phone = phone;
+        this.email = email;
+        this.courseId = courseId;
+        this.lectureId = lectureId;
+    }
+
+    public Long getCourseId() {
+        return courseId;
     }
 
     public Long getPersonId() {

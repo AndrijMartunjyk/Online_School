@@ -17,8 +17,7 @@ public class Course extends Model implements Comparable<Course>, Serializable {
 
     public Course(Long courseId, String courseName) {
         this.courseName = courseName;
-        this.courseId = courseId + new Random().nextLong(Long.MAX_VALUE);
-        counter++;
+        this.courseId = courseId;
     }
 
     public String getCourseName() {

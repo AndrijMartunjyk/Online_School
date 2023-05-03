@@ -40,17 +40,17 @@ public class MainServiceTest {
     @Test
     @DisplayName("Method void checkId parameters test")
     void checkIdTest() {
-        doCallRealMethod().when(mainService).checkId(any());
+        doCallRealMethod().when(mainService).checkNumber(any());
 
         when(mainService.scanner.hasNextLong()).thenReturn(false, true);
         when(mainService.scanner.nextLong()).thenReturn(0L, 1L);
         when(mainService.scanner.nextLine()).thenReturn("");
 
-        mainService.checkId("name");
-        mainService.checkId(null);
+        mainService.checkNumber("name");
+        mainService.checkNumber(null);
 
-        verify(mainService).checkId("name");
-        verify(mainService).checkId(null);
+        verify(mainService).checkNumber("name");
+        verify(mainService).checkNumber(null);
     }
 
     @Test
@@ -130,14 +130,13 @@ public class MainServiceTest {
         when(mainService.checkNumberMinute()).thenReturn((byte) 0);
         when(lecture.getCreationDate()).thenReturn(localDateTimePassedFake, localDateTimeNowFake);
 
-        doCallRealMethod().when(mainService).creatLectureDate(any());
+        doCallRealMethod().when(mainService).creatLectureDate();
 
-        Assertions.assertNull(mainService.creatLectureDate(lecture));
-        Assertions.assertEquals(localDateTimeExpected, mainService.creatLectureDate(lecture));
-        Assertions.assertNull(mainService.creatLectureDate(null));
+        Assertions.assertNull(mainService.creatLectureDate());
+        Assertions.assertEquals(localDateTimeExpected, mainService.creatLectureDate());
 
-        verify(mainService, times(2)).creatLectureDate(lecture);
-        verify(mainService).creatLectureDate(null);
+        verify(mainService, times(2)).creatLectureDate();
+        verify(mainService).creatLectureDate();
     }
 
     @Test
