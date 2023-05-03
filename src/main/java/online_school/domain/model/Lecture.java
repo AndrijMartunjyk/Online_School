@@ -20,8 +20,8 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
     private static int counter;
     private Long personId;
     private final Long courseId;
-    private final String nameCourse;
-    private final LocalDateTime creationDate = LocalDateTime.now();
+    private String nameCourse;
+    private LocalDateTime creationDate;
     private LocalDateTime lectureDate;
 
     public Lecture(Long lectureId, String lectureName, String description, Long courseId, String nameCourse) {
@@ -30,8 +30,26 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
         this.description = description;
         this.courseId = courseId;
         this.nameCourse = nameCourse;
+        this.creationDate = LocalDateTime.now();
         counter++;
     }
+
+    public Lecture(Long lectureId, String lectureName, String description, Long courseId, LocalDateTime creationDate, LocalDateTime lectureDate) {
+        this.lectureId = lectureId;
+        this.lectureName = lectureName;
+        this.description = description;
+        this.courseId = courseId;
+        this.creationDate = creationDate;
+        this.lectureDate = lectureDate;
+    }
+
+//    public Lecture(Long lectureId, String lectureName, String description, Long courseId) {
+//        this.lectureId = lectureId;
+//        this.lectureName = lectureName;
+//        this.description = description;
+//        this.courseId = courseId;
+//
+//    }
 
     public String getLectureName() {
         Optional<String> lectureNameOptional = Optional.ofNullable(lectureName);
@@ -80,14 +98,15 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
     }
 
     public LocalDateTime getCreationDate() {
+        Optional<LocalDateTime> lectureCreationDateOptional = Optional.ofNullable(creationDate);
         Log.debug(Lecture.class.getName(), "method->\"getCreationDate\"");
-        return creationDate;
+        return lectureCreationDateOptional.orElse(LocalDateTime.of(1, 1, 1, 0, 0));
     }
 
     public LocalDateTime getLectureDate() {
         Optional<LocalDateTime> lectureDateOptional = Optional.ofNullable(lectureDate);
         Log.debug(Lecture.class.getName(), "method->\"getLectureDate\"");
-        return lectureDateOptional.orElse(LocalDateTime.of(0, 1, 1, 0, 0));
+        return lectureDateOptional.orElse(LocalDateTime.of(1, 1, 1, 0, 0));
     }
 
     public void setLectureDate(LocalDateTime lectureDate) {

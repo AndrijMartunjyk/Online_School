@@ -1,5 +1,6 @@
 package online_school.service;
 
+import web.dao.CourseDAO;
 import online_school.domain.model.Student;
 import online_school.domain.model.*;
 import online_school.log.Level;
@@ -347,7 +348,7 @@ public class MainService {
         int courseId;
         System.out.println(YOU_CREATING_AN_OBJECT + COURSE);
         Log.info(MAIN_SERVICE, YOU_CREATING_AN_OBJECT + COURSE);
-        checkId(OF_COURSE);
+        checkNumber(OF_COURSE);
         System.out.println(ENTER_NAME_OF_COURSE);
         Log.info(MAIN_SERVICE, ENTER_NAME_OF_COURSE);
         scannerName();
@@ -364,11 +365,9 @@ public class MainService {
     }
 
     public void creatLecture() {
-        boolean isPresent = true;
-        Lecture lecture;
         System.out.println(YOU_CREATING_AN_OBJECT + LECTURE);
         Log.info(MAIN_SERVICE, YOU_CREATING_AN_OBJECT + LECTURE);
-        checkId(OF_LECTURE);
+        checkNumber(OF_LECTURE);
         lectureId = getCheckNumber();
         System.out.println(ENTER_NAME_OF_LECTURE);
         Log.info(MAIN_SERVICE, ENTER_NAME_OF_LECTURE);
@@ -378,20 +377,9 @@ public class MainService {
         Log.info(MAIN_SERVICE, SELECT_ID_OF_COURSE);
         putBorder();
         foundCourse();
-        lecture = lectureService.createLecture(lectureId, getName(), getDescription(), courseId, courseName);
-        do {
-            Optional<LocalDateTime> lectureDateOptional = Optional.ofNullable(creatLectureDate(lecture));
-            if (lectureDateOptional.isPresent()) {
-                lecture.setLectureDate(lectureDateOptional.get());
-                isPresent = false;
-            } else {
-                System.out.println(TRY_AGAIN);
-                Log.info(MAIN_SERVICE, TRY_AGAIN);
-            }
-        } while (isPresent);
-        lectureRepository.getLectureList().add(lecture);
-        System.out.printf(YOU_CREAT_LECTURE,
-                getName(), lectureRepository.getLectureId(lecture), courseId, lecture.getCreationDateFormat(), lecture.getLectureDateFormat());
+        LocalDateTime localDateTime;
+        localDateTime = creatLectureDate();
+        lectureService.createLecture(lectureId, getName(), getDescription(), courseId, localDateTime);
         Log.info(MAIN_SERVICE, YOU_CREAT_LECTURE);
         putBorder();
         showInformCourseAndLecture();
@@ -404,7 +392,7 @@ public class MainService {
         Person student;
         System.out.println(YOU_CREATING_AN_OBJECT + STUDENT);
         Log.info(MAIN_SERVICE, YOU_CREATING_AN_OBJECT + STUDENT);
-        checkId(OF_STUDENT);
+        checkNumber(OF_STUDENT);
         System.out.println(ENTER_NAME);
         Log.info(MAIN_SERVICE, ENTER_NAME);
         scannerFirstName();
@@ -434,7 +422,7 @@ public class MainService {
         Person teacher;
         System.out.println(YOU_CREATING_AN_OBJECT + TEACHER);
         Log.info(MAIN_SERVICE, YOU_CREATING_AN_OBJECT + TEACHER);
-        checkId(OF_TEACHER);
+        checkNumber(OF_TEACHER);
         System.out.println(ENTER_NAME);
         Log.info(MAIN_SERVICE, ENTER_NAME);
         scannerFirstName();
@@ -463,7 +451,7 @@ public class MainService {
     public void creatHomework() {
         System.out.println(YOU_CREATING_AN_OBJECT + HOMEWORK_FOR_LECTURE);
         Log.info(MAIN_SERVICE, YOU_CREATING_AN_OBJECT + HOMEWORK_FOR_LECTURE);
-        checkId(HOMEWORK);
+        checkNumber(HOMEWORK);
         homeworkId = getCheckNumber();
         System.out.println(SELECT_A_LECTURE);
         Log.info(MAIN_SERVICE, SELECT_A_LECTURE);
@@ -489,7 +477,7 @@ public class MainService {
         try {
             System.out.println(YOU_CREATING_AN_OBJECT + ADDITIONAL_MATERIAL_FOR_LECTURE);
             Log.info(MAIN_SERVICE, ADDITIONAL_MATERIAL_FOR_LECTURE);
-            checkId("Додаткових матеріалів");
+            checkNumber("Додаткових матеріалів");
             additionalMaterialId = getCheckNumber();
             System.out.println(NAME_FOR_ADDITIONAL_MATERIALS);
             Log.info(MAIN_SERVICE, NAME_FOR_ADDITIONAL_MATERIALS);
@@ -697,7 +685,7 @@ public class MainService {
         System.out.println(COURSE_FOR_DELETE);
         Log.info(MAIN_SERVICE, COURSE_FOR_DELETE);
         courseService.showAllCourses();
-        checkId(OF_COURSE);
+        checkNumber(OF_COURSE);
         long courseId = getCheckNumber();
         courseService.crateCourseDelete((int) courseId);
         showInformAboutCreation();
@@ -708,7 +696,7 @@ public class MainService {
         System.out.println(LECTURE_FOR_DELETE);
         Log.info(MAIN_SERVICE, LECTURE_FOR_DELETE);
         printAllLecture();
-        checkId(OF_LECTURE);
+        checkNumber(OF_LECTURE);
         long lectureId = getCheckNumber();
         isPresent = true;
         for (int i = 0; i < lectureRepository.getLectureList().size(); i++) {
@@ -731,7 +719,7 @@ public class MainService {
         System.out.println(TEACHER_FOR_DELETE);
         Log.info(MAIN_SERVICE, TEACHER_FOR_DELETE);
         printAllTeacher();
-        checkId(OF_TEACHER);
+        checkNumber(OF_TEACHER);
         long teacherId = getCheckNumber();
         isPresent = true;
         for (int i = 0; i < teacherRepository.getTeacherList().size(); i++) {
@@ -754,7 +742,7 @@ public class MainService {
         System.out.println(STUDENT_FOR_DELETE);
         Log.info(MAIN_SERVICE, STUDENT_FOR_DELETE);
         printAllStudent();
-        checkId(OF_STUDENT);
+        checkNumber(OF_STUDENT);
         long studentId = getCheckNumber();
         isPresent = true;
         for (int i = 0; i < studentRepository.getStudentList().size(); i++) {
@@ -777,7 +765,7 @@ public class MainService {
         System.out.println(HOMEWORK_FOR_DELETE);
         Log.info(MAIN_SERVICE, HOMEWORK_FOR_DELETE);
         printAllHomework();
-        checkId(HOMEWORK);
+        checkNumber(HOMEWORK);
         long homeworkId = getCheckNumber();
         try {
             isPresent = true;
@@ -805,7 +793,7 @@ public class MainService {
         System.out.println(RESOURCE_FOR_DELETE);
         Log.info(MAIN_SERVICE, RESOURCE_FOR_DELETE);
         printAllAdditionalMaterial();
-        checkId(ADDITIONAL_MATERIAL);
+        checkNumber(ADDITIONAL_MATERIAL);
         long additionalMaterialId = getCheckNumber();
         try {
             isPresent = true;
@@ -834,12 +822,12 @@ public class MainService {
         System.out.println(LECTURE_FOR_TEACHER);
         Log.info(MAIN_SERVICE, LECTURE_FOR_TEACHER);
         printAllLecture();
-        checkId(OF_LECTURE);
+        checkNumber(OF_LECTURE);
         long lectureId = getCheckNumber();
         System.out.println(SELECT_OF_A_TEACHER);
         Log.info(MAIN_SERVICE, SELECT_OF_A_TEACHER);
         printAllTeacher();
-        checkId(OF_TEACHER);
+        checkNumber(OF_TEACHER);
         long teacherId = getCheckNumber();
         try {
             teacherService.addPersonToLecture(OF_TEACHER, lectureId, teacherId, lectureRepository.getLectureList(), teacherRepository.getTeacherList());
@@ -860,12 +848,12 @@ public class MainService {
         System.out.println(LECTURE_FOR_STUDENT);
         Log.info(MAIN_SERVICE, LECTURE_FOR_STUDENT);
         printAllLecture();
-        checkId(OF_LECTURE);
+        checkNumber(OF_LECTURE);
         long lectureId = getCheckNumber();
         System.out.println(SELECT_OF_A_STUDENT);
         Log.info(MAIN_SERVICE, SELECT_OF_A_STUDENT);
         printAllStudent();
-        checkId(OF_STUDENT);
+        checkNumber(OF_STUDENT);
         long studentId = getCheckNumber();
         try {
             studentService.addPersonToLecture(OF_STUDENT, lectureId, studentId, lectureRepository.getLectureList(), studentRepository.getStudentList());
@@ -913,7 +901,8 @@ public class MainService {
         Log.debug(MAIN_SERVICE, METHOD_CREAT_DEFAULT);
     }
 
-    public void checkId(String outName) {
+    public void checkNumber(String outName) {
+        number = 0L;
         Optional<String> outNameOptional = Optional.ofNullable(outName);
         if (outNameOptional.isPresent()) {
             long test;
@@ -1142,15 +1131,14 @@ public class MainService {
     }
 
     public void foundCourse() {
-        for (Course c : courseRepository.getCourseList()) {
-            System.out.println(c);
-            Log.info(MAIN_SERVICE, String.valueOf(c));
-        }
+        courseId=0L;
+        CourseDAO courseDAO =new CourseDAO();
+        courseService.showAllCourses();
         putBorder();
         isPresent = true;
         while (isPresent) {
-            checkId(OF_COURSE);
-            for (Course c : courseRepository.getCourseList()) {
+            checkNumber(OF_COURSE);
+            for (Course c : courseDAO.courseList()) {
                 if (c.getCourseId().equals(getCheckNumber())) {
                     courseId = getCheckNumber();
                     courseName = c.getCourseName();
@@ -1263,7 +1251,7 @@ public class MainService {
     }
 
     public void creatLectureDataLogic() {
-        checkId(OF_LECTURE);
+        checkNumber(OF_LECTURE);
         lectureId = getCheckNumber();
         lectureService.showLectures(lectureId, lectureRepository.getLectureList());
         putBorder();
@@ -1296,7 +1284,7 @@ public class MainService {
     }
 
     public void creatCourseDataLogic() {
-        checkId(OF_COURSE);
+        checkNumber(OF_COURSE);
         courseId = getCheckNumber();
         courseService.showOneCourse((int) courseId);
         lectureService.showLecturesInCourse(courseId, lectureRepository.getLectureList());
@@ -1318,8 +1306,9 @@ public class MainService {
         courseService.createCourse(1L, "Auto course");
         courseId = courseService.getCourseId();
         courseName = courseService.getCourseName();
+        LocalDateTime localDateTime = LocalDateTime.of(1, 1, 1, 0, 0);
         for (long i = 0; i < 3; i++) {
-            lectureRepository.getLectureList().add(lectureService.createLecture(i, "No name", "No description", courseId, courseName));
+            lectureService.createLecture(i, "No name", "No description", courseId, localDateTime);
         }
         System.out.println(BORDER_VERY_LONG);
         Log.info(MAIN_SERVICE, BORDER_VERY_LONG);
@@ -1367,7 +1356,7 @@ public class MainService {
         String deadLineFormat;
         isPresent = false;
         while (!isPresent) {
-            checkId(OF_LECTURE);
+            checkNumber(OF_LECTURE);
             lectureId = getCheckNumber();
             if ((!(homeworkRepository.getListHomeworkMap().containsKey(lectureId))) && foundLecture(lectureId)) {
                 homeworkRepository.creatNewCollectionHomeworks(lectureId);
@@ -1389,7 +1378,7 @@ public class MainService {
     public void createResourceTypeLogic() {
         isPresent = false;
         while (!isPresent) {
-            checkId(OF_LECTURE);
+            checkNumber(OF_LECTURE);
             lectureId = getCheckNumber();
             if ((!(additionalMaterialRepository.getListAdditionalMaterialMap().containsKey(lectureId))) && foundLecture(lectureId)) {
                 additionalMaterialRepository.creatNewCollectionAdditionalMaterials(lectureId);
@@ -1613,7 +1602,7 @@ public class MainService {
     }
 
     public void creatSaveObjects() {
-        checkId(OF_COURSE);
+        checkNumber(OF_COURSE);
         Long idOfCourse = number;
         Course course = courseRepository.objectOfCourse(idOfCourse);
         List<Lecture> lectureList = lectureRepository.creatLectureList(idOfCourse);
@@ -1692,27 +1681,19 @@ public class MainService {
         Log.debug(MAIN_SERVICE, "method-> \"creatPrintSavedObjects\"");
     }
 
-    public LocalDateTime creatLectureDate(Lecture lecture) {
-        Optional<Lecture> lectureOptional = Optional.ofNullable(lecture);
+    public LocalDateTime creatLectureDate() {
         LocalDateTime lectureDate = null;
-        if (lectureOptional.isPresent()) {
-            System.out.println(DATE_LECTURE);
-            Log.info(MAIN_SERVICE, DATE_LECTURE);
-            byte month = checkNumberMonth();
-            byte day = checkNumberDay();
-            byte hour = checkNumberHour();
-            byte minute = checkNumberMinute();
-            try {
-                lectureDate = LocalDateTime.of(2023, month, day, hour, minute, 0);
-            } catch (DateTimeException d) {
-                System.err.println(NO_DATE);
-                Log.warning(MAIN_SERVICE, "DateTimeException", NO_DATE);
-            }
-            if (lectureDate != null && lectureDate.isBefore(lectureOptional.get().getCreationDate())) {
-                System.out.println(DATE_PASSED);
-                Log.info(MAIN_SERVICE, DATE_PASSED);
-                lectureDate = null;
-            }
+        System.out.println(DATE_LECTURE);
+        Log.info(MAIN_SERVICE, DATE_LECTURE);
+        byte month = checkNumberMonth();
+        byte day = checkNumberDay();
+        byte hour = checkNumberHour();
+        byte minute = checkNumberMinute();
+        try {
+            lectureDate = LocalDateTime.of(2023, month, day, hour, minute, 0);
+        } catch (DateTimeException d) {
+            System.err.println(NO_DATE);
+            Log.warning(MAIN_SERVICE, "DateTimeException", NO_DATE);
         }
         Log.debug(MAIN_SERVICE, "method-> \"creatLectureDate\"");
         return lectureDate;
