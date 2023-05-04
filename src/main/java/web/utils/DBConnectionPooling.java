@@ -16,6 +16,13 @@ public class DBConnectionPooling {
         config.setPassword(PropertiesLoader.getProperty("db.password"));
         config.setDriverClassName(PropertiesLoader.getProperty("db.driver"));
 
+        // Optional HikariCP settings
+        config.setMaximumPoolSize(Integer.parseInt(PropertiesLoader.getProperty("db.pool.maxPoolSize")));
+        config.setMinimumIdle(Integer.parseInt(PropertiesLoader.getProperty("db.pool.minIdle")));
+        config.setConnectionTimeout(Long.parseLong(PropertiesLoader.getProperty("db.pool.connectionTimeout")));
+        config.setIdleTimeout(Long.parseLong(PropertiesLoader.getProperty("db.pool.idleTimeout")));
+        config.setMaxLifetime(Long.parseLong(PropertiesLoader.getProperty("db.pool.maxLifetime")));
+
         dataSource = new HikariDataSource(config);
     }
 
