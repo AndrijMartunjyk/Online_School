@@ -389,7 +389,6 @@ public class MainService {
     }
 
     public void creatStudent() {
-        Person student;
         System.out.println(YOU_CREATING_AN_OBJECT + STUDENT);
         Log.info(MAIN_SERVICE, YOU_CREATING_AN_OBJECT + STUDENT);
         checkNumber(OF_STUDENT);
@@ -405,11 +404,6 @@ public class MainService {
         System.out.println(ENTER_EMAIL);
         Log.info(MAIN_SERVICE, ENTER_EMAIL);
         scannerEmail(teacherRepository.getTeacherList(), studentRepository.getStudentList());
-        student = studentService.createStudent(Role.STUDENT, getCheckNumber(), getFirstname(),
-                getLastName(), getPhone(), getEmail());
-        studentRepository.getStudentList().add(student);
-        System.out.printf(YOU_CREAT_STUDENT,
-                getFirstname(), getLastName(), studentRepository.getStudentId(student));
         Log.info(MAIN_SERVICE, YOU_CREAT_STUDENT);
         putBorder();
         showInformCourseAndLecture();

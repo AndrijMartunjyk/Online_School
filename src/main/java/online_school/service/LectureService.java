@@ -16,9 +16,9 @@ public class LectureService {
     private String description;
     private Long courseId;
     private String creationDate;
-    private LocalDateTime localDateTime;
+    private LocalDateTime dateLecture;
 
-    public void createLecture(Long lectureId, String lectureName, String description, Long courseId,LocalDateTime localDateTime) {
+    public void createLecture(Long lectureId, String lectureName, String description, Long courseId,LocalDateTime dateLecture) {
         String query = "INSERT INTO lecture(lecture_id,lecture_name,description,course_id,creation_date,lecture_date) VALUES(?,?,?,?,?,?)";
         try (Connection connection = DatabaseConnection.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -27,14 +27,14 @@ public class LectureService {
             this.description = description;
             this.courseId = courseId;
             creationDate = String.valueOf(LocalDateTime.now());
-            this.localDateTime=localDateTime;
+            this.dateLecture =dateLecture;
 
             statement.setLong(1, this.lectureId);
             statement.setString(2, this.lectureName);
             statement.setString(3, this.description);
             statement.setLong(4, this.courseId);
             statement.setString(5, creationDate);
-            statement.setString(6, String.valueOf(this.localDateTime));
+            statement.setString(6, String.valueOf(this.dateLecture));
             statement.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
