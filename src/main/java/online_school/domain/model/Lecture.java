@@ -21,7 +21,7 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
     private Long personId;
     private final Long courseId;
     private String nameCourse;
-    private LocalDateTime creationDate;
+    private final LocalDateTime creationDate;
     private LocalDateTime lectureDate;
 
     public Lecture(Long lectureId, String lectureName, String description, Long courseId, String nameCourse) {

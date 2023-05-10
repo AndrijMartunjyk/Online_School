@@ -39,6 +39,7 @@ public class Person extends Model implements Comparable<Person>, Serializable {
         this.lectureId = lectureId;
     }
 
+
     public Long getCourseId() {
         return courseId;
     }

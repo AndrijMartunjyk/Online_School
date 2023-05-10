@@ -51,7 +51,7 @@ WHERE t.last_name BETWEEN 'А%' AND 'Н%'
 ORDER BY t.last_name;
 
 
-# # 6 first name and last name of student
+# 6 first name and last name of student
 # SELECT first_name, last_name, COUNT(*) AS course_count
 # FROM student
 #          JOIN student_courses ON student.student_id = student_courses.student_id
