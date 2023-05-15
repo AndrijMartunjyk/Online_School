@@ -9,7 +9,7 @@ create table course
 create table student
 (
     PRIMARY KEY (`student_id`),
-    student_id   INT AUTO_INCREMENT UNIQUE,
+    student_id   INT AUTO_INCREMENT,
     first_name   VARCHAR(20),
     last_name    VARCHAR(40),
     email        VARCHAR(40),

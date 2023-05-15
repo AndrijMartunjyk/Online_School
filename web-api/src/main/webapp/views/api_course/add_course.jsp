@@ -12,9 +12,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Add courses</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/course_css/add_course.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="body-flax">
 <div class="container">
     <h2>Add Course</h2>
     <form action="${pageContext.request.contextPath}/add_course" method="post">
@@ -32,7 +35,7 @@
         <div>
             <input type="submit" value="Add">
         </div>
-        <div><%=courseName%>
+        <div class="massage"><%=courseName%>
         </div>
 
         <nav>

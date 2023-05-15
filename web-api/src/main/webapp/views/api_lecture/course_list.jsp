@@ -5,12 +5,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/shared_css/course_list.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
 </head>
 <body class="container">
-<h3>Виберіть для якого курсу створити лекцію</h3>
-<h4>Courses List</h4>
-<form action="${pageContext.request.contextPath}/add_lecture" method="get">
-    <table border="1">
+<h1>Courses List</h1>
+<h4>Виберіть для якого курсу створити лекцію</h4>
+<table border="1">
+    <form action="${pageContext.request.contextPath}/add_lecture" method="get">
         <thead>
         <tr>
             <th>Course Name</th>
@@ -21,7 +25,7 @@
         <tbody>
 
         <c:forEach var="apiExample" items="${course_list_for_lectures}">
-            <tr>
+            <tr class="tr">
                 <td>${apiExample.courseName}</td>
                 <td>
                     <label>
@@ -32,11 +36,9 @@
             </tr>
         </c:forEach>
         </tbody>
-
-    </table>
-    <div><input type="submit"/></div>
-</form>
-
+        <div><input type="submit"/></div>
+    </form>
+</table>
 <nav>
     <ul>
         <li><a href="${pageContext.request.contextPath}/">Back to Home Page</a></li>
