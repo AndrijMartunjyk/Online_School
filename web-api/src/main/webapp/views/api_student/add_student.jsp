@@ -9,10 +9,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Add student</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/shared_css/add_object.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
 </head>
-<body>
-<h3>Added student</h3>
+<body class="body-flax" >
+<div class="container">
+<h1>Added student</h1>
 <form action="${pageContext.request.contextPath}/add_student" method="post">
 
 
@@ -29,7 +35,7 @@
 
     <div><input type="submit" value="Зберегти"/></div>
 
-</form>
+
 
 <%
     String message = "";
@@ -39,10 +45,12 @@
         message = "Студента " + "\"" + name + "\" додано до " + idCourseSize + " курсів";
     }
 %>
+<div class="massage" >
+    <%=
+    message
+    %>
+</div>
 
-<%=
-message
-%>
 <nav>
     <ul>
         <li><a href="/course_list_for_students">Попередня сторінка</a></li>
@@ -50,5 +58,7 @@ message
         <li><a href="${pageContext.request.contextPath}/">Back to Home Page</a></li>
     </ul>
 </nav>
+</form>
+</div>
 </body>
 </html>

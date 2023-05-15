@@ -12,6 +12,10 @@
 <head>
     <meta charset="UTF-8">
     <title>List of Lectures</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/shared_css/list.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
 </head>
 <body class="container">
 <h1>Lectures</h1>
@@ -28,7 +32,7 @@
     </thead>
     <tbody>
     <c:forEach var="apiExample" items="${lectures}">
-        <tr>
+        <tr class="tr">
             <td>${apiExample.lectureId}</td>
             <td>${apiExample.lectureName}</td>
             <td>${apiExample.description}</td>

@@ -5,6 +5,10 @@
 <head>
     <meta charset="UTF-8">
     <title>List of Courses</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/course_css/course_list.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
 </head>
 <body class="container">
 <h1>Courses List</h1>
@@ -18,7 +22,7 @@
     </thead>
     <tbody>
     <c:forEach var="apiExample" items="${course_list}">
-        <tr>
+        <tr class="tr">
             <td>${apiExample.courseId}</td>
             <td>${apiExample.courseName}</td>
             <td><a href="${pageContext.request.contextPath}/all-objects?course_id=${apiExample.courseId}">Вся інформація про курс
@@ -34,6 +38,5 @@
         </li>
     </ul>
 </nav>
-
 </body>
 </html>

@@ -1,0 +1,66 @@
+.flex-box{
+    width: auto;
+    height: 620px;
+    border: 2px solid black;
+    background: #e5ffdc;
+}
+.header-box{
+    font-size: 18px;
+    font-family: 'Montserrat', sans-serif;
+    width: auto;
+    height: 80px;
+    border: 2px #95958d;
+    border-radius: 10px;
+    background: #bbbcf9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.5);
+}
+.nav-box{
+    width: auto;
+    height: 255px;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-around;
+    align-items: center;
+}
+.nav{
+    font-size: 18px;
+    font-family: 'Montserrat', sans-serif;
+    width: 600px;
+    height: 220px;
+    border: 2px #95958d;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: #f6f9d7;
+    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.5);
+}
+.nav-box2{
+    width: auto;
+    height: 255px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+}
+.nav2{
+    font-size: 18px;
+    font-family: 'Montserrat', sans-serif;
+    width: 1300px;
+    height: 220px;
+    border: 2px #95958d;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: #f6f9d7;
+    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.5);
+}
+a:hover {
+    color: red;
+    text-decoration: none
+}
