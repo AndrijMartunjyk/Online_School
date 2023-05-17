@@ -1,5 +1,6 @@
 package online_school.service;
 
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import web.dao.CourseDAO;
 import online_school.domain.model.Student;
 import online_school.domain.model.*;
@@ -56,6 +57,7 @@ public class MainService {
     private static final WriterLogs WRITER_LOGS = new WriterLogs();
     private static final ControlWorkService controlWork = new ControlWorkService();
     private static final List<Student> listOfStudentsForThread = new ArrayList<>();
+    private final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 
 
     public Scanner scanner;
@@ -1126,7 +1128,7 @@ public class MainService {
 
     public void foundCourse() {
         courseId=0L;
-        CourseDAO courseDAO =new CourseDAO();
+        CourseDAO courseDAO = context.getBean("courseDao", CourseDAO.class);
         courseService.showAllCourses();
         putBorder();
         isPresent = true;
