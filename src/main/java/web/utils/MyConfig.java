@@ -7,17 +7,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import web.dao.CourseDAO;
-import web.dao.Driver;
 import web.dao.LectureDAO;
 import web.dao.StudentDAO;
 
 @Configuration
 @PropertySource("classpath:application.properties")
 public class MyConfig {
-    @Bean
-    public Driver driver() {
-        return new Driver();
-    }
 
     @Bean
     public CourseDAO courseDAO() {
