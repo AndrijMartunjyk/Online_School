@@ -2,20 +2,24 @@ package web.dao;
 
 import online_school.domain.model.Person;
 import online_school.domain.model.Role;
-import web.utils.DatabaseConnection;
+import org.springframework.beans.factory.annotation.Value;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentDAO {
+public class StudentDAO extends Driver {
+    @Value("${db.url}")
+    private String url;
+    @Value("${db.username}")
+    String username;
+    @Value("${db.password}")
+    private String password;
+
     public List<Person> getStudentByCourseId(int courseId) {
         List<Person> studentList = new ArrayList<>();
-
-        try (Connection connection = DatabaseConnection.getConnection()) {
+        driver();
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
             String sgl = "SELECT * FROM student WHERE course_id=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sgl);
             preparedStatement.setInt(1, courseId);
@@ -43,7 +47,8 @@ public class StudentDAO {
 
     public List<Person> showAllStudents() {
         List<Person> studentList = new ArrayList<>();
-        try (Connection connection = DatabaseConnection.getConnection()) {
+        driver();
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
             String sgl = "SELECT * FROM student";
             PreparedStatement preparedStatement = connection.prepareStatement(sgl);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -66,5 +71,10 @@ public class StudentDAO {
             e.printStackTrace();
         }
         return studentList;
+    }
+
+    @Override
+    public void driver() {
+        super.driver();
     }
 }

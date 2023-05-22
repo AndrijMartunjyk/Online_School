@@ -2,7 +2,8 @@ package online_school.service;
 
 import online_school.domain.model.Lecture;
 import online_school.log.Log;
-import web.utils.DatabaseConnection;
+import org.springframework.beans.factory.annotation.Value;
+import web.dao.Driver;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -10,7 +11,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-public class LectureService {
+public class LectureService extends Driver {
+    @Value("${db.url}")
+    private String url;
+    @Value("${db.username}")
+    String username;
+    @Value("${db.password}")
+    private String password;
     private Long lectureId;
     private String lectureName;
     private String description;
@@ -18,16 +25,17 @@ public class LectureService {
     private String creationDate;
     private LocalDateTime dateLecture;
 
-    public void createLecture(Long lectureId, String lectureName, String description, Long courseId,LocalDateTime dateLecture) {
+    public void createLecture(Long lectureId, String lectureName, String description, Long courseId, LocalDateTime dateLecture) {
         String query = "INSERT INTO lecture(lecture_id,lecture_name,description,course_id,creation_date,lecture_date) VALUES(?,?,?,?,?,?)";
-        try (Connection connection = DatabaseConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
+        driver();
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement statement = connection.prepareStatement(query)) {
             this.lectureId = lectureId + new Random().nextLong(Integer.MAX_VALUE);
             this.lectureName = lectureName;
             this.description = description;
             this.courseId = courseId;
             creationDate = String.valueOf(LocalDateTime.now());
-            this.dateLecture =dateLecture;
+            this.dateLecture = dateLecture;
 
             statement.setLong(1, this.lectureId);
             statement.setString(2, this.lectureName);

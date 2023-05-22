@@ -7,25 +7,25 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import online_school.domain.model.Role;
 import online_school.service.StudentService;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import web.utils.MyConfig;
 
 import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/add_student")
 public class AddStudent extends HttpServlet {
-    private StudentService studentService;
+    private final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MyConfig.class);
+    private final StudentService studentService = context.getBean("studentService", StudentService.class);
     private String[] courseIdList;
 
-    public void init() {
-        studentService = new StudentService();
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         courseIdList = req.getParameterValues("course_id");
         if (courseIdList != null) {
             req.getRequestDispatcher("/views/api_student/add_student.jsp").forward(req, resp);
-        }else {
+        } else {
             req.getRequestDispatcher("/views/api_student/student_not_found.jsp").forward(req, resp);
         }
 

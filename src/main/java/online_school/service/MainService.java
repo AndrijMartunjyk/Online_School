@@ -1,5 +1,6 @@
 package online_school.service;
 
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import web.dao.CourseDAO;
 import online_school.domain.model.Student;
@@ -15,6 +16,7 @@ import online_school.domain.task_for_lecture.Homework;
 import online_school.exception.EntityNotFoundException;
 import server.Client;
 import server.WatcherForBlackIp;
+import web.utils.MyConfig;
 
 import java.io.*;
 import java.net.URI;
@@ -57,7 +59,7 @@ public class MainService {
     private static final WriterLogs WRITER_LOGS = new WriterLogs();
     private static final ControlWorkService controlWork = new ControlWorkService();
     private static final List<Student> listOfStudentsForThread = new ArrayList<>();
-    private final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+    private final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MyConfig.class);
 
 
     public Scanner scanner;
@@ -1127,8 +1129,8 @@ public class MainService {
     }
 
     public void foundCourse() {
-        courseId=0L;
-        CourseDAO courseDAO = context.getBean("courseDao", CourseDAO.class);
+        courseId = 0L;
+        CourseDAO courseDAO = context.getBean("courseDAO", CourseDAO.class);
         courseService.showAllCourses();
         putBorder();
         isPresent = true;

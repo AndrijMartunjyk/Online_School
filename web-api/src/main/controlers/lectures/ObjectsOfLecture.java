@@ -6,19 +6,20 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import online_school.domain.model.Lecture;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import web.dao.LectureDAO;
+import web.utils.MyConfig;
 
 import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/all_lectures")
 public class ObjectsOfLecture extends HttpServlet {
-    private final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+    private final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MyConfig.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Lecture> lectureList = context.getBean("lectureDao", LectureDAO.class).showAllLectures();
+        List<Lecture> lectureList = context.getBean("lectureDAO", LectureDAO.class).showAllLectures();
         req.setAttribute("lectures", lectureList);
         req.getRequestDispatcher("/views/api_lecture/lecture_list.jsp").forward(req, resp);
     }

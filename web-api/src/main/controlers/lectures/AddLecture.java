@@ -6,17 +6,18 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import online_school.service.LectureService;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import web.utils.MyConfig;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 
 @WebServlet("/add_lecture")
 public class AddLecture extends HttpServlet {
-   private LectureService lectureService;
-private int courseId;
-    public void init() {
-        lectureService = new LectureService();
-    }
+    private final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MyConfig.class);
+    private final LectureService lectureService = context.getBean("lectureService", LectureService.class);
+    private int courseId;
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -30,7 +31,6 @@ private int courseId;
         String description = req.getParameter("description");
 
         String dateLecture = req.getParameter("date");
-
 
         lectureService.createLecture(1L, lectureName, description, (long) courseId, LocalDateTime.parse(dateLecture));
 

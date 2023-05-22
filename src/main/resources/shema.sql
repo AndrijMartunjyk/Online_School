@@ -19,14 +19,14 @@ create table student
     course_id    LONG
 );
 
-create table student_courses
-(
-    PRIMARY KEY (student_id, course_id),
-    student_id INT NOT NULL,
-    course_id  INT NOT NULL,
-    FOREIGN KEY (student_id) REFERENCES student (student_id),
-    FOREIGN KEY (course_id) REFERENCES course (course_id)
-);
+# create table student_courses
+# (
+#     PRIMARY KEY (student_id, course_id),
+#     student_id INT NOT NULL,
+#     course_id  INT NOT NULL,
+#     FOREIGN KEY (student_id) REFERENCES student (student_id),
+#     FOREIGN KEY (course_id) REFERENCES course (course_id)
+# );
 create table teacher
 (
     teacher_key  INT PRIMARY KEY AUTO_INCREMENT,
