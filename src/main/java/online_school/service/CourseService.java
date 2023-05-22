@@ -1,11 +1,18 @@
 package online_school.service;
 
-import web.utils.DatabaseConnection;
+import org.springframework.beans.factory.annotation.Value;
+import web.dao.Driver;
 
 import java.sql.*;
 import java.util.Random;
 
-public class CourseService {
+public class CourseService extends Driver {
+    @Value("${db.url}")
+    private String url;
+    @Value("${db.username}")
+    String username;
+    @Value("${db.password}")
+    private String password;
 
     private final String SQL = "{call table_name('course')}";
     private long courseId;
@@ -13,9 +20,9 @@ public class CourseService {
 
     public void createCourse(Long id, String name) {
         String query = "INSERT INTO course(course_id, course_name) VALUES(?,?)";
-        try (
-                Connection connection = DatabaseConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
+        driver();
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
             courseId = id + new Random().nextLong(Integer.MAX_VALUE);
             courseName = name;
@@ -29,10 +36,10 @@ public class CourseService {
     }
 
     public void showAllCourses() {
-        try (
-                Connection connection = DatabaseConnection.getConnection();
-                CallableStatement callableStatement = connection.prepareCall(SQL);
-                ResultSet resultSet = callableStatement.executeQuery()) {
+        driver();
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             CallableStatement callableStatement = connection.prepareCall(SQL);
+             ResultSet resultSet = callableStatement.executeQuery()) {
             while (resultSet.next()) {
                 int id = resultSet.getInt("course_id");
                 String name = resultSet.getString("course_name");
@@ -44,10 +51,10 @@ public class CourseService {
     }
 
     public void showOneCourse(int courseId) {
-        try (
-                Connection connection = DatabaseConnection.getConnection();
-                CallableStatement callableStatement = connection.prepareCall(SQL);
-                ResultSet resultSet = callableStatement.executeQuery()) {
+        driver();
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             CallableStatement callableStatement = connection.prepareCall(SQL);
+             ResultSet resultSet = callableStatement.executeQuery()) {
             int id;
             while (resultSet.next()) {
                 id = resultSet.getInt("course_id");
@@ -62,11 +69,11 @@ public class CourseService {
     }
 
 
-    public static void crateCourseDelete(int courseId) {
+    public void crateCourseDelete(int courseId) {
         String query = "DELETE FROM course WHERE course_id=?";
-        try (
-                Connection connection = DatabaseConnection.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
+        driver();
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, courseId);
             statement.executeUpdate();
@@ -82,5 +89,10 @@ public class CourseService {
 
     public String getCourseName() {
         return courseName;
+    }
+
+    @Override
+    public void driver() {
+        super.driver();
     }
 }

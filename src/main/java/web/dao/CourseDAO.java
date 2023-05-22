@@ -1,20 +1,24 @@
 package web.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import online_school.domain.model.Course;
-import web.utils.DatabaseConnection;
+import org.springframework.beans.factory.annotation.Value;
 
-public class CourseDAO {
+public class CourseDAO extends Driver {
+    @Value("${db.url}")
+    private String url;
+    @Value("${db.username}")
+    String username;
+    @Value("${db.password}")
+    private String password;
+
     public List<Course> courseList() {
         List<Course> courseList = new ArrayList<>();
-
-        try (Connection connection = DatabaseConnection.getConnection()) {
+        driver();
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
             String sql = "SELECT * FROM course";
             PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
@@ -29,5 +33,10 @@ public class CourseDAO {
             e.printStackTrace();
         }
         return courseList;
+    }
+
+    @Override
+    public void driver() {
+        super.driver();
     }
 }

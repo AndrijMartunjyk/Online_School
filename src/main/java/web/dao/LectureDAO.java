@@ -8,14 +8,21 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import web.utils.DatabaseConnection;
+import org.springframework.beans.factory.annotation.Value;
 
-public class LectureDAO {
+public class LectureDAO extends Driver{
+    @Value("${db.url}")
+    private String url;
+    @Value("${db.username}")
+    String username;
+    @Value("${db.password}")
+    private String password;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public List<Lecture> showAllLectures() {
         List<Lecture> lectureList = new ArrayList<>();
-        try (Connection connection = DatabaseConnection.getConnection()) {
+        driver();
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
             String sgl = "SELECT * FROM lecture";
             PreparedStatement preparedStatement = connection.prepareStatement(sgl);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -39,8 +46,8 @@ public class LectureDAO {
 
     public List<Lecture> getLectureByCourseId(int courseId) {
         List<Lecture> lectureList = new ArrayList<>();
-
-        try (Connection connection = DatabaseConnection.getConnection()) {
+        driver();
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
             String sgl = "SELECT * FROM lecture WHERE course_id=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sgl);
             preparedStatement.setInt(1, courseId);
@@ -61,5 +68,10 @@ public class LectureDAO {
             e.printStackTrace();
         }
         return lectureList;
+    }
+
+    @Override
+    public void driver() {
+        super.driver();
     }
 }
