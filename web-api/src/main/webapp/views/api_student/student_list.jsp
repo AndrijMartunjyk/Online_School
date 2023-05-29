@@ -29,9 +29,9 @@
     <tbody>
     <c:forEach var="apiExample" items="${students}">
         <tr class="tr">
-            <td>${apiExample.personId}</td>
-            <td>${apiExample.firstPersonName}</td>
-            <td>${apiExample.lastPersonName}</td>
+            <td>${apiExample.studentId}</td>
+            <td>${apiExample.firstName}</td>
+            <td>${apiExample.lastName}</td>
             <td>${apiExample.email}</td>
             <td>${apiExample.phone}</td>
             <td>${apiExample.role}</td>

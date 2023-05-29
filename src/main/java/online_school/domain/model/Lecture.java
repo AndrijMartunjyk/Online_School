@@ -1,5 +1,6 @@
 package online_school.domain.model;
 
+import jakarta.persistence.*;
 import online_school.log.Log;
 import online_school.service.MainService;
 
@@ -11,17 +12,31 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
 
+@Entity
+@Table(name = "lecture", schema = "online_school")
 public class Lecture extends Model implements Comparable<Lecture>, Serializable {
     @Serial
+    @Transient
     private static final long serialVersionUID = 2L;
-    private final Long lectureId;
-    private final String lectureName;
-    private final String description;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "lecture_id")
+    private Long lectureId;
+    @Column(name = "lecture_name")
+    private String lectureName;
+    @Column(name = "description")
+    private String description;
+    @Transient
     private static int counter;
+    @Transient
     private Long personId;
-    private final Long courseId;
+    @Column(name = "course_id")
+    private Long courseId;
+    @Transient
     private String nameCourse;
-    private final LocalDateTime creationDate;
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
+    @Column(name = "lecture_date")
     private LocalDateTime lectureDate;
 
     public Lecture(Long lectureId, String lectureName, String description, Long courseId, String nameCourse) {
@@ -34,8 +49,7 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
         counter++;
     }
 
-    public Lecture(Long lectureId, String lectureName, String description, Long courseId, LocalDateTime creationDate, LocalDateTime lectureDate) {
-        this.lectureId = lectureId;
+    public Lecture(String lectureName, String description, Long courseId, LocalDateTime creationDate, LocalDateTime lectureDate) {
         this.lectureName = lectureName;
         this.description = description;
         this.courseId = courseId;
@@ -43,13 +57,8 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
         this.lectureDate = lectureDate;
     }
 
-//    public Lecture(Long lectureId, String lectureName, String description, Long courseId) {
-//        this.lectureId = lectureId;
-//        this.lectureName = lectureName;
-//        this.description = description;
-//        this.courseId = courseId;
-//
-//    }
+    public Lecture() {
+    }
 
     public String getLectureName() {
         Optional<String> lectureNameOptional = Optional.ofNullable(lectureName);

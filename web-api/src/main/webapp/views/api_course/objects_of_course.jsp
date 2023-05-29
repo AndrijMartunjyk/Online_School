@@ -54,11 +54,11 @@
     </tr>
     </thead>
     <tbody>
-    <c:forEach var="apiExample" items="${person_list}">
+    <c:forEach var="apiExample" items="${student_list}">
         <tr class="tr">
-            <td>${apiExample.personId}</td>
-            <td>${apiExample.firstPersonName}</td>
-            <td>${apiExample.lastPersonName}</td>
+            <td>${apiExample.studentId}</td>
+            <td>${apiExample.firstName}</td>
+            <td>${apiExample.lastName}</td>
             <td>${apiExample.role}</td>
             <td>${apiExample.courseId}</td>
             <td>${apiExample.lectureId}</td>

@@ -5,8 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import online_school.service.CourseService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import web.dao.CourseDAO;
 import web.utils.MyConfig;
 
 import java.io.IOException;
@@ -15,8 +15,7 @@ import java.io.IOException;
 public class AddCourse extends HttpServlet {
 
     private final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MyConfig.class);
-
-    private final CourseService courseService = context.getBean("courseService", CourseService.class);
+    private final CourseDAO courseDAO = context.getBean("courseDAO", CourseDAO.class);
 
 
     @Override
@@ -27,7 +26,7 @@ public class AddCourse extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String courseName = req.getParameter("courseName");
-        courseService.createCourse(1L, courseName);
+        courseDAO.createCourse(courseName);
         req.setAttribute("courseName", courseName);
         doGet(req, resp);
     }

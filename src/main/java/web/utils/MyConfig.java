@@ -1,8 +1,5 @@
 package web.utils;
 
-import online_school.service.CourseService;
-import online_school.service.LectureService;
-import online_school.service.StudentService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -27,20 +24,5 @@ public class MyConfig {
     @Bean
     public StudentDAO studentDAO() {
         return new StudentDAO();
-    }
-
-    @Bean
-    public CourseService courseService() {
-        return new CourseService();
-    }
-
-    @Bean
-    public LectureService lectureService() {
-        return new LectureService();
-    }
-
-    @Bean
-    public StudentService studentService() {
-        return new StudentService();
     }
 }

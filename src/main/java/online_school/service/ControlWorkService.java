@@ -1,7 +1,7 @@
 package online_school.service;
 
 import online_school.domain.model.Role;
-import online_school.domain.model.Student;
+import online_school.domain.control_work.Student;
 import online_school.log.Log;
 
 import java.util.List;
