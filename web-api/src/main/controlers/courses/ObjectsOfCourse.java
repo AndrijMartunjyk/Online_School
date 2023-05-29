@@ -5,7 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import online_school.domain.model.Person;
+import online_school.domain.model.Student;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import web.dao.LectureDAO;
 import online_school.domain.model.Lecture;
@@ -26,9 +26,9 @@ public class ObjectsOfCourse extends HttpServlet {
         int courseId = Integer.parseInt(req.getParameter("course_id"));
 
         List<Lecture> lectureList = lectureDAO.getLectureByCourseId(courseId);
-        List<Person> personList = studentDAO.getStudentByCourseId(courseId);
+        List<Student> studentList = studentDAO.getStudentByCourseId(courseId);
         req.setAttribute("lecture_list", lectureList);
-        req.setAttribute("person_list", personList);
+        req.setAttribute("student_list", studentList);
         req.getRequestDispatcher("/views/api_course/objects_of_course.jsp").forward(req, resp);
         context.close();
     }

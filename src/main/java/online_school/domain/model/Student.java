@@ -1,68 +1,119 @@
 package online_school.domain.model;
 
-import online_school.log.Log;
+import jakarta.persistence.*;
 
-import java.io.Serial;
-import java.io.Serializable;
+@Entity
+@Table(name = "student",schema = "online_school")
+public class Student {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "student_id")
+    private Long studentId;
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "last_name")
+    private String lastName;
+    @Column(name = "email")
+    private String email;
+    @Column(name = "phone_number")
+    private String phone;
+    @Column(name = "role")
+    private String role;
+    @Column(name = "lecture_id")
+    private Long lectureId;
+    @Column(name = "course_id")
+    private Long courseId;
 
-public class Student extends Person implements Runnable, Serializable {
-    @Serial
-    private static final long serialVersionUID = 5L;
-    private int studentNumber;
-    private byte time;
-    private byte taskNumber;
 
-    public Student(Role role, Long personId, String firstPersonName, String lastPersonName, String phone, String email) {
-        super(role, personId, firstPersonName, lastPersonName, phone, email);
+
+    public Student(String firstName, String lastName, String email, String phone, Role role, Long lectureId, Long courseId) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+        this.role = String.valueOf(role);
+        this.lectureId = lectureId;
+        this.courseId = courseId;
     }
 
-    @Override
-    public void run() {
-        time = (byte) (Math.random() * (15 - 8) + 8);
-        Log.debug(Student.class.getName(), "method->\"run\"");
+    public Student() {
     }
 
-    @Override
-    public String getFirstPersonName() {
-        Log.debug(Student.class.getName(), "method->\"getFirstPersonName\"");
-        return super.getFirstPersonName();
+    public Long getStudentId() {
+        return studentId;
     }
 
-    public byte getTaskNumber() {
-        Log.debug(Student.class.getName(), "method->\"getTaskNumber\"");
-        return taskNumber;
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
     }
 
-    public byte getTime() {
-        Log.debug(Student.class.getName(), "method->\"getTime\"");
-        return time;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public int getStudentNumber() {
-        Log.debug(Student.class.getName(), "method->\"getStudentNumber\"");
-        return studentNumber;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setTaskNumber(byte taskNumber) {
-        Log.debug(Student.class.getName(), "method->\"setTaskNumber\"");
-        this.taskNumber = taskNumber;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setStudentNumber(int studentNumber) {
-        Log.debug(Student.class.getName(), "method->\"setStudentNumber\"");
-        this.studentNumber = studentNumber;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Long getLectureId() {
+        return lectureId;
+    }
+
+    public void setLectureId(Long lectureId) {
+        this.lectureId = lectureId;
+    }
+
+    public Long getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Long courseId) {
+        this.courseId = courseId;
     }
 
     @Override
     public String toString() {
-        Log.debug(Student.class.getName(), "method->\"toString\"");
-        return "Студент-> "
-                + "\" "
-                + studentNumber
-                + " \""
-                + " отримав завдання № "
-                + taskNumber
-                + "  //  "
-                + super.toString();
+        return "Student{" +
+                "studentId=" + studentId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", role=" + role +
+                ", lectureId=" + lectureId +
+                ", courseId=" + courseId +
+                '}';
     }
 }

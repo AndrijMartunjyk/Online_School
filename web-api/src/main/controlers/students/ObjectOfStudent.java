@@ -5,7 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import online_school.domain.model.Person;
+import online_school.domain.model.Student;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import web.dao.StudentDAO;
 import web.utils.MyConfig;
@@ -19,7 +19,7 @@ public class ObjectOfStudent extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Person> studentList = context.getBean("studentDAO", StudentDAO.class).showAllStudents();
+        List<Student> studentList = context.getBean("studentDAO", StudentDAO.class).showAllStudents();
         req.setAttribute("students", studentList);
         req.getRequestDispatcher("/views/api_student/student_list.jsp").forward(req, resp);
     }

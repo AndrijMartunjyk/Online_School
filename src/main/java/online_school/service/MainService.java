@@ -1,9 +1,8 @@
 package online_school.service;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import web.dao.CourseDAO;
-import online_school.domain.model.Student;
+import online_school.domain.control_work.Student;
 import online_school.domain.model.*;
 import online_school.log.Level;
 import online_school.log.Log;

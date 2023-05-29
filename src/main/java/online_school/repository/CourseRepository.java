@@ -32,7 +32,7 @@ public class CourseRepository implements InterfaceRepository {
             if (course == null) {
                 break;
             } else {
-                result = course.getCounter();
+//                result = course.getCounter();
             }
         }
         Log.debug(CourseRepository.class.getName(), "method->\"counter\"");
