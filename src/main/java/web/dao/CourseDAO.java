@@ -8,16 +8,17 @@ import org.hibernate.Session;
 
 public class CourseDAO {
     public void createCourse(String name) {
-        try (Session session = HibernateUtil.getSessionFactory().getCurrentSession()) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
             Course course = new Course(name);
             session.persist(course);
+            session.getTransaction().commit();
         }
     }
 
 
     public List<Course> courseList() {
-        try (Session session = HibernateUtil.getSessionFactory().getCurrentSession()) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
             return session.createQuery("from Course", Course.class).list();
         }

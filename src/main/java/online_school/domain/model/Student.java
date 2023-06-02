@@ -3,7 +3,7 @@ package online_school.domain.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "student",schema = "online_school")
+
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,21 +19,17 @@ public class Student {
     private String phone;
     @Column(name = "role")
     private String role;
-    @Column(name = "lecture_id")
-    private Long lectureId;
-    @Column(name = "course_id")
-    private Long courseId;
+    @ManyToOne
+    @JoinColumn(name = "id_course")
+    private Course course;
 
 
-
-    public Student(String firstName, String lastName, String email, String phone, Role role, Long lectureId, Long courseId) {
+    public Student(String firstName, String lastName, String email, String phone, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
         this.role = String.valueOf(role);
-        this.lectureId = lectureId;
-        this.courseId = courseId;
     }
 
     public Student() {
@@ -87,20 +83,12 @@ public class Student {
         this.role = role;
     }
 
-    public Long getLectureId() {
-        return lectureId;
+    public Course getCourse() {
+        return course;
     }
 
-    public void setLectureId(Long lectureId) {
-        this.lectureId = lectureId;
-    }
-
-    public Long getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(Long courseId) {
-        this.courseId = courseId;
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     @Override
@@ -112,8 +100,6 @@ public class Student {
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", role=" + role +
-                ", lectureId=" + lectureId +
-                ", courseId=" + courseId +
                 '}';
     }
 }

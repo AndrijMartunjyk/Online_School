@@ -47,8 +47,6 @@
         <th>Student Name</th>
         <th>Student Last Name</th>
         <th>Role</th>
-        <th>Course Id</th>
-        <th>Lecture Id</th>
         <th>Phone Number</th>
         <th>Email</th>
     </tr>
@@ -60,8 +58,6 @@
             <td>${apiExample.firstName}</td>
             <td>${apiExample.lastName}</td>
             <td>${apiExample.role}</td>
-            <td>${apiExample.courseId}</td>
-            <td>${apiExample.lectureId}</td>
             <td>${apiExample.phone}</td>
             <td>${apiExample.email}</td>
         </tr>
