@@ -2,13 +2,12 @@ package web.utils;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import web.dao.CourseDAO;
 import web.dao.LectureDAO;
 import web.dao.StudentDAO;
 
 @Configuration
-@PropertySource("classpath:application.properties")
+//@PropertySource("classpath:application.properties")
 public class MyConfig {
 
     @Bean

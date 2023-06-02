@@ -1,6 +1,6 @@
 package service_test;
 
-import online_school.domain.model.Student;
+import online_school.domain.control_work.Student;
 import online_school.service.ControlWorkService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

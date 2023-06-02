@@ -41,7 +41,7 @@ public class AddStudent extends HttpServlet {
             List<String> listCourse = List.of(courseIdList);
 
             for (String courseId : listCourse) {
-                studentDAO.createStudent(name, lastName, email, phone, Role.STUDENT, 0L, Long.valueOf(courseId));
+                studentDAO.createStudent(name, lastName, email, phone, Role.STUDENT,  Long.valueOf(courseId));
             }
 
             req.setAttribute("name", name);

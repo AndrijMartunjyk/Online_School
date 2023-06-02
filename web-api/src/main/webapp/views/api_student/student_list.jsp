@@ -22,8 +22,6 @@
         <th>Email</th>
         <th>Phone</th>
         <th>Role</th>
-        <th>Lecture Id</th>
-        <th>Course Id</th>
     </tr>
     </thead>
     <tbody>
@@ -35,8 +33,6 @@
             <td>${apiExample.email}</td>
             <td>${apiExample.phone}</td>
             <td>${apiExample.role}</td>
-            <td>${apiExample.lectureId}</td>
-            <td>${apiExample.courseId}</td>
         </tr>
     </c:forEach>
     </tbody>

@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.Random;
 
 @Entity
-@Table(name = "lecture", schema = "online_school")
+
 public class Lecture extends Model implements Comparable<Lecture>, Serializable {
     @Serial
     @Transient
@@ -30,7 +30,7 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
     private static int counter;
     @Transient
     private Long personId;
-    @Column(name = "course_id")
+    @Transient
     private Long courseId;
     @Transient
     private String nameCourse;
@@ -38,6 +38,9 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
     private LocalDateTime creationDate;
     @Column(name = "lecture_date")
     private LocalDateTime lectureDate;
+    @ManyToOne
+    @JoinColumn(name = "id_course")
+    private Course course;
 
     public Lecture(Long lectureId, String lectureName, String description, Long courseId, String nameCourse) {
         this.lectureId = lectureId + new Random().nextLong(Long.MAX_VALUE);
@@ -49,10 +52,9 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
         counter++;
     }
 
-    public Lecture(String lectureName, String description, Long courseId, LocalDateTime creationDate, LocalDateTime lectureDate) {
+    public Lecture(String lectureName, String description, LocalDateTime creationDate, LocalDateTime lectureDate) {
         this.lectureName = lectureName;
         this.description = description;
-        this.courseId = courseId;
         this.creationDate = creationDate;
         this.lectureDate = lectureDate;
     }
@@ -135,6 +137,38 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
         }
         Log.debug(Lecture.class.getName(), "method->\"getLectureDateFormat\"");
         return lectureDateFormatOptional.orElse(MainService.IS_EMPTY);
+    }
+
+    public void setLectureName(String lectureName) {
+        this.lectureName = lectureName;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCourseId(Long courseId) {
+        this.courseId = courseId;
+    }
+
+    public void setNameCourse(String nameCourse) {
+        this.nameCourse = nameCourse;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setLectureId(Long lectureId) {
+        this.lectureId = lectureId;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     @Override

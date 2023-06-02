@@ -25,8 +25,8 @@ public class ObjectsOfCourse extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int courseId = Integer.parseInt(req.getParameter("course_id"));
 
-        List<Lecture> lectureList = lectureDAO.getLectureByCourseId(courseId);
-        List<Student> studentList = studentDAO.getStudentByCourseId(courseId);
+        List<Lecture> lectureList = lectureDAO.getLectureListByCourseId((long) courseId);
+        List<Student> studentList = studentDAO.getStudentListByCourseId((long) courseId);
         req.setAttribute("lecture_list", lectureList);
         req.setAttribute("student_list", studentList);
         req.getRequestDispatcher("/views/api_course/objects_of_course.jsp").forward(req, resp);
