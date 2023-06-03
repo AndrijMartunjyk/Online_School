@@ -5,39 +5,56 @@ import online_school.domain.model.Role;
 import online_school.domain.model.Student;
 import online_school.util.HibernateUtil;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDAO {
     public void createStudent(String firstName, String lastName, String email, String phone, Role role, Long courseId) {
+        Transaction transaction = null;
         Student student = new Student(firstName, lastName, email, phone, role);
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            session.beginTransaction();
-            Query<Course> courseQuery = session.createQuery("from Course where id=:courseId", Course.class);
-            Course course = courseQuery.setParameter("courseId", courseId).getSingleResult();
+            transaction = session.beginTransaction();
+            Course course = session.get(Course.class, courseId);
             course.getStudentList().add(student);
             student.setCourse(course);
             session.persist(student);
             session.getTransaction().commit();
+        } catch (RuntimeException r) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
     }
 
     public List<Student> getStudentListByCourseId(Long courseId) {
-        List<Student> studentList;
+        Transaction transaction = null;
+        List<Student> studentList = new ArrayList<>();
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            session.beginTransaction();
-            Query<Course> courseQuery = session.createQuery("from Course where id=:courseId", Course.class);
-            Course course = courseQuery.setParameter("courseId", courseId).getSingleResult();
+            transaction = session.beginTransaction();
+            Course course = session.get(Course.class, courseId);
             studentList = course.getStudentList().stream().toList();
+        } catch (RuntimeException r) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
         return studentList;
     }
 
     public List<Student> showAllStudents() {
+        Transaction transaction = null;
+        List<Student> studentList = new ArrayList<>();
         try (Session session = HibernateUtil.getSessionFactory().getCurrentSession()) {
-            session.beginTransaction();
-            return session.createQuery("from Student", Student.class).list();
+            transaction = session.beginTransaction();
+            studentList = session.createQuery("from Student s join fetch s.course", Student.class).list();
+        } catch (RuntimeException r) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
         }
+        return studentList;
     }
 }

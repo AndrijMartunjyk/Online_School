@@ -10,7 +10,8 @@ public class HibernateUtil {
                     .configure("hibernate.cfg.xml")
                     .buildSessionFactory();
         } catch (Throwable e) {
-            System.err.println("ОЙЙЙЙ ЩОСЬ НЕ ТЕ");
+            e.printStackTrace();
+            System.err.println("ЩОСЬ НЕ ТЕ");
         }
     }
 
