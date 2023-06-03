@@ -38,7 +38,7 @@ public class Lecture extends Model implements Comparable<Lecture>, Serializable 
     private LocalDateTime creationDate;
     @Column(name = "lecture_date")
     private LocalDateTime lectureDate;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_course")
     private Course course;
 

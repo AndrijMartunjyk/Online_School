@@ -19,7 +19,7 @@ public class Student {
     private String phone;
     @Column(name = "role")
     private String role;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_course")
     private Course course;
 
