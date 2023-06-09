@@ -1,4 +1,4 @@
-package web.dao;
+package web.utils;
 
 import java.lang.reflect.InvocationTargetException;
 

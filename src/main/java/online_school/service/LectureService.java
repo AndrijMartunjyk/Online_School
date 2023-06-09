@@ -3,7 +3,7 @@ package online_school.service;
 import online_school.domain.model.Lecture;
 import online_school.log.Log;
 import org.springframework.beans.factory.annotation.Value;
-import web.dao.Driver;
+import web.utils.Driver;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -26,7 +26,7 @@ public class LectureService extends Driver {
     private LocalDateTime dateLecture;
 
     public void createLecture(Long lectureId, String lectureName, String description, Long courseId, LocalDateTime dateLecture) {
-        String query = "INSERT INTO lecture(lecture_id,lecture_name,description,course_id,creation_date,lecture_date) VALUES(?,?,?,?,?,?)";
+        String query = "INSERT INTO lecture(lecture_id,lecture_name,description,creation_date,lecture_date) VALUES(?,?,?,?,?,?)";
         driver();
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(query)) {

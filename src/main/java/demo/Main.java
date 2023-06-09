@@ -1,7 +1,6 @@
 package demo;
 
 
-import online_school.domain.model.Role;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 

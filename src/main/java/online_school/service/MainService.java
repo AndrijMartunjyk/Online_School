@@ -1,7 +1,6 @@
 package online_school.service;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import web.dao.CourseDAO;
 import online_school.domain.control_work.Student;
 import online_school.domain.model.*;
 import online_school.log.Level;
@@ -1129,13 +1128,13 @@ public class MainService {
 
     public void foundCourse() {
         courseId = 0L;
-        CourseDAO courseDAO = context.getBean("courseDAO", CourseDAO.class);
+        web.service.CourseService courseServiceWeb=context.getBean(web.service.CourseService.class);
         courseService.showAllCourses();
         putBorder();
         isPresent = true;
         while (isPresent) {
             checkNumber(OF_COURSE);
-            for (Course c : courseDAO.courseList()) {
+            for (Course c : courseServiceWeb.getCourseList()) {
                 if (c.getCourseId().equals(getCheckNumber())) {
                     courseId = getCheckNumber();
                     courseName = c.getCourseName();
