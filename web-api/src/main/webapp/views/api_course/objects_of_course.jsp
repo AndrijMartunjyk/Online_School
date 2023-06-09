@@ -18,7 +18,6 @@
         <th>ID</th>
         <th>Lecture Name</th>
         <th>Description</th>
-        <th>Course Id</th>
         <th>creationDate</th>
         <th>lectureDate</th>
     </tr>
@@ -29,7 +28,6 @@
             <td>${apiExample.lectureId}</td>
             <td>${apiExample.lectureName}</td>
             <td>${apiExample.description}</td>
-            <td>${apiExample.courseId}</td>
             <td>${apiExample.creationDate}</td>
             <td>${apiExample.lectureDate}</td>
         </tr>

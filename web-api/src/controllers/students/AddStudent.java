@@ -1,4 +1,4 @@
-package main.controlers.students;
+package controllers.students;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import online_school.domain.model.Role;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import web.dao.StudentDAO;
+import web.service.StudentService;
 import web.utils.MyConfig;
 
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.util.List;
 @WebServlet("/add_student")
 public class AddStudent extends HttpServlet {
     private final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MyConfig.class);
-    private final StudentDAO studentDAO = context.getBean("studentDAO", StudentDAO.class);
+    private final StudentService studentService=context.getBean(StudentService.class);
     private String[] courseIdList;
 
 
@@ -41,7 +41,7 @@ public class AddStudent extends HttpServlet {
             List<String> listCourse = List.of(courseIdList);
 
             for (String courseId : listCourse) {
-                studentDAO.createStudent(name, lastName, email, phone, Role.STUDENT,  Long.valueOf(courseId));
+                studentService.addStudent(name, lastName, email, phone, Role.STUDENT, Long.valueOf(courseId));
             }
 
             req.setAttribute("name", name);
