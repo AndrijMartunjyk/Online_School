@@ -20,8 +20,6 @@ CourseService courseService=context.getBean(CourseService.class);
         LectureService lectureService=context.getBean(LectureService.class);
 
 //studentService.addStudent("jon","io","sdas@fv","23232323", Role.STUDENT,13L);
-
-
         System.out.println(lectureService.getLectureListByCourseId(10L));
     }
 }
