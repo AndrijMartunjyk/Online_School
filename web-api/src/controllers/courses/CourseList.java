@@ -1,26 +1,27 @@
-package main.controlers.students;
+package controllers.courses;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import online_school.domain.model.Student;
+import online_school.domain.model.Course;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import web.dao.StudentDAO;
+import web.service.CourseService;
 import web.utils.MyConfig;
 
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/all_students")
-public class ObjectOfStudent extends HttpServlet {
+@WebServlet("/course_list")
+public class CourseList extends HttpServlet {
     private final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MyConfig.class);
+    private final CourseService courseService = context.getBean(CourseService.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Student> studentList = context.getBean("studentDAO", StudentDAO.class).showAllStudents();
-        req.setAttribute("students", studentList);
-        req.getRequestDispatcher("/views/api_student/student_list.jsp").forward(req, resp);
+        List<Course> courseList = courseService.getCourseList();
+        req.setAttribute("course_list", courseList);
+        req.getRequestDispatcher("/views/api_course/course_list.jsp").forward(req, resp);
     }
 }
