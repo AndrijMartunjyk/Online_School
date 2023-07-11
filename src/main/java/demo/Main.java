@@ -1,14 +1,13 @@
 package demo;
 
 
-import online_school.domain.model.Role;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 
-import web.service.CourseService;
-import web.service.LectureService;
-import web.service.StudentService;
-import web.utils.MyConfig;
+import my_web.service.CourseService;
+import my_web.service.LectureService;
+import my_web.service.StudentService;
+import my_web.utils.MyConfig;
 
 
 
@@ -21,8 +20,6 @@ CourseService courseService=context.getBean(CourseService.class);
         LectureService lectureService=context.getBean(LectureService.class);
 
 //studentService.addStudent("jon","io","sdas@fv","23232323", Role.STUDENT,13L);
-
-
         System.out.println(lectureService.getLectureListByCourseId(10L));
     }
 }
