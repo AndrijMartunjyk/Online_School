@@ -1,0 +1,7 @@
+service_test\AdditionalMaterialServiceTest.class
+log_test\LogTest.class
+service_test\CourseServiceTest.class
+service_test\MainServiceTest.class
+service_test\HomeworkServiceTest.class
+service_test\LectureServiceTest.class
+service_test\ControlWorkServiceTest.class

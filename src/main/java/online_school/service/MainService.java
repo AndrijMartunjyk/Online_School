@@ -14,7 +14,7 @@ import online_school.domain.task_for_lecture.Homework;
 import online_school.exception.EntityNotFoundException;
 import server.Client;
 import server.WatcherForBlackIp;
-import web.utils.MyConfig;
+import my_web.utils.MyConfig;
 
 import java.io.*;
 import java.net.URI;
@@ -1128,7 +1128,7 @@ public class MainService {
 
     public void foundCourse() {
         courseId = 0L;
-        web.service.CourseService courseServiceWeb=context.getBean(web.service.CourseService.class);
+        my_web.service.CourseService courseServiceWeb=context.getBean(my_web.service.CourseService.class);
         courseService.showAllCourses();
         putBorder();
         isPresent = true;

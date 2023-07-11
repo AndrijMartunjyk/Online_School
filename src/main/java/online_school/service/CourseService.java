@@ -1,7 +1,7 @@
 package online_school.service;
 
 import org.springframework.beans.factory.annotation.Value;
-import web.utils.Driver;
+import my_web.utils.Driver;
 
 import java.sql.*;
 import java.util.Random;

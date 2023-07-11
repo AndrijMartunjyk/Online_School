@@ -3,7 +3,7 @@ package online_school.service;
 import online_school.domain.model.Lecture;
 import online_school.log.Log;
 import org.springframework.beans.factory.annotation.Value;
-import web.utils.Driver;
+import my_web.utils.Driver;
 
 import java.sql.*;
 import java.time.LocalDateTime;

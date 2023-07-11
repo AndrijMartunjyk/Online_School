@@ -4,10 +4,10 @@ package demo;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 
-import web.service.CourseService;
-import web.service.LectureService;
-import web.service.StudentService;
-import web.utils.MyConfig;
+import my_web.service.CourseService;
+import my_web.service.LectureService;
+import my_web.service.StudentService;
+import my_web.utils.MyConfig;
 
 
 
